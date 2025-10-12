@@ -12,7 +12,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("img/login_background.jpg") no-repeat;
+  background: url("../img/login_background.jpg") no-repeat;
   background-size: cover;
   background-position: center;
 }
@@ -183,16 +183,16 @@ body {
   text-decoration: underline;
 }
 
-/* --- Card 3D Flip --- */
+/* Flip card khi xoay */
 .wrapper {
-  perspective: 1200px; /* tạo chiều sâu */
+  perspective: 1200px;
   overflow: visible;
 }
 
 .flip {
   position: relative;
   width: 100%;
-  min-height: 420px; /* đảm bảo đủ cao cho cả 2 mặt */
+  min-height: 420px;
   transform-style: preserve-3d;
   transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.1, 1);
 }
@@ -200,13 +200,13 @@ body {
 .panel {
   position: absolute;
   inset: 0;
-  backface-visibility: hidden; /* giấu mặt sau */
+  backface-visibility: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .panel--admin {
-  transform: rotateY(180deg); /* lật 180° để làm mặt sau */
+  transform: rotateY(180deg);
 }
 
 /* Khi ở trạng thái admin: xoay toàn bộ khối */
