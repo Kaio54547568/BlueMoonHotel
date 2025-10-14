@@ -5,6 +5,9 @@ from .forms import ReservationForm
 def rooms_list(request):
     rooms = Room.objects.all()
     return render(request, 'core/rooms_list.html', {'rooms': rooms})
+def home(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/home.html', {'home': home})
 
 def book_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
