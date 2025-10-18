@@ -1,0 +1,263 @@
+:root{
+  --blue: #1e3a8a;
+  --bg: #f4f8ff;
+  --card: #fff;
+  --shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Reset cơ bản */
+*{box-sizing:border-box}
+body{
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:#222;
+  min-height:100vh;
+}
+
+/* Topbar */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:var(--blue);
+  color:white;
+  padding:12px 16px;
+}
+.topbar h1{font-size:18px;margin:0}
+.icon-btn{
+  background:transparent;
+  border:2px solid rgba(255,255,255,0.15);
+  color:white;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+}
+.icon-btn:focus{outline:3px solid rgba(255,255,255,0.15)}
+
+/* Overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+  z-index:50;
+}
+
+/* Sidebar */
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  height:100vh;
+  width:320px;
+  max-width:85%;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  transform:translateX(-110%);
+  transition:transform .28s cubic-bezier(.2,.8,.2,1);
+  z-index:60;
+  display:flex;
+  flex-direction:column;
+  padding:18px;
+}
+.sidebar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.sidebar-header h2{margin:0;color:var(--blue)}
+.close-btn{
+  background:transparent;
+  border:none;
+  font-size:20px;
+  cursor:pointer;
+}
+
+/* Nav links */
+.nav{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.nav a{
+  padding:10px 12px;
+  text-decoration:none;
+  color:#222;
+  border-radius:8px;
+}
+.nav a:hover{background:#f1f5ff}
+
+/* Footer of sidebar */
+.sidebar-footer{margin-top:auto;color:#555;font-size:13px}
+
+/* Content push (optional) */
+.content{
+  padding:24px;
+  transition:margin-left .28s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Open states (JS sẽ thêm/remove class .open) */
+.sidebar.open{
+  transform:translateX(0);
+}
+.overlay.visible{
+  opacity:1;
+  pointer-events:auto;
+}
+/* Nếu muốn đẩy nội dung khi mở sidebar (desktop) */
+@media (min-width:900px){
+  .content.shift{
+    margin-left:320px;
+  }
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Toàn bộ trang */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #86d4c6; /* xanh nhạt */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #a4dfcf;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.menu button,
+.logout button {
+  background-color: #b7e8db;
+  border: 1px solid #5f9ea0;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.menu button:hover,
+.logout button:hover {
+  background-color: #d5f2ea;
+}
+
+.logout {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  background-color: #b7e8db; /* xanh nhạt hơn */
+  padding: 20px;
+}
+
+.main-content h1 {
+  text-align: center;
+  background-color: #a1d5f2;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* Danh sách hộ khẩu */
+.household-list {
+  background-color: #a1d5f2;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  border-radius: 10px;
+}
+
+/* Card hộ khẩu */
+.card {
+  background-color: #fff4b2;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card-buttons button {
+  padding: 5px 10px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.card-buttons button:hover {
+  background-color: #f2f2f2;
+}
+
+/* Nút thêm hộ khẩu mới */
+.add-btn {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.add-btn button {
+  background-color: #f6e58d;
+  padding: 10px 20px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-btn button:hover {
+  background-color: #fffaad;
+}
+
+/* Nút menu */
+.menu-btn {
+  background: none;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 4px 8px;
+  cursor: pointer;
+}

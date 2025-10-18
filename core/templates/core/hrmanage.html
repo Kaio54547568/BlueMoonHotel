@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Demo Sidebar - BLUEMOON</title>
+
+  <!-- nếu dùng Django, đổi thành:  và  -->
+  <link rel="stylesheet" href="{% static 'css/hrmanage.css' %}">
+</head>
+<body>  
+  <header class="topbar">
+    <button id="btnOpen" class="icon-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">
+      ☰ Menu
+    </button>
+    <h1>BLUEMOON - Dashboard</h1>
+  </header>
+
+  <!-- overlay (che mờ nội dung khi sidebar mở) -->
+  <div id="overlay" class="overlay" tabindex="-1" hidden></div>
+
+  
+  <!-- Nội dung chính -->
+  <main class="main-content">
+      <h1>Danh sách hộ khẩu</h1>
+      
+      <div class="household-list">
+        <div class="card">
+          <h3>Tên hộ</h3>
+          <p>&lt;Thông tin cơ bản...&gt;</p>
+          <div class="card-buttons">
+            <button>Chi tiết</button>
+            <button>Chỉnh sửa</button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>Tên hộ</h3>
+          <p>&lt;Thông tin cơ bản...&gt;</p>
+          <div class="card-buttons">
+            <button>Chi tiết</button>
+            <button>Chỉnh sửa</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Tên hộ</h3>
+          <p>&lt;Thông tin cơ bản...&gt;</p>
+          <div class="card-buttons">
+            <button>Chi tiết</button>
+            <button>Chỉnh sửa</button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>Tên hộ</h3>
+          <p>&lt;Thông tin cơ bản...&gt;</p>
+          <div class="card-buttons">
+            <button>Chi tiết</button>
+            <button>Chỉnh sửa</button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>Tên hộ</h3>
+          <p>&lt;Thông tin cơ bản...&gt;</p>
+          <div class="card-buttons">
+            <button>Chi tiết</button>
+            <button>Chỉnh sửa</button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>Tên hộ</h3>
+          <p>&lt;Thông tin cơ bản...&gt;</p>
+          <div class="card-buttons">
+            <button>Chi tiết</button>
+            <button>Chỉnh sửa</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-btn">
+        <button>Thêm hộ khẩu mới</button>
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
+      <div class="sidebar-header">
+        <h2>Menu</h2>
+        <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
+      </div>
+  
+      <nav class="nav">
+        <a href="#">Quản lý hộ khẩu</a>
+        <a href="#">Quản lý nhân khẩu</a>
+        <a href="#">Quản lý tài khoản</a>
+        
+      </nav>
+      <div class="logout">
+          <button>Đăng xuất</button>
+        </div>
+  
+      <div class="sidebar-footer">
+        <small>© 2025 BLUEMOON</small>
+      </div>
+    </aside>
+    <script src="{% static 'js/sidebar.js' %}"></script>
+  </body>
+</html>

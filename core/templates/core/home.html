@@ -2,20 +2,43 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLUEMOON - Hệ thống quản lý khách sạn</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Demo Sidebar - BLUEMOON</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <!-- <link rel="stylesheet" href="css/style.css"> -->
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
-<body>
-    <header>
-        <h1>🏨 BLUEMOON HOTEL MANAGEMENT SYSTEM</h1>
-        <p>Giải pháp toàn diện giúp quản lý khách sạn chuyên nghiệp, nhanh chóng và chính xác</p>
-    </header>
+<body> 
+  <header class="topbar">
+    <button id="btnOpen" class="icon-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">
+      ☰ Menu
+    </button>
+    <h1>BLUEMOON - Dashboard</h1>
+  </header>
 
-    <main>
+  <div id="overlay" class="overlay" tabindex="-1" hidden></div>
+
+  <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
+    <div class="sidebar-header">
+      <h2>Menu</h2>
+      <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
+    </div>
+
+    <nav class="nav">
+      <a href="#">Trang chủ</a>
+      <a href="#">Đặt phòng</a>
+      <a href="#">Khách hàng</a>
+      <a href="#">Dịch vụ</a>
+      <a href="#">Báo cáo</a>
+      <a href="#">Cài đặt</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <small>© 2025 BLUEMOON</small>
+    </div>
+  </aside>
+
+   <main>
         <section>
             <h2>Giới thiệu</h2>
             <p class="intro">
@@ -56,17 +79,8 @@
         </section>
 
     </main>
-    
-    <footer>
-        <section>
-            <h2>Liên hệ</h2>
-            <p class="info">
-                Mọi thắc mắc xin liên hệ <b>Phòng kỹ thuật BLUEMOON</b> qua email: 
-                <a href="mailto:support@bluemoonhotel.vn">support@bluemoonhotel.vn</a>  
-                hoặc hotline: <b>0123 456 789</b>.
-            </p>
-        </section>
-        © 2025 BLUEMOON Hotel Management System - All Rights Reserved.
-    </footer>
+  
+
+  <script src="{% static 'js/sidebar.js' %}"></script>
 </body>
 </html>
