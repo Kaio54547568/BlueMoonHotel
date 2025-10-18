@@ -2,9 +2,30 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Room, Guest, Reservation
 from .forms import ReservationForm
 
+def test(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/test.html', {'rooms': rooms})
+def demomanage(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/demomanage.html', {'rooms': rooms})
+def accountmanage(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/accountmanage.html', {'rooms': rooms})
+def hredit(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/hredit.html', {'rooms': rooms})
+def hrmanage(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/hrmanage.html', {'rooms': rooms})
 def rooms_list(request):
     rooms = Room.objects.all()
     return render(request, 'core/rooms_list.html', {'rooms': rooms})
+def home(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/home.html', {'home': home})
+def profile(request):
+    rooms = Room.objects.all()
+    return render(request, 'core/profile.html', {'profile': profile})
 
 def book_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
