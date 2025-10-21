@@ -1,67 +1,46 @@
 from django.db import models
-from django.utils import timezone
 
-class RoomType(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
-    price_per_night = models.DecimalField(max_digits=8, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.name} - {self.price_per_night}"
-
-class Room(models.Model):
-    STATUS = (
-        ('available','Available'),
-        ('occupied','Occupied'),
-        ('maintenance','Maintenance'),
-    )
-    number = models.CharField(max_length=10, unique=True)
-    room_type = models.ForeignKey(RoomType, on_delete=models.PROTECT)
-    floor = models.IntegerField(default=1)
-    status = models.CharField(max_length=12, choices=STATUS, default='available')
+# =======================
+# Bảng Hộ khẩu
+# =======================
+class HoKhau(models.Model):
+    id_ho_khau = models.AutoField(primary_key=True)
+    so_can_ho = models.CharField(max_length=50)
+    dien_tich = models.DecimalField(max_digits=8, decimal_places=2)
+    # id_chu_ho sẽ liên kết tới Nhân khẩu (ForeignKey tạm thời để null được)
+    # ta sẽ định nghĩa sau khi có model NhanKhau
 
     def __str__(self):
-        return f"Room {self.number} ({self.room_type.name})"
+        return f"Hộ khẩu {self.id_ho_khau} - Căn hộ {self.so_can_ho}"
 
-class Guest(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
-    phone = models.CharField(max_length=30, blank=True)
-    address = models.TextField(blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
-class Reservation(models.Model):
-    STATUS = (
-        ('reserved','Reserved'),
-        ('checked_in','Checked-in'),
-        ('checked_out','Checked-out'),
-        ('cancelled','Cancelled'),
-    )
-    guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
-    check_in = models.DateField()
-    check_out = models.DateField()
-    num_guests = models.IntegerField(default=1)
-    status = models.CharField(max_length=12, choices=STATUS, default='reserved')
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    created_at = models.DateTimeField(default=timezone.now)
+# =======================
+# Bảng Nhân khẩu
+# =======================
+class NhanKhau(models.Model):
+    id_nhan_khau = models.AutoField(primary_key=True)
+    id_ho_khau = models.CharField()
+    # id_ho_khau = models.ForeignKey(HoKhau, on_delete=models.CASCADE, related_name='nhan_khau')
+    ngay_sinh = models.DateField()
+    can_cuoc_cong_dan = models.CharField(max_length=12, unique=True)
+    quan_he_chu_ho = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Reservation {self.id} - {self.guest} [{self.check_in} → {self.check_out}]"
+        return f"Nhân khẩu {self.id_nhan_khau} ({self.quan_he_chu_ho})"
 
-class Service(models.Model):
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+
+
+# =======================
+# Bảng Tài khoản
+# =======================
+class TaiKhoan(models.Model):
+    id_tai_khoan = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=100)
+    vai_tro = models.CharField(max_length=20, choices=[
+        ('admin', 'Quản trị viên'),
+        ('user', 'Người dùng'),
+    ])
 
     def __str__(self):
-        return self.name
-
-class ServiceUsage(models.Model):
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="services")
-    service = models.ForeignKey(Service, on_delete=models.PROTECT)
-    qty = models.IntegerField(default=1)
-    created_at = models.DateTimeField(default=timezone.now)
+        return f"{self.username} ({self.vai_tro})"
