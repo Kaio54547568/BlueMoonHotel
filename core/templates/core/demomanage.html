@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demo Sidebar - BLUEMOON</title>
+  <title>demomanage</title>
 
   <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
   <link rel="stylesheet" href="{% static 'css/demomanage.css' %}">
@@ -21,22 +21,53 @@
 
   
   <div class="hrcontainer">
-    <div class="hrsearch-bar">
-      <input type="text" placeholder="Thanh tìm kiếm...">
-      <button>Tìm kiếm</button>
+    <div class="search-bar">
+      <!-- <input type="text" placeholder="Thanh tìm kiếm..."> -->
+      <form method="get" action="{% url 'demomanage' %}">
+          <input type="text" name="search_id" placeholder="Nhập ID nhân khẩu..." value="{{ query }}">
+          <button type="submit">Tìm kiếm</button>
+          {% if query %}
+              <a href="{% url 'demomanage' %}">Hiện tất cả</a>
+          {% endif %}
+      </form>
+      <!-- <button>Tìm kiếm</button> -->
     </div>
 
-    <div class="hrmember-list">
-      <h2>Danh sách người trong hoteru</h2>
-    </div>
 
-    <div class="hrbutton-bar">
-      <button class="hrbtn">Thêm nhân khẩu</button>
-      <button class="hrbtn">Thống kê</button>
+      <main class="content">
+      <div class="main-section">
+        <h1 style="width: 80%; margin: 0 auto;">Danh sách Nhân khẩu</h1>
+        <table border="1" cellpadding="5" style="width: 80%; margin: 0 auto;">
+            <tr>
+                <th>ID nhân khẩu</th>
+                <th>ID hộ khẩu</th>
+                <th>DOB</th>
+                <th>CCCD</th>
+                <th>Quan hệ với chủ hộ</th>
+            </tr> 
+            {% for hk in nhan_khau_list %}
+            <tr>
+                <td>{{ hk.id_nhan_khau }}</td>
+                <td>{{ hk.id_ho_khau }}</td>
+                <td>{{ hk.ngay_sinh }}</td>
+                <td>{{ hk.can_cuoc_cong_dan }}</td>
+                <td>{{ hk.quan_he_chu_ho }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Không có dữ liệu</td>
+            </tr>
+            {% endfor %}
+        </table>   
 
-    </div>
-  </div>
-    <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
+        <div class="hrbutton-bar">
+          <button class="hrbtn">Thêm nhân khẩu</button>
+          <button class="hrbtn">Thống kê</button>
+
+        </div>
+      </div>
+      </main>
+      <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
       <div class="sidebar-header">
         <h2>Menu</h2>
         <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>

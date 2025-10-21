@@ -1,39 +1,28 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chi tiết hộ khẩu</title>
-  <link rel="stylesheet" href="{% static 'css/hredit.css' %}">
-  </head>
+    <meta charset="UTF-8">
+    <title>Danh sách Hộ khẩu</title>
+</head>
 <body>
-  <div class="container">
-    <!-- Thanh tìm kiếm -->
-    <div class="search-bar">
-      <input type="text" placeholder="Thanh tìm kiếm...">
-      <button>Tìm kiếm</button>
-    </div>
-
-    <!-- Danh sách thành viên -->
-    <div class="member-list">
-      <h2>Danh sách thành viên:</h2>
-      <ul>
-        <li><strong>A</strong> (chủ hộ)</li>
-        <li>B</li>
-        <li>C</li>
-        <li>D</li>
-      </ul>
-    </div>
-
-    <!-- Các nút chức năng -->
-    <div class="button-bar">
-      <button class="btn">Thay đổi chủ hộ</button>
-      <button class="btn">Thêm thành viên</button>
-      <button class="btn">Xóa thành viên</button>
-      <button class="btn">Tách hộ</button>
-      <button class="btn danger">Xóa hộ</button>
-    </div>
-  </div>
+    <h1>Danh sách Hộ khẩu</h1>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Số căn hộ</th>
+            <th>Diện tích (m²)</th>
+        </tr>
+        {% for hk in ho_khau_list %}
+        <tr>
+            <td>{{ hk.id_ho_khau }}</td>
+            <td>{{ hk.so_can_ho }}</td>
+            <td>{{ hk.dien_tich }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Không có dữ liệu</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>

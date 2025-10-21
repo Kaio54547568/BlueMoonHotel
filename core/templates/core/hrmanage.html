@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demo Sidebar - BLUEMOON</title>
+  <title>hrmanage</title>
 
   <!-- nếu dùng Django, đổi thành:  và  -->
   <link rel="stylesheet" href="{% static 'css/hrmanage.css' %}">
@@ -26,59 +26,20 @@
       <h1>Danh sách hộ khẩu</h1>
       
       <div class="household-list">
+        {% for hk in ho_khau_list %}
         <div class="card">
-          <h3>Tên hộ</h3>
-          <p>&lt;Thông tin cơ bản...&gt;</p>
-          <div class="card-buttons">
-            <button>Chi tiết</button>
-            <button>Chỉnh sửa</button>
+            <p>id hộ: {{ hk.id_ho_khau }}</p>
+            <p>số căn: {{ hk.so_can_ho }}</p>
+            <p>diện tích: {{ hk.dien_tich }}</p>
+            <div class="card-buttons">
+              <button>Chi tiết</button>
+              <button>Chỉnh sửa</button>
+            </div>
           </div>
-        </div>
-        
-        <div class="card">
-          <h3>Tên hộ</h3>
-          <p>&lt;Thông tin cơ bản...&gt;</p>
-          <div class="card-buttons">
-            <button>Chi tiết</button>
-            <button>Chỉnh sửa</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Tên hộ</h3>
-          <p>&lt;Thông tin cơ bản...&gt;</p>
-          <div class="card-buttons">
-            <button>Chi tiết</button>
-            <button>Chỉnh sửa</button>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h3>Tên hộ</h3>
-          <p>&lt;Thông tin cơ bản...&gt;</p>
-          <div class="card-buttons">
-            <button>Chi tiết</button>
-            <button>Chỉnh sửa</button>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h3>Tên hộ</h3>
-          <p>&lt;Thông tin cơ bản...&gt;</p>
-          <div class="card-buttons">
-            <button>Chi tiết</button>
-            <button>Chỉnh sửa</button>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h3>Tên hộ</h3>
-          <p>&lt;Thông tin cơ bản...&gt;</p>
-          <div class="card-buttons">
-            <button>Chi tiết</button>
-            <button>Chỉnh sửa</button>
-          </div>
-        </div>
+                
+        {% empty %}
+        <p>Không có dữ liệu</p>
+        {% endfor %}
       </div>
 
       <div class="add-btn">
