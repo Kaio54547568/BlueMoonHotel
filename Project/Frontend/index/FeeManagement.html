@@ -2,14 +2,15 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Chung cư BlueMoon</title>
+    <title>Quản Lý Khoản Thu - Chung cư BlueMoon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../Accountant.css">
 </head>
 <body>
-    <div id="sidebar-container"></div>
+    <div id="sidebar-container">
+        </div>
 
     <main>
         <header class="main-header">
@@ -29,64 +30,83 @@
                 <div id="userMenuContainer">
                     </div>
                 <div class="user-menu-overlay" id="userMenuOverlay"></div>
-            </div>    
+            </div>  
         </header>
 
-        <section class="dashboard">
-            <div class="dash-card">
-                <div class="dash-icon bg-blue"><i class="fa-solid fa-money-bill-trend-up"></i></div>
-                <div class="dash-info">
-                    <div class="dash-number">358</div>
-                    <div class="dash-label">Khoản thu</div>
+        <section class="main-content income-management-page">
+            <div class="main-panel data-table-panel" id="income-container">
+                
+                <div class="income-controls-top">
+                    <div class="search-box-container">
+                        <input type="text" placeholder="Tìm kiếm khoản thu...">
+                        <i class="fa-solid fa-search"></i>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="btn-filter"><i class="fa-solid fa-filter"></i> Lọc</button>
+                    </div>
                 </div>
-            </div>
-            <div class="dash-card">
-                <div class="dash-icon bg-green"><i class="fa-solid fa-users"></i></div>
-                <div class="dash-info">
-                    <div class="dash-number">1,210</div>
-                    <div class="dash-label">Nhân khẩu</div>
+
+                <div class="income-summary-box">
+                    <h3 class="box-title">Tổng quan Khoản thu năm 2025</h3>
+                    <div class="summary-details">
+                        <p>Tổng khoản thu đang hoạt động: **5**</p>
+                        <p>Tổng tiền dự kiến (Quý): **2.500.000.000 VND**</p>
+                    </div>
                 </div>
-            </div>
-            <div class="dash-card">
-                <div class="dash-icon bg-orange"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                <div class="dash-info">
-                    <div class="dash-number">6,120</div>
-                    <div class="dash-label">Phiếu thu dịch vụ</div>
+
+                <h2 class="table-title">DANH SÁCH KHOẢN THU HIỆN TẠI</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã KT</th>
+                                <th>Tên khoản thu</th>
+                                <th>Kỳ hạn</th>
+                                <th>Số tiền (dự kiến/đơn vị)</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Mã KT">KT001</td>
+                                <td data-label="Tên khoản thu">Phí quản lý Quý 4/2025</td>
+                                <td data-label="Kỳ hạn">Hàng Quý</td>
+                                <td data-label="Số tiền">900,000 VND</td>
+                                <td data-label="Trạng thái"><span class="status status-active">Đang mở</span></td>
+                                <td data-label="Thao tác">
+                                    <button class="action-btn view-detail" title="Chi tiết"><i class="fa-solid fa-file-invoice"></i></button>
+                                    <button class="action-btn edit-item" style="background:#fff3e0; color:var(--orange);" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Mã KT">KT002</td>
+                                <td data-label="Tên khoản thu">Phí giữ xe T9/2025</td>
+                                <td data-label="Kỳ hạn">Hàng tháng</td>
+                                <td data-label="Số tiền">150,000 VND</td>
+                                <td data-label="Trạng thái"><span class="status status-inactive">Đã đóng</span></td>
+                                <td data-label="Thao tác">
+                                    <button class="action-btn view-detail" title="Chi tiết"><i class="fa-solid fa-file-invoice"></i></button>
+                                    <button class="action-btn edit-item" style="background:#fff3e0; color:var(--orange);" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="dash-card">
-                <div class="dash-icon bg-purple"><i class="fa-solid fa-chart-simple"></i></div>
-                <div class="dash-info">
-                    <div class="dash-number">40+</div>
-                    <div class="dash-label">Báo cáo thống kê</div>
+
+                <div class="income-actions-bottom">
+                    <button class="btn btn-create-new"><i class="fa-solid fa-plus"></i> Tạo khoản thu mới</button>
+                    <button class="btn btn-primary"><i class="fa-solid fa-gear"></i> Chỉnh sửa khoản thu</button>
                 </div>
+
             </div>
         </section>
-        
-        <section class="main-content">
-            <div class="main-panel">
-                <h2>Tổng quan & Thống kê Tài chính</h2>
-                <p>
-                    Chào mừng đến với Hệ thống Quản lý Chung cư BlueMoon.<br>
-                    Bảng điều khiển này cung cấp cái nhìn tổng quan nhanh về các chỉ số tài chính và hoạt động chính.<br>
-                    Hãy sử dụng các liên kết nhanh để truy cập các chức năng thường dùng hoặc xem báo cáo chi tiết.
-                </p>
-            </div>
-            <aside class="quick-links">
-                <h3>Chức năng nhanh</h3>
-                <ul>
-                    <li><a href="CollectManagement.html"><i class="fa-solid fa-money-bill-trend-up"></i> Quản lý Khoản Thu</a></li>
-                    <li><a href="PayCollectManagement.html"><i class="fa-solid fa-file-invoice-dollar"></i> Quản lý Đợt Thu Phí</a></li>
-                    <li><a href="Thongke.html"><i class="fa-solid fa-chart-simple"></i> Tra cứu & Thống kê</a></li>
-                    <li><a href="#"><i class="fa-solid fa-file-export"></i> Xuất Báo cáo Thu</a></li>
-                </ul>
-            </aside>
-        </section>
-        
+
         <footer>
             &copy; BlueMoon Apartment 2025. Created by the ChatGPT's son-in-law team.
         </footer>
     </main>
+
     <script>
         // Import sidebar 
         fetch('sidebar.html')
@@ -139,7 +159,7 @@
                 }
             });
 
-        //  ẨN/HIỆN SIDEBAR (TOGGLE)
+        // LOGIC ẨN/HIỆN SIDEBAR (TOGGLE)
         const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
         const body = document.body;
 
