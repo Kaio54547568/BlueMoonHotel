@@ -75,10 +75,18 @@ WSGI_APPLICATION = 'hotel_mgmt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'defaultdb',
+        'USER': 'avnadmin',
+        'PASSWORD': 'AVNS_ihvG3I25hPKDjZnGQtv',
+        'HOST': 'pg-bluemoon-bluemoon2025.i.aivencloud.com',
+        'PORT': '20994',
+        'OPTIONS': {
+            'sslmode': 'require',  # Aiven yêu cầu SSL để kết nối
+        },
     }
 }
+
 
 
 # Password validation
