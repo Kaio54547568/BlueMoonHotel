@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>accountmanage'</title>
+
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/edit_nhan_khau.css' %}">
+</head>
+<body>  
+  {% include 'core/header.html'%}
+ <main class="main-section">
+    <section class="edit-form">
+      <h2>{{ nhan_khau.ho_ten }} (ID: {{ nhan_khau.id_nhankhau }})</h2>
+      <form method="POST" action="">
+        {% csrf_token %}
+
+        <div class="form-row">
+          <label>Họ tên:</label>
+          <input type="text" name="ho_ten" value="{{ nhan_khau.ho_ten }}" required>
+        </div>
+
+        <div class="form-row">
+          <label>Ngày sinh:</label>
+          <input type="date" name="ngay_sinh" value="{{ nhan_khau.ngay_sinh|date:'Y-m-d' }}">
+        </div>
+
+        <div class="form-row">
+          <label>CCCD:</label>
+          <input type="text" name="cccd" value="{{ nhan_khau.cccd }}">
+        </div>
+
+        <div class="form-row">
+          <label>Quan hệ chủ hộ:</label>
+          <input type="text" name="quan_he_chu_ho" value="{{ nhan_khau.quan_he_chu_ho }}">
+        </div>
+
+        <div class="form-row">
+          <label>ID Hộ khẩu:</label>
+          <input type="number" name="ho_khau_id" value="{{ nhan_khau.ho_khau.id_hokhau }}">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="hrbtn">💾 Lưu thay đổi</button>
+          <a href="{% url 'nhan_khau_profile' nhan_khau.id_nhankhau %}" class="hrbtn danger">Hủy</a>
+        </div>
+      </form>
+    </section>
+  </main>
+          {% include 'core/sidebar_and_footer.html' %}
+
+  </body>
+</html>

@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>add_demo</title>
+
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/add_demo.css' %}">
+</head>
+<body>  
+      {% include 'core/header.html' %}
+  
+   <main class="main-section">
+    <section class="add-form">
+      <h2>Thêm nhân khẩu mới</h2>
+      <form method="POST" action="{% url 'demomanage/adddemo' %}">
+        {% csrf_token %}
+        <div class="form-row">
+          <label for="ho_ten">Họ tên:</label>
+          <input type="text" id="ho_ten" name="ho_ten" required>
+        </div>
+
+        <div class="form-row">
+          <label for="ngay_sinh">Ngày sinh:</label>
+          <input type="date" id="ngay_sinh" name="ngay_sinh">
+        </div>
+
+        <div class="form-row">
+          <label for="cccd">CCCD:</label>
+          <input type="text" id="cccd" name="cccd" maxlength="12">
+        </div>
+
+        <div class="form-row">
+          <label for="quan_he_chu_ho">Quan hệ chủ hộ:</label>
+          <input type="text" id="quan_he_chu_ho" name="quan_he_chu_ho">
+        </div>
+
+        <div class="form-row">
+          <label for="ho_khau_id">ID Hộ khẩu:</label>
+          <input type="number" id="ho_khau_id" name="ho_khau_id" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="hrbtn">➕ Thêm nhân khẩu</button>
+        </div>
+      </form>
+    </section>
+  </main>
+          {% include 'core/sidebar_and_footer.html' %}
+
+  </body>
+</html>
