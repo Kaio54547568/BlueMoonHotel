@@ -60,26 +60,7 @@
       <button class="hrbtn danger">Xóa hộ</button>
     </div>
   </div>
-    <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
-      <div class="sidebar-header">
-        <h2>Menu</h2>
-        <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
-      </div>
-  
-      <nav class="nav">
-        <a href="#">Quản lý hộ khẩu</a>
-        <a href="#">Quản lý nhân khẩu</a>
-        <a href="#">Quản lý tài khoản</a>
-        
-      </nav>
-      <div class="logout">
-          <button>Đăng xuất</button>
-        </div>
-  
-      <div class="sidebar-footer">
-        <small>© 2025 BLUEMOON</small>
-      </div>
-    </aside>
-    <script src="{% static 'js/sidebar.js' %}"></script>
+          {% include 'core/sidebar_and_footer.html' %}
+
   </body>
 </html>

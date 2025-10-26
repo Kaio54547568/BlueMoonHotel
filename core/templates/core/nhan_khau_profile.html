@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>accountmanage'</title>
+
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/accountmanage.css' %}">
+</head>
+<body>  
+  {% include 'core/header.html'%}
+
+  <main class="profile-container">
+    <h2>{{ nhan_khau.ho_ten }}</h2>
+    <ul>
+      <li><strong>ID:</strong> {{ nhan_khau.id_nhankhau }}</li>
+      <li><strong>Ngày sinh:</strong> {{ nhan_khau.ngay_sinh|date:"d/m/Y" }}</li>
+      <li><strong>CCCD:</strong> {{ nhan_khau.cccd }}</li>
+      <li><strong>Quan hệ chủ hộ:</strong> {{ nhan_khau.quan_he_chu_ho }}</li>
+      <li><strong>ID Hộ khẩu:</strong> {{ nhan_khau.ho_khau.id_hokhau }}</li>
+    </ul>
+    <a href="{% url 'demomanage' %}" class="hrbtn">← Quay lại danh sách</a>
+
+
+    <a href="{% url 'edit_nhan_khau' nhan_khau.id_nhankhau %}" class="hrbtn">✏️ Sửa thông tin</a>
+
+
+    <button class="hrbtn">
+            <a href="{% url 'nhan_khau_delete' nhan_khau.id_nhankhau %}">Xóa nhân khẩu {{ nhan_khau.ho_ten }}</a>
+    </button>
+
+    
+  </main>
+</div>
+          {% include 'core/sidebar_and_footer.html' %}
+          
+        </body>
+        </html>
+        

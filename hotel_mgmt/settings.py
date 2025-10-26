@@ -72,13 +72,19 @@ WSGI_APPLICATION = 'hotel_mgmt.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hotel_db',
+        'USER': 'avnadmin',
+        'PASSWORD': 'myAivenSecretPassword',
+        'HOST': 'pg-1234.aivencloud.com',
+        'PORT': '12345',
     }
 }
+
+
+
 
 
 # Password validation

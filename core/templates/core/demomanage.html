@@ -10,27 +10,24 @@
   <link rel="stylesheet" href="{% static 'css/demomanage.css' %}">
 </head>
 <body>  
-  <header class="topbar">
-    <button id="btnOpen" class="icon-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">
-      ☰ Menu
-    </button>
-    <h1>BLUEMOON - Dashboard</h1>
-  </header>
+        {% include 'core/header.html' %}
+
+  
 
   <div id="overlay" class="overlay" tabindex="-1" hidden></div>
 
+  <!-- <input type="text" placeholder="Thanh tìm kiếm..."> 
+  <button>Tìm kiếm</button>  -->
   
   <div class="hrcontainer">
-    <div class="search-bar">
-      <!-- <input type="text" placeholder="Thanh tìm kiếm..."> -->
-      <form method="get" action="{% url 'demomanage' %}">
-          <input type="text" name="search_id" placeholder="Nhập ID nhân khẩu..." value="{{ query }}">
+  <div class="search-bar">
+    <form method="get" action="{% url 'demomanage' %}">
+      <input type="text" name="search_id" placeholder="Nhập ID nhân khẩu..." value="{{ query }}">
           <button type="submit">Tìm kiếm</button>
           {% if query %}
               <a href="{% url 'demomanage' %}">Hiện tất cả</a>
           {% endif %}
       </form>
-      <!-- <button>Tìm kiếm</button> -->
     </div>
 
 
@@ -47,10 +44,14 @@
             </tr> 
             {% for hk in nhan_khau_list %}
             <tr>
-                <td>{{ hk.id_nhan_khau }}</td>
-                <td>{{ hk.id_ho_khau }}</td>
+                <td>
+                  <a href="{% url 'nhan_khau_profile' hk.id_nhankhau %}">
+                    {{ hk.id_nhankhau }}
+                  </a>
+                </td>                
+                <td>{{ hk.ho_khau }}</td>
                 <td>{{ hk.ngay_sinh }}</td>
-                <td>{{ hk.can_cuoc_cong_dan }}</td>
+                <td>{{ hk.cccd }}</td>
                 <td>{{ hk.quan_he_chu_ho }}</td>
             </tr>
             {% empty %}
@@ -61,32 +62,17 @@
         </table>   
 
         <div class="hrbutton-bar">
-          <button class="hrbtn">Thêm nhân khẩu</button>
-          <button class="hrbtn">Thống kê</button>
+          
+          <button class="hrbtn">
+            <a href="/demomanage/adddemo">Thêm nhân khẩu</a>
+          </button>
+          <button class="hrbtn">Sửa thông tin nhân khẩu</button>
+          <button class="hrbtn">Xóa nhân khẩu</button>
 
         </div>
       </div>
       </main>
-      <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
-      <div class="sidebar-header">
-        <h2>Menu</h2>
-        <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
-      </div>
-  
-      <nav class="nav">
-        <a href="#">Quản lý hộ khẩu</a>
-        <a href="#">Quản lý nhân khẩu</a>
-        <a href="#">Quản lý tài khoản</a>
-        
-      </nav>
-      <div class="logout">
-          <button>Đăng xuất</button>
-        </div>
-  
-      <div class="sidebar-footer">
-        <small>© 2025 BLUEMOON</small>
-      </div>
-    </aside>
-    <script src="{% static 'js/sidebar.js' %}"></script>
+      {% include 'core/sidebar_and_footer.html' %}
+
   </body>
 </html>

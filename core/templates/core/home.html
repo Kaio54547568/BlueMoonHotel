@@ -16,27 +16,7 @@
     <h1>BLUEMOON - Dashboard</h1>
   </header>
 
-  <div id="overlay" class="overlay" tabindex="-1" hidden></div>
-
-  <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
-    <div class="sidebar-header">
-      <h2>Menu</h2>
-      <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
-    </div>
-
-    <nav class="nav">
-      <a href="#">Trang chủ</a>
-      <a href="#">Đặt phòng</a>
-      <a href="#">Khách hàng</a>
-      <a href="#">Dịch vụ</a>
-      <a href="#">Báo cáo</a>
-      <a href="#">Cài đặt</a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <small>© 2025 BLUEMOON</small>
-    </div>
-  </aside>
+  
 
    <main>
         <section>
@@ -77,10 +57,9 @@
                 </div>
             </div>
         </section>
-
-    </main>
+        
+      </main>
+      {% include 'core/sidebar_and_footer.html' %}
   
-
-  <script src="{% static 'js/sidebar.js' %}"></script>
 </body>
 </html>

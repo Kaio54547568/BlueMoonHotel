@@ -16,11 +16,6 @@
     </button>
     <h1>BLUEMOON - Dashboard</h1>
   </header>
-
-  <!-- overlay (che mờ nội dung khi sidebar mở) -->
-  <div id="overlay" class="overlay" tabindex="-1" hidden></div>
-
-  
   <!-- Nội dung chính -->
   <main class="main-content">
       <h1>Danh sách hộ khẩu</h1>
@@ -32,6 +27,7 @@
             <p>số căn: {{ hk.so_can_ho }}</p>
             <p>diện tích: {{ hk.dien_tich }}</p>
             <div class="card-buttons">
+
               <button>Chi tiết</button>
               <button>Chỉnh sửa</button>
             </div>
@@ -43,31 +39,13 @@
       </div>
 
       <div class="add-btn">
-        <button>Thêm hộ khẩu mới</button>
+        <button>
+        <a href="/ho-khau/them">Thêm hộ khẩu</a>
+        </button>
       </div>
     </main>
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
-      <div class="sidebar-header">
-        <h2>Menu</h2>
-        <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
-      </div>
-  
-      <nav class="nav">
-        <a href="#">Quản lý hộ khẩu</a>
-        <a href="#">Quản lý nhân khẩu</a>
-        <a href="#">Quản lý tài khoản</a>
-        
-      </nav>
-      <div class="logout">
-          <button>Đăng xuất</button>
-        </div>
-  
-      <div class="sidebar-footer">
-        <small>© 2025 BLUEMOON</small>
-      </div>
-    </aside>
-    <script src="{% static 'js/sidebar.js' %}"></script>
+         {% include 'core/sidebar_and_footer.html' %}
+
   </body>
 </html>

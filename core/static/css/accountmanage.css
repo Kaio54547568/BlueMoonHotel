@@ -7,7 +7,7 @@
 }
 .layout {
   display: flex;
-    flex-direction: column; /* sắp theo chiều dọc */
+  flex-direction: column; /* sắp theo chiều dọc */
 
   flex-direction: column; /* header nằm trên cùng */
   height: 100vh;
@@ -18,7 +18,7 @@ body {
   background-color: #9bd4c6; /* màu xanh nhạt */
   height: 100vh;
   display: flex;
-    flex-direction: column; /* sắp theo chiều dọc */
+  flex-direction: column; /* sắp theo chiều dọc */
 
   justify-content: center;
   align-items: center;

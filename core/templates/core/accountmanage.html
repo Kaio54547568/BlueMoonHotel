@@ -10,12 +10,7 @@
   <link rel="stylesheet" href="{% static 'css/accountmanage.css' %}">
 </head>
 <body>  
-  <header class="topbar">
-    <button id="btnOpen" class="icon-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">
-      ☰ Menu
-    </button>
-    <h1>BLUEMOON - Dashboard</h1>
-  </header>
+  {% include 'core/header.html'%}
 
   <div id="overlay" class="overlay" tabindex="-1" hidden></div>
 
@@ -37,10 +32,15 @@
           </tr>
           {% for hk in tai_khoan_list %}
           <tr>
-              <td>{{ hk.id_tai_khoan}}</td>
+              <td>
+                <a href="{% url 'view_taikhoan' hk.id_taikhoan %}">
+                    {{ hk.id_taikhoan }}
+                </a>
+              </td>
+
               <td>{{ hk.username}}</td>
               <td>{{ hk.password }}</td>
-              <td>{{ hk.vai_tro}}</td>
+              <td>{{ hk.vaitro}}</td>
           </tr>
           {% empty %}
           <tr>
@@ -52,30 +52,14 @@
     </div>
 
     <div class="hrbutton-bar">
-      <button class="hrbtn">Thêm tài khoản</button>
-      
+
+      <button class="hrbtn">
+        <a href="/accountmanage/addaccount">Thêm tài khoản</a>
+      </button>
+
     </div>
   </div>
-    <aside id="sidebar" class="sidebar" role="navigation" aria-hidden="true">
-      <div class="sidebar-header">
-        <h2>Menu</h2>
-        <button id="btnClose" class="close-btn" aria-label="Đóng menu">✕</button>
-      </div>
-  
-      <nav class="nav">
-        <a href="#">Quản lý hộ khẩu</a>
-        <a href="#">Quản lý nhân khẩu</a>
-        <a href="#">Quản lý tài khoản</a>
-        
-      </nav>
-      <div class="logout">
-          <button>Đăng xuất</button>
-        </div>
-  
-      <div class="sidebar-footer">
-        <small>© 2025 BLUEMOON</small>
-      </div>
-    </aside>
-    <script src="{% static 'js/sidebar.js' %}"></script>
+          {% include 'core/sidebar_and_footer.html' %}
+
   </body>
 </html>
