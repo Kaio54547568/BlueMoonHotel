@@ -113,3 +113,11 @@ body {
 .hrdanger:hover {
   background-color: #ff9999;
 }
+.search-bar {
+  position: sticky; /* hoặc fixed */
+  top: 60px; /* ngay dưới topbar */
+  background-color: #fff4b2;
+  z-index: 999;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}

@@ -1,3 +1,4 @@
+from calendar import day_name
 from pyexpat.errors import messages
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404, redirect
@@ -109,7 +110,24 @@ def demomanage(request):
 def accountmanage(request):
     # Dữ liệu mẫu cho Tài khoản
     tai_khoan_list = TaiKhoan.objects.all()
-    return render(request, 'core/accountmanage.html', {'tai_khoan_list': tai_khoan_list })
+    query = request.GET.get('search_id', 'hrmanage')
+    if query:
+        try:
+            print(query)
+            # lọc theo ID nhân khẩu nếu người dùng nhập
+            for a in tai_khoan_list:
+                if(a.id_taikhoan==int(query)):
+                    tai_khoan_list= [a]
+                    print(a.id_taikhoan)
+                print(a.id_taikhoan)
+        except ValueError:
+            tai_khoan_list= TaiKhoan.objects.all()  # nếu không nhập, hiển thị tất cả
+        context = {
+        'tai_khoan_list': tai_khoan_list,
+        'query': query,
+    }
+
+    return render(request, 'core/accountmanage.html', context)
 def accountmanage_addaccount(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -161,9 +179,28 @@ def edit_taikhoan(request, id_taikhoan):
 def hredit(request):
     nhan_khau_list = HoKhau.objects.all()
     return render(request, 'core/hredit.html', {'nhan_khau_list': nhan_khau_list})
+
 def hrmanage(request):
     ds_ho_khau = HoKhau.objects.all()  # Lấy toàn bộ dữ liệu tro bảng HoKhau
-    return render(request, 'core/hrmanage.html', {'ho_khau_list': ds_ho_khau})
+    query = request.GET.get('search_id', 'hrmanage')
+    if query:
+        try:
+            print(query)
+            # lọc theo ID nhân khẩu nếu người dùng nhập
+            for a in ds_ho_khau:
+                if(a.id_hokhau==int(query)):
+                    ds_ho_khau= [a]
+                    print(a.id_hokhau)
+                print(a.id_hokhau)
+        except ValueError:
+            ds_ho_khau = HoKhau.objects.all()  # nếu không nhập, hiển thị tất cả
+        context = {
+        'ho_khau_list': ds_ho_khau,
+        'query': query,
+    }
+
+    return render(request, 'core/hrmanage.html', context)
+
 def add_hokhau(request):
     if request.method == "POST":
         so_can_ho = request.POST.get('so_can_ho')
@@ -182,6 +219,37 @@ def add_hokhau(request):
         return redirect('add_hokhau')
 
     return render(request, 'core/add_hokhau.html')
+
+def hokhau_detail(request, id_hokhau):
+    hokhau = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
+    thanh_vien = NhanKhau.objects.filter(ho_khau=hokhau)
+
+    return render(request, 'core/hokhau_detail.html', {
+        'hokhau': hokhau,
+        'thanh_vien': thanh_vien
+    })
+
+
+def edit_hokhau(request, id_hokhau):
+    hokhau = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
+
+    if request.method == "POST":
+        so_can_ho = request.POST.get("so_can_ho")
+        dien_tich = request.POST.get("dien_tich")
+
+        if not so_can_ho:
+            messages.error(request, "Số căn hộ không được để trống!")
+        else:
+            try:
+                hokhau.so_can_ho = so_can_ho
+                hokhau.dien_tich = float(dien_tich) if dien_tich else None
+                hokhau.save()
+                messages.success(request, "Cập nhật thông tin hộ khẩu thành công!")
+                return redirect('hokhau_detail', id_hokhau=id_hokhau)
+            except ValueError:
+                messages.error(request, "Diện tích phải là số hợp lệ!")
+
+    return render(request, 'core/hokhau_edit.html', {'hokhau': hokhau})
 
 def HoKhaus_list(request):
     HoKhaus = HoKhau.objects.all()

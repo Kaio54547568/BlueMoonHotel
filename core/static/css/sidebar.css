@@ -125,17 +125,4 @@ body {
     margin-left:320px;
   }
 }
-.search-bar {
-  position: sticky; /* hoặc fixed */
-  top: 60px; /* ngay dưới topbar */
-  background-color: #fff4b2;
-  z-index: 999;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-.main-section {
-  min-height: 100vh; /* đảm bảo có thể dài xuống */
-  background: #aee1d3;
-  padding-bottom: 40px; /* chừa không gian cuối */
-}
 

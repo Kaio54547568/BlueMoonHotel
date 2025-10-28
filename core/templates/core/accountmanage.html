@@ -12,13 +12,15 @@
 <body>  
   {% include 'core/header.html'%}
 
-  <div id="overlay" class="overlay" tabindex="-1" hidden></div>
-
-  
   <div class="hrcontainer">
-    <div class="hrsearch-bar">
-      <input type="text" placeholder="Thanh tìm kiếm...">
-      <button>Tìm kiếm</button>
+    <div class="search-bar">
+    <form method="get" action="{% url 'accountmanage' %}">
+      <input type="text" name="search_id" placeholder="Nhập ID tai khoan..." value="{{ query }}">
+          <button type="submit">Tìm kiếm</button>
+          {% if query %}
+              <a href="{% url 'accountmanage' %}">Hiện tất cả</a>
+          {% endif %}
+      </form>
     </div>
 
     <div class="hrmember-list">

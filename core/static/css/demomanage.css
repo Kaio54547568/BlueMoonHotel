@@ -66,3 +66,12 @@ html, body {
   cursor: not-allowed;
   opacity: 0.6;
 }
+
+.search-bar {
+  position: sticky; /* hoặc fixed */
+  top: 60px; /* ngay dưới topbar */
+  background-color: #fff4b2;
+  z-index: 999;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
