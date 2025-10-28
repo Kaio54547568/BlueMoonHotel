@@ -1,38 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trang chủ</title>
+
+    <!-- Giữ file cũ -->
     <link rel="stylesheet" href="../styles/main_page.css" />
+    <link rel="stylesheet" href="../styles/Accountant.css" />
+
+    <!-- Font Awesome cho icon của sidebar -->
     <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+
+    <!-- Thêm file add-on off-canvas (đặt SAU Accountant.css) -->
+    <link rel="stylesheet" href="../styles/sidebar.offcanvas.css" />
   </head>
 
   <body>
     <header>
       <nav class="navbar">
-        <a href="#" class="nav-logo">
-          <h2 class="logo-text">BlueMoon</h2>
-        </a>
-        <ul class="nav-menu">
-          <!-- Màn hình chính -->
-          <li class="nav-item">
-            <a href="#" class="nav-link">Trang chính</a>
-          </li>
-          <!-- Thông tin -->
-          <li class="nav-item">
-            <a href="#" class="nav-link">Thông tin</a>
-          </li>
-          <!-- Vào trang đăng nhập -->
-          <li class="nav-item">
-            <a href="login.html" class="nav-link">Đăng nhập</a>
-          </li>
-        </ul>
+        <div class="nav-left">
+          <button
+            id="sidebarToggle"
+            class="icon-btn"
+            aria-label="Mở menu"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+
+        <div class="nav-center">
+          <a href="#" class="nav-logo"><h2 class="logo-text">BlueMoon</h2></a>
+        </div>
       </nav>
     </header>
+
+    <!-- Overlay mờ khi sidebar mở ở mobile -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="layout">
+      <!-- Placeholder để JS nhúng sidebar -->
+      <div id="sidebar-root" data-src="./sidebar.html"></div>
+
+      <main class="content">
+        <h1>Trang chính</h1>
+        <!-- nội dung -->
+      </main>
+    </div>
+
+    <!-- Loader chung cho sidebar -->
+    <script type="module">
+      import { loadSidebar } from "../scripts/sidebar.js";
+      // Nếu bạn dùng đường dẫn khác, đổi src bên dưới:
+      loadSidebar({
+        mountId: "sidebar-root",
+        src: "./sidebar.html",
+        toggleBtnId: "sidebarToggle",
+        overlayId: "sidebarOverlay",
+      });
+    </script>
   </body>
 </html>
