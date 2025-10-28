@@ -21,6 +21,9 @@ urlpatterns = [
 
     path('hrmanage/', views.hrmanage, name='hrmanage'),
     path('ho-khau/them/', views.add_hokhau, name='add_hokhau'),
+    path('hokhau_detail/<int:id_hokhau>/', views.hokhau_detail, name='hokhau_detail'),
+    path('ho-khau/<int:id_hokhau>/edit/', views.edit_hokhau, name='hokhau_edit'),
+
 
     path('hredit/', views.hredit, name='hredit'),
 ]

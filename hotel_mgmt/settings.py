@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'hotel_mgmt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hotel_db',
+        'NAME': 'defaultdb',
         'USER': 'avnadmin',
-        'PASSWORD': 'myAivenSecretPassword',
-        'HOST': 'pg-1234.aivencloud.com',
-        'PORT': '12345',
+        'PASSWORD': 'AVNS_ihvG3I25hPKDjZnGQtv',
+        'HOST': 'pg-bluemoon-bluemoon2025.i.aivencloud.com',
+        'PORT': '20994',
     }
 }
 
