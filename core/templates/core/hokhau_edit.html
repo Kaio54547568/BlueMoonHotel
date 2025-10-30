@@ -1,48 +1,70 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>accountmanage'</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>accountmanage'</title>
 
-  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-  <link rel="stylesheet" href="{% static 'css/hokhau_edit.css' %}">
-</head>
-<body>  
-  {% include 'core/header.html'%}
-  <main class="main-section">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/hrmanage.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/hokhau_edit.css' %}" />
+  </head>
+  <body>
+    {% include 'core/header.html'%}
+    <main class="main-section">
+      <section class="edit-form brutalist-panel">
+        <h2>Chỉnh sửa thông tin hộ khẩu</h2>
 
-    <section class="edit-form">
-      <h2>Chỉnh sửa thông tin hộ khẩu</h2>
+        <form method="POST">
+          {% csrf_token %}
 
-      <form method="POST">
-        {% csrf_token %}
+          <div class="form-row">
+            <label>ID hộ khẩu:</label>
+            <input type="text" value="{{ hokhau.id_hokhau }}" disabled />
+          </div>
 
-        <div class="form-row">
-          <label>ID hộ khẩu:</label>
-          <input type="text" value="{{ hokhau.id_hokhau }}" disabled>
-        </div>
+          <div class="form-row">
+            <label for="so_can_ho">Số căn hộ:</label>
+            <input
+              type="text"
+              id="so_can_ho"
+              name="so_can_ho"
+              value="{{ hokhau.so_can_ho }}"
+              required
+            />
+          </div>
 
-        <div class="form-row">
-          <label for="so_can_ho">Số căn hộ:</label>
-          <input type="text" id="so_can_ho" name="so_can_ho" value="{{ hokhau.so_can_ho }}" required>
-        </div>
+          <div class="form-row">
+            <label for="dien_tich">Diện tích (m²):</label>
+            <input
+              type="number"
+              step="0.01"
+              id="dien_tich"
+              name="dien_tich"
+              value="{{ hokhau.dien_tich }}"
+            />
+          </div>
 
-        <div class="form-row">
-          <label for="dien_tich">Diện tích (m²):</label>
-          <input type="number" step="0.01" id="dien_tich" name="dien_tich" value="{{ hokhau.dien_tich }}">
-        </div>
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="brutalist-card__button brutalist-card__button--secondary"
+            >
+              💾 Lưu thay đổi
+            </button>
 
-        <div class="form-actions">
-          <button type="submit" class="hrbtn">💾 Lưu thay đổi</button>
-          <a href="{% url 'hokhau_detail' hokhau.id_hokhau %}" class="hrbtn cancel">↩ Quay lại</a>
-        </div>
-      </form>
-    </section>
+            <a
+              href="{% url 'hokhau_detail' hokhau.id_hokhau %}"
+              class="brutalist-card__button brutalist-card__button--yellow brutalist-card__button--compact"
+            >
+              ↩ Quay lại
+            </a>
+          </div>
+        </form>
+      </section>
+    </main>
 
-  </main>
-          {% include 'core/sidebar_and_footer.html' %}
-
+    {% include 'core/sidebar_and_footer.html' %}
   </body>
 </html>

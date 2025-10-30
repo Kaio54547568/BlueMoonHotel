@@ -1,77 +1,77 @@
-html, body {
+/* Nền trắng đồng bộ */
+html,
+body {
   margin: 0;
   padding: 0;
+  background: #fff;
   font-family: Arial, sans-serif;
-  background-color: #9bd4c6;
-  flex-direction: column; /* header nằm trên cùng */
-
 }
 
-/* Header
-.topbar {
-  background-color: #1e3a8a;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  font-size: 20px;
-  font-weight: bold;
-} */
-
-/* Main content */
+/* Căn giữa khối form */
 .main-section {
-  margin-top: 40px;
+  margin-top: 80px; /* chừa topbar */
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  padding: 20px;
 }
 
-/* Form container */
-.add-form {
-  background-color: #aee1d3;
-  padding: 25px 40px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+/* Panel brutalist giống các trang trước */
+.brutalist-panel {
+  width: 520px;
+  background: #fff;
+  border: 4px solid #4b9ad7;
+  border-radius: 12px;
+  box-shadow: 10px 10px 0 #5d9ed0;
+  padding: 24px 28px;
 }
 
 .add-form h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #333;
+  margin-bottom: 18px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: 900;
 }
 
-/* Form rows */
+/* Input brutalist */
 .form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
-
 .form-row label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 700;
 }
 
-.form-row input {
-  padding: 8px;
-  border: 1px solid #888;
-  border-radius: 6px;
+.brutalist-input {
+  padding: 10px 12px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #fff;
+  outline: none;
+  transition: box-shadow 0.2s ease, transform 0.05s ease;
+}
+.brutalist-input:focus {
+  box-shadow: 6px 6px 0 #000;
+  transform: translate(-2px, -2px);
 }
 
-/* Nút vàng */
-.hrbtn {
-  background-color: #fff4b2;
-  color: #333;
-  border: 1px solid #c2a700;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-  display: block;
-  margin: 0 auto;
+/* Hàng nút */
+.form-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
 }
 
-.hrbtn:hover {
-  background-color: #ffe36e;
+/* Bảo đảm nút gọn – nếu chưa có trong hrmanage.css thì để thêm: */
+.brutalist-card__button--compact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  padding: 0.6rem 1.25rem;
+  flex: 0 0 auto !important;
+  white-space: nowrap;
 }

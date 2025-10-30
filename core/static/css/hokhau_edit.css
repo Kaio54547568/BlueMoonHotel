@@ -1,75 +1,105 @@
+/* Nền trang edit */
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #9bd4c6;
+  background: #ffffff;
 }
 
-
-/* Layout */
+/* Layout chung */
 .main-section {
-  margin-top: 40px;
+  margin-top: 80px; /* chừa topbar */
   display: flex;
   justify-content: center;
+  padding: 20px;
 }
 
-/* Form box */
-.edit-form {
-  background-color: #aee1d3;
-  padding: 25px 40px;
-  border-radius: 10px;
-  width: 420px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+/* Hộp form dạng brutalist */
+.brutalist-panel {
+  width: 520px;
+  background: #fff;
+  border: 4px solid #4b9ad7;
+  border-radius: 12px; /* bo góc như yêu cầu */
+  box-shadow: 10px 10px 0 #5d9ed0;
+  padding: 24px 28px;
 }
 
 .edit-form h2 {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 18px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 /* Fields */
 .form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
-
 .form-row label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 700;
 }
-
 .form-row input {
-  padding: 8px;
-  border: 1px solid #777;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border: 2px solid #000; /* viền đậm cho hợp brutalist */
+  border-radius: 8px;
+  outline: none;
+  transition: box-shadow 0.2s ease, transform 0.05s ease;
+  background: #fff;
+}
+.form-row input:focus {
+  box-shadow: 6px 6px 0 #000; /* nổi khối khi focus */
+  transform: translate(-2px, -2px);
 }
 
-/* Buttons */
+/* Hàng nút */
 .form-actions {
-  margin-top: 20px;
+  margin-top: 18px;
   display: flex;
+  gap: 12px;
   justify-content: space-between;
 }
 
-.hrbtn {
-  background-color: #fff4b2;
-  border: 1px solid #c2a700;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
+/* Nút brutalist tái dùng (đã có trong hrmanage.css):
+   .brutalist-card__button
+   .brutalist-card__button--secondary (xanh)
+   .brutalist-card__button--yellow (vàng)
+   .brutalist-card__button--compact (không full width)
+*/
+
+/* Nếu muốn cả 2 nút có cùng chiều rộng gọn gàng: */
+.form-actions .brutalist-card__button {
+  flex: 1;
+  text-align: center;
+}
+.form-actions .brutalist-card__button--compact {
+  flex: 0 0 auto;
+} /* giữ nút quay lại nhỏ gọn */
+
+/* Hàng nút: chỉ cần gap, không dùng space-between */
+.form-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  /* justify-content: space-between;  <- bỏ dòng này */
+  align-items: stretch;
 }
 
-.hrbtn:hover {
-  background-color: #ffe36e;
+/* Nút LƯU chiếm phần còn lại */
+.form-actions .brutalist-card__button {
+  flex: 1 1 0; /* co giãn đều, không bị bóp quá mức */
+  min-width: 0; /* cho phép co nhỏ hơn content nếu cần */
+  text-align: center;
 }
 
-.cancel {
-  background-color: #d9d9d9;
-}
-
-.cancel:hover {
-  background-color: #c7c7c7;
+/* Nút QUAY LẠI: không full width nữa */
+.brutalist-card__button--compact {
+  display: inline-flex; /* gọn, căn giữa nội dung */
+  align-items: center;
+  justify-content: center;
+  width: auto !important; /* override width:100% từ base */
+  padding: 0.6rem 1.25rem;
+  flex: 0 0 auto !important; /* không co giãn */
+  white-space: nowrap; /* không xuống dòng chữ */
 }

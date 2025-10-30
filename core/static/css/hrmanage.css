@@ -1,4 +1,4 @@
-/* * {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -6,7 +6,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #9bd4c6;
+  background-color: white;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -78,7 +78,7 @@ body {
 
 .main-content {
   padding: 30px;
-  flex: 1; 
+  flex: 1;
 }
 
 .main-content h1 {
@@ -90,47 +90,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 20px;
-}
-
-.card {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 18px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.12);
-  transition: transform .15s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.card p {
-  margin-bottom: 8px;
-  font-size: 15px;
-}
-
-.card-buttons {
-  margin-top: 12px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.card-buttons button {
-  background-color: #fff4b2;
-  border: 1px solid #c2a700;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.card-buttons button:hover {
-  background-color: #ffe36e;
-}
-
-.card-buttons a {
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
 }
 
 .add-btn {
@@ -155,4 +114,136 @@ body {
   text-decoration: none;
   font-weight: bold;
   color: black;
-} */
+}
+
+/* === Brutalist Card cho Hộ Khẩu === */
+.brutalist-card {
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%; /* quan trọng: fit ô grid */
+  border: 4px solid #4b9ad7;
+  background-color: #fff;
+  padding: 1rem;
+  font-family: "Arial", sans-serif;
+}
+
+.brutalist-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.75rem;
+}
+
+.brutalist-card__title {
+  font-weight: 900;
+  color: #000;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.brutalist-card__meta {
+  margin-top: 0.5rem;
+  color: #000;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.brutalist-card__actions {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.brutalist-card__button {
+  border-radius: 8px;
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background-color: #578cc5;
+  color: #000;
+  position: relative;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.brutalist-card__button--primary {
+  background-color: #ff4141;
+  color: #fff;
+}
+
+.brutalist-card__button::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: all 0.6s;
+}
+.brutalist-card__button:hover::before {
+  left: 100%;
+}
+.brutalist-card__button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #000;
+}
+.brutalist-card__button--secondary:hover {
+  background-color: #296fbb;
+  border-color: #296fbb;
+  color: #fff;
+  box-shadow: 7px 7px 0 #004280;
+}
+.brutalist-card__button--primary:hover {
+  background-color: #ff0000;
+  border-color: #ff0000;
+  color: #fff;
+  box-shadow: 7px 7px 0 #800000;
+}
+.brutalist-card__button:active {
+  transform: translate(5px, 5px);
+  box-shadow: none;
+}
+
+/* Lưới danh sách giữ nguyên – chỉ tăng min-width chút cho hợp “brutalist” */
+.household-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(260px, 1fr)
+  ); /* trước là 230px */
+  gap: 20px;
+}
+
+/* (không bắt buộc) Vô hiệu class cũ nếu lỡ còn dùng */
+.card,
+.card-buttons {
+  all: unset;
+}
+
+.brutalist-card__button--yellow {
+  background-color: #fff4b2; /* vàng nhạt pastel */
+  border: 3px solid #c2a700;
+}
+
+.brutalist-card__button--yellow:hover {
+  background-color: #ffe36e; /* vàng đậm hơn khi hover */
+  transform: translate(-2px, -2px);
+}
+
+.brutalist-card__button--yellow:active {
+  transform: translate(5px, 5px);
+  box-shadow: none;
+}

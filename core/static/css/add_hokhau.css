@@ -1,66 +1,79 @@
-html, body {
+/* Nền trắng đồng bộ */
+html,
+body {
   margin: 0;
   padding: 0;
+  background: #ffffff;
   font-family: Arial, sans-serif;
-  background-color: #9bd4c6;
 }
 
-
-/* Main layout */
+/* Layout căn giữa khối form */
 .main-section {
-  margin-top: 40px;
+  margin-top: 80px; /* chừa topbar cố định */
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  padding: 20px;
 }
 
-/* Form container */
-.add-form {
-  background-color: #aee1d3;
-  padding: 25px 40px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+/* Hộp form kiểu brutalist (tái dùng như trang Edit) */
+.brutalist-panel {
+  width: 520px;
+  background: #fff;
+  border: 4px solid #4b9ad7;
+  border-radius: 12px;
+  box-shadow: 10px 10px 0 #5d9ed0;
+  padding: 24px 28px;
 }
 
 .add-form h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #333;
+  margin-bottom: 18px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-/* Form fields */
+/* Trường nhập */
 .form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
-
 .form-row label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 700;
 }
-
 .form-row input {
-  padding: 8px;
-  border: 1px solid #888;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  outline: none;
+  transition: box-shadow 0.2s ease, transform 0.05s ease;
+  background: #fff;
+}
+.form-row input:focus {
+  box-shadow: 6px 6px 0 #000;
+  transform: translate(-2px, -2px);
 }
 
-/* Button */
-.hrbtn {
-  background-color: #fff4b2;
-  color: #333;
-  border: 1px solid #c2a700;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-  display: block;
-  margin: 0 auto;
+/* Hàng nút */
+.form-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center; /* nút ở giữa */
 }
 
-.hrbtn:hover {
-  background-color: #ffe36e;
+/* Modifier cho nút gọn (không full-width) – tái dùng cùng hệ */
+.brutalist-card__button--compact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important; /* override width:100% nếu có */
+  padding: 0.6rem 1.25rem;
+  flex: 0 0 auto !important;
+  white-space: nowrap;
 }
+
+/* Bạn đã có .brutalist-card__button và --yellow trong hrmanage.css,
+   không cần lặp lại ở đây. */

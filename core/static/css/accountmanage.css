@@ -1,123 +1,96 @@
-/* Đặt style tổng thể */
-.hr * {
-  box-sizing: border-box;
+/* Nền trắng gọn như các trang khác */
+html,
+body {
+  background: #fff;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
 }
-.layout {
-  display: flex;
-  flex-direction: column; /* sắp theo chiều dọc */
 
-  flex-direction: column; /* header nằm trên cùng */
-  height: 100vh;
-}
-
-/* Nền tổng thể */
-body {
-  background-color: #9bd4c6; /* màu xanh nhạt */
-  height: 100vh;
-  display: flex;
-  flex-direction: column; /* sắp theo chiều dọc */
-
-  justify-content: center;
-  align-items: center;
-}
-
-/* Khung chính */
-.hrcontainer {
-  background-color: #aee1d3;
-  width: 90%;
-  max-width: 900px;
+/* Khung ngoài */
+.page-wrap {
+  margin-top: 80px; /* chừa topbar cố định */
   padding: 20px;
-  border-radius: 10px;
+  max-width: 980px;
+  margin-inline: auto;
 }
 
-/* Thanh tìm kiếm */
-.hrsearch-bar {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  background-color: #fff4b2;
-  padding: 10px;
-  border-radius: 5px;
+/* Card chi tiết */
+.nk-profile {
+  padding: 22px;
 }
 
-.hrsearch-bar input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #aaa;
-  border-radius: 5px;
+/* Lưới: ảnh trái – thông tin phải */
+.nk-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  align-items: start;
 }
 
-.hrsearch-bar button {
-  margin-left: 10px;
-  padding: 8px 15px;
-  background-color: #d9ead3;
-  border: 1px solid #666;
-  border-radius: 5px;
-  cursor: pointer;
+/* Khung avatar */
+.nk-avatar {
+  margin: 0;
+  width: 180px;
+  height: 220px;
+  border: 4px solid #000;
+  border-radius: 12px;
+  box-shadow: 6px 6px 0 #000;
+  overflow: hidden;
+  background: #eee;
+}
+.nk-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.hrsearch-bar button:hover {
-  background-color: #c4dfb5;
+/* Tiêu đề + meta */
+.nk-name {
+  margin: 0 0 8px;
+  font: 900 22px/1.2 Arial, sans-serif;
+  text-transform: uppercase;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
 }
-
-/* Danh sách thành viên */
-.hrmember-list {
-  background-color: #fff4b2;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  min-height: 250px;
-}
-
-.hrmember-list h2 {
-  margin-bottom: 10px;
-}
-
-.hrmember-list ul {
+.nk-meta {
   list-style: none;
-  font-size: 18px;
+  margin: 0 0 12px 0;
+  padding: 0;
+  display: grid;
+  row-gap: 6px;
+}
+.nk-meta li {
+  font-weight: 600;
+}
+.nk-meta li span {
+  font-weight: 900;
 }
 
-.hrmember-list li {
-  margin: 8px 0;
-}
-
-/* Dãy nút dưới cùng */
-.hrbutton-bar {
+/* Hàng nút nhỏ gọn */
+.button-row {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.brutalist-card__button {
+  width: auto;
+} /* override nếu css chung set 100% */
+.brutalist-card__button--xs {
+  /* thu nhỏ nút */
+  padding: 0.45rem 0.8rem;
+  font-size: 0.9rem;
+  box-shadow: 5px 5px 0 #000;
 }
 
-.hrbtn {
-  background-color: #fff4b2;
-  border: 1px solid #666;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.hrbtn:hover {
-  background-color: #fffaaf;
-}
-
-/* Nút màu đỏ cho Xóa hộ */
-.hrdanger {
-  background-color: #f8b6b6;
-}
-
-.hrdanger:hover {
-  background-color: #ff9999;
-}
-.search-bar {
-  position: sticky; /* hoặc fixed */
-  top: 60px; /* ngay dưới topbar */
-  background-color: #fff4b2;
-  z-index: 999;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+/* Responsive: stack khi màn hẹp */
+@media (max-width: 680px) {
+  .nk-grid {
+    grid-template-columns: 1fr;
+  }
+  .nk-avatar {
+    width: 100%;
+    height: 200px;
+  }
 }

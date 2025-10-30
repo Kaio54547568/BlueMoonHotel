@@ -1,72 +1,92 @@
+/* Nền trắng gọn, đồng bộ toàn site */
+html,
 body {
+  background: #fff !important;
   margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
-  background-color: #9bd4c6;
 }
 
-
-/* Main section */
+/* Căn giữa card */
 .main-section {
-  margin-top: 30px;
+  margin-top: 80px; /* chừa topbar cố định */
   display: flex;
   justify-content: center;
-  align-items: flex-start;  
+  padding: 20px;
 }
 
-.edit-form {
-  background-color: #aee1d3;
-  padding: 30px;
-  border-radius: 10px;
-  width: 420px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+/* Card brutalist có viền + bóng rõ ràng */
+.brutalist-panel {
+  background: #fff !important;
+  border: 4px solid #4b9ad7 !important;
+  border-radius: 12px;
+  box-shadow: 10px 10px 0 #5d9ed0 !important;
+  padding: 24px 28px;
+  width: 520px;
 }
 
-.edit-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
+/* Tiêu đề form */
+.nk-edit__title {
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  font-weight: 900;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
+}
+.nk-edit__title span {
+  text-transform: none;
+  font-weight: 700;
 }
 
-/* Inputs */
+/* Dòng field */
 .form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
-
 .form-row label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 700;
 }
 
-.form-row input {
-  padding: 8px;
-  border: 1px solid #888;
-  border-radius: 6px;
+/* Input kiểu brutalist */
+.brutalist-input {
+  padding: 10px 12px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  transition: box-shadow 0.2s ease, transform 0.05s ease;
+}
+.brutalist-input:focus {
+  box-shadow: 6px 6px 0 #000;
+  transform: translate(-2px, -2px);
 }
 
-/* Buttons */
-.hrbtn {
-  background-color: #fff4b2;
-  border: 1px solid #c2a700;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: bold;
-  cursor: pointer;
-  text-decoration: none;
-  color: #333;
-  transition: 0.2s;
-  margin: 3px;
+/* Hàng nút – nhỏ gọn và không full width */
+.form-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
-.hrbtn:hover {
-  background-color: #ffe36e;
+/* Nếu hrmanage.css đang đặt width:100% cho button thì ép gọn lại */
+.brutalist-card__button {
+  width: auto !important;
 }
 
-.hrbtn.danger {
-  background-color: #f8b6b6;
-  border-color: #c64b4b;
+/* Kích cỡ nút XS cho trang form */
+.brutalist-card__button--xs {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.92rem;
+  box-shadow: 5px 5px 0 #000;
 }
 
-.hrbtn.danger:hover {
-  background-color: #ff9999;
+/* Responsive */
+@media (max-width: 560px) {
+  .brutalist-panel {
+    width: 100%;
+    padding: 20px;
+  }
 }
