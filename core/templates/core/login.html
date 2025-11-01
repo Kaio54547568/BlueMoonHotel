@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-{% load static %}
+{% load static %} <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,17 +13,27 @@
   </head>
 
   <body>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="global-error-message {% if message.tags %}{{ message.tags }}{% endif %}">
+                <i class='bx bxs-error-circle'></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
     <div class="wrapper" id="loginCard">
       <div class="flip">
-        <!-- Mặt trước: User -->
-        <form class="panel panel--user" action="">
+        <form class="panel panel--user" action="" method="post">
+          {% csrf_token %}
           <h1>Người dùng</h1>
           <div class="input-box">
-            <input type="text" placeholder="Tên đăng nhập" required />
+            <input type="text" placeholder="Tên đăng nhập" required name="username_user" />
             <i class="bx bxs-user"></i>
           </div>
           <div class="input-box">
-            <input type="password" placeholder="Mật khẩu" required />
+            <input type="password" placeholder="Mật khẩu" required name="password_user" />
             <i class="bx bxs-lock-alt"></i>
           </div>
 
@@ -50,15 +59,15 @@
           </div>
         </form>
 
-        <!-- Mặt sau: Admin -->
-        <form class="panel panel--admin" action="">
+        <form class="panel panel--admin" action="" method="post">
+          {% csrf_token %}
           <h1>Admin</h1>
           <div class="input-box">
-            <input type="text" placeholder="Tên đăng nhập" required />
+            <input type="text" placeholder="Tên đăng nhập" required name="username_admin" />
             <i class="bx bxs-id-card"></i>
           </div>
           <div class="input-box">
-            <input type="password" placeholder="Mật khẩu" required />
+            <input type="password" placeholder="Mật khẩu" required name="password_admin" />
             <i class="bx bxs-lock"></i>
           </div>
 
@@ -74,14 +83,24 @@
     </div>
 
     <script>
-      const card = document.getElementById("loginCard");
-      document.getElementById("toAdmin").addEventListener("click", (e) => {
-        e.preventDefault();
-        card.classList.add("show-admin");
-      });
-      document.getElementById("toUser").addEventListener("click", (e) => {
-        e.preventDefault();
-        card.classList.remove("show-admin");
+      document.addEventListener('DOMContentLoaded', function() {
+          const card = document.getElementById("loginCard");
+          
+          const toAdminButton = document.getElementById("toAdmin");
+          if (toAdminButton) {
+              toAdminButton.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  card.classList.add("show-admin");
+              });
+          }
+
+          const toUserButton = document.getElementById("toUser");
+          if (toUserButton) {
+              toUserButton.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  card.classList.remove("show-admin");
+              });
+          }
       });
     </script>
   </body>
