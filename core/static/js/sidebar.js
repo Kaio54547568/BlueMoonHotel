@@ -12,7 +12,7 @@ function openSidebar() {
   sidebar.setAttribute('aria-hidden', 'false');
   overlay.hidden = false;
   // optional: push content on wide screens
-  if (window.innerWidth >= 900) mainContent.classList.add('shift');
+  // if (window.innerWidth >= 900) mainContent.classList.add('shift');
 
   // put focus on first focusable item inside sidebar for accessibility
   const focusable = sidebar.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');

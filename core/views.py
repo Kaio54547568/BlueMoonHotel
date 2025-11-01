@@ -30,7 +30,7 @@ def edit_nhan_khau(request, id_nhankhau):
         nhan_khau.save()
         return redirect('nhan_khau_profile', id_nhankhau=nhan_khau.id_nhankhau)
 
-    return render(request, 'core/edit_nhan_khau.html', {'nhan_khau': nhan_khau})
+    return render(request, 'core/demomanage_edit.html', {'nhan_khau': nhan_khau})
 
 def nhan_khau_profile(request, id_nhankhau):
     nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
@@ -65,7 +65,7 @@ def add_demo(request):
 
         return redirect('demomanage/adddemo')  # reload lại form trống    
 
-    return render(request, 'core/add_demo.html')
+    return render(request, 'core/demomanage_add.html')
 def login(request):
 
     ds_ho_khau = HoKhau.objects.all()  # Lấy toàn bộ dữ liệu tro bảng HoKhau
