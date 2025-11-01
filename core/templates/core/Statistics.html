@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Bảng Thống Kê Tổng Quan - Chung cư BlueMoon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}">
+</head>
+<body>
+    
+    {% include 'core/Sidebar.html' %}
+
+    <main>
+        <header class="main-header">
+            <div class="header-left">
+                <button id="sidebarToggleBtn" class="toggle-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1>Chung cư <span>BlueMoon</span></h1>
+                <p>Hệ thống quản lý hiện đại và thông minh cho tòa nhà của bạn</p>
+            </div>
+            <div class="header-right">
+                <button class="lang-btn" style="margin-right: 12px;">
+                    <img src="https://flagcdn.com/vn.svg" alt="VI" width="22" style="border-radius:50%;border:1px solid #d9d9d9; background:#fff; margin-right:7px;">
+                    <span>VI</span>
+                </button>
+                <div class="user-avatar" id="userMenuBtn">KT</div>
+                
+                {% include 'core/UserMenu.html' %}
+                
+                <div class="user-menu-overlay" id="userMenuOverlay"></div>
+            </div>  
+        </header>
+
+        <section class="main-content statistic-dashboard-page">
+            <div class="statistic-panel">
+                
+                <div class="tab-navigation">
+                    <button class="nav-tab active"><i class="fa-solid fa-gauge-high"></i> Tổng quan</button>
+                    <button class="nav-tab"><i class="fa-solid fa-money-bill-trend-up"></i> Khoản thu</button>
+                    <button class="nav-tab"><i class="fa-solid fa-receipt"></i> Phiếu thu</button>
+                    <button class="nav-tab"><i class="fa-solid fa-users"></i> Nhân khẩu</button>
+                    <button class="nav-tab"><i class="fa-solid fa-chart-line"></i> Tài chính</button>
+                    <div class="search-and-export">
+                        <input type="text" placeholder="Tìm kiếm">
+                        <i class="fa-solid fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="top-cards-row">
+                    <div class="stat-card">
+                        <div class="card-title">Tổng thu trong kỳ</div>
+                        <div class="card-content">
+                            <div class="progress-chart">
+                                <span class="percent-label">78%</span>
+                                </div>
+                            <div class="stat-info">
+                                <p>Đã thu: **2.7 tỷ**</p>
+                                <p>Cần thu: **3.5 tỷ**</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="card-title">Phân loại phí</div>
+                        <div class="card-content chart-container-small">
+                            <img src="https://via.placeholder.com/80x80/f7f9ff/1976d2?text=Chart" alt="Phân loại phí" style="border-radius:50%;">
+                        </div>
+                        <div class="stat-info-right">
+                            <p>QL: 45%</p>
+                            <p>Xe: 30%</p>
+                            <p>Khác: 25%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="card-title">Thống kê thu (Quý)</div>
+                        <div class="card-content chart-container-bar">
+                             <img src="https://via.placeholder.com/150x80/f7f9ff/1976d2?text=Bar+Chart" alt="Biểu đồ cột">
+                        </div>
+                        <div class="stat-info-bottom" style="display:flex; justify-content:space-around; width:100%; margin-top:10px;">
+                            <div class="stat-bar-label">T9</div>
+                            <div class="stat-bar-label">T10</div>
+                            <div class="stat-bar-label">T11</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-sections-row">
+                    <div class="large-chart-card">
+                        <div class="card-title">Xu hướng thu theo tháng</div>
+                        <div class="chart-content">
+                            <img src="https://via.placeholder.com/700x250/fff/1976d2?text=Large+Line+Chart" alt="Xu hướng thu" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="card-title">Chi tiết các khoản thu phí</div>
+                        <ul class="detail-list">
+                            <li>Phí Quản lý <span class="amount">600M</span></li>
+                            <li>Phí Dịch vụ <span class="amount">450M</span></li>
+                            <li>Phí Gửi xe <span class="amount">300M</span></li>
+                            <li>Phí Khác <span class="amount">150M</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="card-title">Ghi chú đợt thu</div>
+                        <ul class="detail-list">
+                            <li>Đợt Q4/2025 <span class="amount status-active">Đang mở</span></li>
+                            <li>Đợt T9/2025 <span class="amount status-inactive">Đã đóng</span></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="statistic-actions">
+                    <button class="btn btn-primary"><i class="fa-solid fa-file-export"></i> Xuất Excel</button>
+                    <button class="btn btn-primary-outline"><i class="fa-solid fa-download"></i> Tải báo cáo</button>
+                    <button class="btn btn-secondary-outline"><i class="fa-solid fa-gear"></i> Cấu hình thống kê</button>
+                </div>
+
+            </div>
+        </section>
+
+        <footer>
+            &copy; BlueMoon Apartment 2025. Created by the ChatGPT's son-in-law team.
+        </footer>
+    </main>
+
+    <script>
+    </script>
+</body>
+</html>

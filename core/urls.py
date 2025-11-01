@@ -6,7 +6,7 @@ urlpatterns = [
     path('accountmanage', views.accountmanage, name='accountmanage'),
     path('accountmanage/addaccount', views.accountmanage_addaccount, name='accountmanage_addaccount'),
     path('accountmanage/change/<int:id_taikhoan>/', views.edit_taikhoan, name='edit_taikhoan'),
-    path('accountmanage/view/<int:id_taikhoan>/', views.view_taikhoan, name='view_taikhoan'),  # 👈 thêm dòng này
+    path('accountmanage/view/<int:id_taikhoan>/', views.view_taikhoan, name='view_taikhoan'), 
 
 
     path('demomanage', views.demomanage, name='demomanage'),
@@ -23,4 +23,15 @@ urlpatterns = [
     path('ho-khau/them/', views.add_hokhau, name='add_hokhau'),
 
     path('hredit/', views.hredit, name='hredit'),
+#============Kế toán URLs===================
+    path('accountant-home/', views.accountant_home, name='accountant_home'),  # Accountant main page
+
+    path('fee-management/', views.fee_management, name='fee_management'),  # Trang quản lý khoản thu
+    path('fee-management/add/', views.add_khoanthu, name='add_khoanthu'),
+    path('fee-management/detail/<int:pk>/modal/', views.view_khoanthu_detail_modal, name='view_khoanthu_detail_modal'), 
+    path('fee-management/edit/<int:pk>/', views.edit_khoanthu, name='edit_khoanthu'),
+
+    path('fee-collection-period/', views.fee_collection_period, name='fee_collection_period'),  # Trang quản lý đợt thu phí
+    path('statistics-view/', views.statistics_view, name='statistics_view'),  # Trang thống kê
+
 ]

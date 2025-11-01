@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    {% load static %}
+    {% load humanize %} 
+    <meta charset="UTF-8">
+    <title>Quản Lý Khoản Thu - Chung cư BlueMoon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fee_management_modal.css' %}"> 
+</head>
+<body>
+    
+    {% include 'core/Sidebar.html' %} 
+    <main>
+        <header class="main-header">
+            <div class="header-left">
+                <button id="sidebarToggleBtn" class="toggle-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1>Chung cư <span>BlueMoon</span></h1>
+                <p>Hệ thống quản lý hiện đại và thông minh cho tòa nhà của bạn</p>
+            </div>
+            <div class="header-right">
+                <button class="lang-btn" style="margin-right: 12px;">
+                    <img src="https://flagcdn.com/vn.svg" alt="VI" width="22" style="border-radius:50%;border:1px solid #d9d9d9; background:#fff; margin-right:7px;">
+                    <span>VI</span>
+                </button>
+                <div class="user-avatar" id="userMenuBtn">KT</div>
+                
+                {% include 'core/UserMenu.html' %} 
+                
+                <div class="user-menu-overlay" id="userMenuOverlay"></div>
+            </div> 
+        </header>
+
+        <section class="main-content income-management-page">
+            <div class="main-panel data-table-panel" id="income-container">
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <div class="message-container success" style="background-color: #e6f7d9; color: #52c41a; border: 1px solid #b7eb8f;">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <div class="income-controls-top">
+                    <div class="search-box-container">
+                        <input type="text" placeholder="Tìm kiếm khoản thu...">
+                        <i class="fa-solid fa-search"></i>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="btn-filter"><i class="fa-solid fa-filter"></i> Lọc</button>
+                    </div>
+                </div>
+
+                <div class="income-summary-box">
+                    <h3 class="box-title">Tổng quan Khoản thu</h3>
+                    <div class="summary-details">
+                        <p>Tổng số Khoản Thu đã định nghĩa: **{{ total_count|default:"0" }}**</p>
+                        <p>Đơn giá trung bình (Tạm tính): **— VND**</p>
+                    </div>
+                </div>
+
+                <h2 class="table-title">DANH SÁCH KHOẢN THU HIỆN TẠI</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã KT</th>
+                                <th>Tên Khoản Thu</th>
+                                <th>Đơn Vị Tính</th>
+                                <th>Đơn Giá</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in khoan_thu_list %}
+                            <tr>
+                                <td data-label="Mã KT">{{ item.id_khoanthu }}</td>
+                                <td data-label="Tên khoản thu">{{ item.ten_khoanthu }}</td>
+                                <td data-label="Đơn Vị Tính">
+                                    {{ item.get_don_vi_tinh_display }}
+                                </td>
+                                <td data-label="Đơn Giá">{{ item.don_gia|floatformat:0|intcomma }} VND</td>
+                                
+                                <td data-label="Thao tác">
+                                    <button class="action-btn view-detail modal-trigger" 
+                                            title="Chi tiết" 
+                                            data-url="{% url 'view_khoanthu_detail_modal' pk=item.id_khoanthu %}">
+                                        <i class="fa-solid fa-file-invoice"></i>
+                                    </button>
+                                    
+                                    <button class="action-btn edit-fee modal-trigger" 
+                                    title="Chỉnh sửa" 
+                                    data-url="{% url 'edit_khoanthu' pk=item.id_khoanthu %}"> 
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align: center;">Không có khoản thu nào được tìm thấy.</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="income-actions-bottom">
+                    <button id="createNewFeeBtn" class="btn btn-create-new" style="min-width: 180px;" data-url="{% url 'add_khoanthu' %}">
+                        <i class="fa-solid fa-plus"></i> Tạo khoản thu mới
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <footer>
+            &copy; BlueMoon Apartment 2025. Created by the ChatGPT's son-in-law team.
+        </footer>
+    </main>
+    
+  <div id="mainModal" class="modal">
+    <div class="modal-content">
+        </div>
+</div>
+    <script src="{% static 'js/fee_management_modal_logic.js' %}"></script>
+    
+</body>
+</html>

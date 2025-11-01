@@ -1,17 +1,39 @@
-<link rel="stylesheet" href="../styles/Accountant.css" />
+{% load static %}
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <i class="fa-solid fa-building-columns"></i>
-    <span>BlueMoon</span>
-  </div>
-  <nav>
-    <ul>
-      <li class="Login_btn">
-        <a href="login.html">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          <span>Đăng nhập</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-building-columns"></i>
+        <span>BlueMoon</span>
+    </div>
+    <nav>
+        <ul>
+            <li>
+                <a href="/accountant-home">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="icon-text">Trang chủ</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="/fee-management">
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                    <span class="icon-text">Quản lý khoản thu</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/fee-collection-period">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span class="icon-text">Quản lý đợt thu phí</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/statistics-view">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span class="icon-text">Tra cứu & Thống kê</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </aside>
+<script src="{% static 'js/1Sidebar.js' %}"></script>

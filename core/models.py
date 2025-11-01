@@ -55,3 +55,51 @@ class TaiKhoan(models.Model):
         db_table = 'taikhoan'   
     def __str__(self):
         return self.username
+    
+#KẾ TOÁN
+
+# =======================
+# Bảng Khoản thu
+# =======================
+class KhoanThu(models.Model):
+    id_khoanthu = models.AutoField(
+        primary_key=True,
+        verbose_name="Mã Khoản Thu",
+    )
+    ten_khoanthu = models.CharField(
+        max_length=300,
+        verbose_name="Tên Khoản Thu",
+        blank=False, #Không được để trống
+    )
+    
+    don_gia = models.DecimalField(
+        max_digits=30,
+        decimal_places=0, #Không có chữ số thập phân
+        blank=False, #Không được để trống
+        verbose_name="Đơn Giá (VND)"
+    )
+    UNIT_CHOICES = [
+        ('per_person', 'Mỗi người'),
+        ('per_apartment', 'Mỗi căn hộ'),
+        ('per_month', 'Hàng tháng'),
+        ('per_year', 'Hàng năm'),
+        ('per_quarter', 'Hàng quý'),
+        ('fixed', 'Cố định'),
+    ]
+    don_vi_tinh = models.CharField(
+        max_length=50, 
+        choices=UNIT_CHOICES, 
+        default='fixed',
+        blank=False, #Không được để trống
+        verbose_name="Đơn Vị Tính/Kỳ Hạn"
+    )
+
+    class Meta:
+        verbose_name = "Khoản Thu"
+        verbose_name_plural = "Khoản Thu"
+        ordering = ['ten_khoanthu']
+        db_table = 'khoanthu'
+
+    def __str__(self):
+        return self.ten_khoanthu
+    
