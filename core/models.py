@@ -47,7 +47,7 @@ class NhanKhau(models.Model):
 # Bảng Tài khoản
 # =======================
 class TaiKhoan(models.Model):
-    id_taikhoan = models.AutoField(primary_key=True)
+    id_taikhoan = models.AutoField(primary_key=True) 
     username = models.CharField(max_length=50, unique=True)  # CITEXT có thể bỏ qua
     password = models.CharField(max_length=255)
     vaitro = models.ForeignKey(VaiTro, on_delete=models.CASCADE, related_name='tai_khoan', db_column='id_vaitro')
