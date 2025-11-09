@@ -104,8 +104,12 @@ def login(request):
                         # Dùng hàm 'auth_login' chúng ta đã import
                         request.session['id_taikhoan'] = tai_khoan.id_taikhoan
                         
-                        # Chuyển hướng đến trang chủ
-                        return redirect('home') 
+                        # Dựa theo thông tin trước đó, 1=Admin, 3=Kế toán
+                        
+                        if vaitro_mong_muon == 3: # NẾU LÀ KẾ TOÁN
+                            return redirect('accountant_home') # <-- Đi đến trang Kế toán
+                        else: # NẾU LÀ ADMIN HOẶC VAI TRÒ KHÁC
+                            return redirect('home') # <-- Đi đến trang chủ chung
                     else:
                         # Vai trò sai
                         messages.error(request, "Bạn đang đăng nhập ở form không đúng vai trò!")
