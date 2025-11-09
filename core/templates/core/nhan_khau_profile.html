@@ -1,41 +1,76 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>accountmanage'</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Nhân khẩu – {{ nhan_khau.ho_ten }}</title>
 
-  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-  <link rel="stylesheet" href="{% static 'css/accountmanage.css' %}">
-</head>
-<body>  
-  {% include 'core/header.html'%}
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <!-- Hệ nút/card brutalist chung -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- CSS riêng cho trang chi tiết -->
+    <link rel="stylesheet" href="{% static 'css/nhankhau_profile.css' %}" />
+  </head>
+  <body>
+    {% include 'core/header.html' %}
 
-  <main class="profile-container">
-    <h2>{{ nhan_khau.ho_ten }}</h2>
-    <ul>
-      <li><strong>ID:</strong> {{ nhan_khau.id_nhankhau }}</li>
-      <li><strong>Ngày sinh:</strong> {{ nhan_khau.ngay_sinh|date:"d/m/Y" }}</li>
-      <li><strong>CCCD:</strong> {{ nhan_khau.cccd }}</li>
-      <li><strong>Quan hệ chủ hộ:</strong> {{ nhan_khau.quan_he_chu_ho }}</li>
-      <li><strong>ID Hộ khẩu:</strong> {{ nhan_khau.ho_khau.id_hokhau }}</li>
-    </ul>
-    <a href="{% url 'demomanage' %}" class="hrbtn">← Quay lại danh sách</a>
+    <main class="page-wrap">
+      <section class="brutalist-panel nk-profile">
+        <div class="nk-grid">
+          <!-- TODO: ẢNH ĐẠI DIỆN CỦA NHÂN KHẨU -->
+          <figure class="nk-avatar">
+            <img
+              src="{{ nhan_khau.avatar_url|default:'/static/img/avatar-placeholder.png' }}"
+              alt="Ảnh đại diện"
+            />
+          </figure>
 
+          <!-- Thông tin -->
+          <div class="nk-info">
+            <h2 class="nk-name">{{ nhan_khau.ho_ten }}</h2>
 
-    <a href="{% url 'edit_nhan_khau' nhan_khau.id_nhankhau %}" class="hrbtn">✏️ Sửa thông tin</a>
+            <ul class="nk-meta">
+              <li><span>ID:</span> {{ nhan_khau.id_nhankhau }}</li>
+              <li>
+                <span>Ngày sinh:</span> {{ nhan_khau.ngay_sinh|date:"d/m/Y" }}
+              </li>
+              <li><span>CCCD:</span> {{ nhan_khau.cccd|default:"—" }}</li>
+              <li>
+                <span>Quan hệ chủ hộ:</span> {{ nhan_khau.quan_he_chu_ho }}
+              </li>
+              <li>
+                <span>ID hộ khẩu:</span> {{ nhan_khau.ho_khau.id_hokhau }}
+              </li>
+            </ul>
 
+            <div class="button-row nk-actions">
+              <a
+                href="{% url 'demomanage' %}"
+                class="brutalist-card__button brutalist-card__button--yellow brutalist-card__button--xs"
+              >
+                ↩ Quay lại
+              </a>
 
-    <button class="hrbtn">
-            <a href="{% url 'nhan_khau_delete' nhan_khau.id_nhankhau %}">Xóa nhân khẩu {{ nhan_khau.ho_ten }}</a>
-    </button>
+              <a
+                href="{% url 'edit_nhan_khau' nhan_khau.id_nhankhau %}"
+                class="brutalist-card__button brutalist-card__button--secondary brutalist-card__button--xs"
+              >
+                ✏️ Sửa thông tin
+              </a>
 
-    
-  </main>
-</div>
-          {% include 'core/sidebar_and_footer.html' %}
-          
-        </body>
-        </html>
-        
+              <a
+                href="{% url 'nhan_khau_delete' nhan_khau.id_nhankhau %}"
+                class="brutalist-card__button brutalist-card__button--primary brutalist-card__button--xs"
+              >
+                🗑️ Xóa {{ nhan_khau.ho_ten }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    {% include 'core/sidebar_and_footer.html' %}
+  </body>
+</html>

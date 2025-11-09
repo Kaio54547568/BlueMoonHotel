@@ -1,59 +1,76 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>accountmanage'</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Hộ khẩu – Chi tiết</title>
 
-  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-  <link rel="stylesheet" href="{% static 'css/hokhau_detail.css' %}">
-</head>
-<body>  
-  {% include 'core/header.html'%}
-<main class="container">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/hokhau_detail.css' %}" />
+  </head>
+  <body>
+    {% include 'core/header.html' %}
 
-  <section class="house-info">
-    <h2>Thông tin hộ khẩu</h2>
-    <p><strong>ID Hộ khẩu:</strong> {{ hokhau.id_hokhau }}</p>
-    <p><strong>Số căn hộ:</strong> {{ hokhau.so_can_ho }}</p>
-    <p><strong>Diện tích:</strong> {{ hokhau.dien_tich }} m²</p>
-  </section>
+    <main class="main-section">
+      <div class="container-wide">
+        <!-- Panel: Thông tin hộ khẩu -->
+        <section class="brutalist-panel hkd-panel">
+          <h2 class="text-uc hkd-title">Thông tin hộ khẩu</h2>
+          <ul class="hkd-meta">
+            <li><strong>ID Hộ khẩu:</strong> {{ hokhau.id_hokhau }}</li>
+            <li><strong>Số căn hộ:</strong> {{ hokhau.so_can_ho }}</li>
+            <li><strong>Diện tích:</strong> {{ hokhau.dien_tich }} m²</li>
+          </ul>
+        </section>
 
-  <section class="member-list">
-    <h2>Danh sách thành viên</h2>
+        <!-- Panel: Danh sách thành viên -->
+        <section class="brutalist-panel hkd-panel">
+          <h2 class="text-uc hkd-title">Danh sách thành viên</h2>
 
-    {% if thanh_vien %}
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Họ tên</th>
-        <th>Ngày sinh</th>
-        <th>CCCD</th>
-        <th>Quan hệ chủ hộ</th>
-        <th>Hành động</th>
-      </tr>
+          {% if thanh_vien %}
+          <table class="brutalist-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Ngày sinh</th>
+                <th>CCCD</th>
+                <th>Quan hệ chủ hộ</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for nk in thanh_vien %}
+              <tr>
+                <td>
+                  <a href="{% url 'nhan_khau_profile' nk.id_nhankhau %}"
+                    >{{ nk.id_nhankhau }}</a
+                  >
+                </td>
+                <td>{{ nk.ho_ten }}</td>
+                <td>{{ nk.ngay_sinh|date:"d/m/Y" }}</td>
+                <td>{{ nk.cccd }}</td>
+                <td>{{ nk.quan_he_chu_ho }}</td>
+                <td>
+                  <a
+                    class="btn btn--yellow btn--xs btn--compact"
+                    href="{% url 'edit_nhan_khau' nk.id_nhankhau %}"
+                    >Chỉnh sửa</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p><em>Không có thành viên nào trong hộ này.</em></p>
+          {% endif %}
+        </section>
+      </div>
+    </main>
 
-      {% for nk in thanh_vien %}
-      <tr>
-        <td><a href="{% url 'nhan_khau_profile' nk.id_nhankhau %}">{{ nk.id_nhankhau }}</a></td>
-        <td>{{ nk.ho_ten }}</td>
-        <td>{{ nk.ngay_sinh|date:"d/m/Y" }}</td>
-        <td>{{ nk.cccd }}</td>
-        <td>{{ nk.quan_he_chu_ho }}</td>
-        <td>
-          <a href="{% url 'edit_nhan_khau' nk.id_nhankhau %}" class="hrbtn small">Chỉnh sửa</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% else %}
-      <p><em>Không có thành viên nào trong hộ này.</em></p>
-    {% endif %}
-  </section>
-
-</main>
-          {% include 'core/sidebar_and_footer.html' %}
-
+    {% include 'core/sidebar_and_footer.html' %}
   </body>
 </html>

@@ -1,0 +1,52 @@
+{% load static %}
+<div class="user-menu" id="userMenu">
+  <div class="user-menu-header">
+    <div class="user-avatar-lg">KT</div>
+    <div class="user-info">
+      <div class="user-name">Kế toán</div>
+      <div class="user-id">0123456789</div>
+    </div>
+  </div>
+
+  <div class="user-menu-list">
+    <a href="#" class="user-menu-item">
+      <span
+        class="user-menu-icon menu-account"
+        style="background-color: #f7f7f7; color: #4096ff"
+        ><i class="fa-solid fa-user"></i
+      ></span>
+      <div>
+        <div class="item-title">Tài khoản</div>
+        <div class="item-desc">Quản lý tài khoản của bạn.</div>
+      </div>
+    </a>
+
+    <a href="#" class="user-menu-item">
+      <span
+        class="user-menu-icon menu-idea"
+        style="background-color: #f3e8ff; color: #7f58af"
+        ><i class="fa-regular fa-message"></i
+      ></span>
+      <div>
+        <div class="item-title">Đóng góp ý kiến</div>
+        <div class="item-desc">Góp phần cải thiện phiên bản BlueMoon.</div>
+      </div>
+    </a>
+
+    <a href="#" class="user-menu-item" data-action="logout">
+      <span
+        class="user-menu-icon menu-logout"
+        style="background-color: #fff1f0; color: #ff4d4f"
+        ><i class="fa-solid fa-arrow-right-from-bracket"></i
+      ></span>
+      <div>
+        <div class="item-title">Đăng xuất</div>
+        <div class="item-desc" style="white-space: normal">
+          Hãy xóa cookie nếu không được điều hướng trở lại ứng dụng khi đăng
+          xuất.
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+<script src="{% static 'js/UserMenu.js' %}"></script>

@@ -1,45 +1,84 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>add_account</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Account – Add</title>
 
-  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-  <link rel="stylesheet" href="{% static 'css/accountmanage_addaccount.css' %}">
-</head>
-<body>  
-      {% include 'core/header.html' %}
-  
-  <main class="main-section">
-    <section class="add-form">
-      <h2>Thêm tài khoản mới</h2>
-      <form method="POST" action="{% url 'accountmanage_addaccount' %}">
-        {% csrf_token %}
-        
-        <div class="form-row">
-          <label for="username">Tên đăng nhập:</label>
-          <input type="text" id="username" name="username" required>
-        </div>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/accountmanage_addaccount.css' %}"
+    />
+  </head>
+  <body>
+    {% include 'core/header.html' %}
 
-        <div class="form-row">
-          <label for="password">Mật khẩu:</label>
-          <input type="password" id="password" name="password" required>
-        </div>
+    <main class="main-section">
+      <section class="brutalist-panel brutalist-panel--narrow add-form">
+        <h2
+          class="text-uc"
+          style="
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 18px;
+          "
+        >
+          Thêm tài khoản mới
+        </h2>
 
-        <div class="form-row">
-          <label for="vaitro_id">ID Vai trò:</label>
-          <input type="number" id="vaitro_id" name="vaitro_id" required>
-        </div>
+        <form method="POST" action="{% url 'accountmanage_addaccount' %}">
+          {% csrf_token %}
 
-        <div class="form-actions">
-          <button type="submit" class="hrbtn">➕ Thêm tài khoản</button>
-        </div>
-      </form>
-    </section>
-  </main>
-          {% include 'core/sidebar_and_footer.html' %}
+          <div class="form-row">
+            <label for="username">Tên đăng nhập:</label>
+            <input
+              class="brutalist-input"
+              id="username"
+              name="username"
+              required
+            />
+          </div>
 
+          <div class="form-row">
+            <label for="password">Mật khẩu:</label>
+            <input
+              class="brutalist-input"
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <label for="vaitro_id">ID Vai trò:</label>
+            <input
+              class="brutalist-input"
+              type="number"
+              id="vaitro_id"
+              name="vaitro_id"
+              required
+            />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn--yellow">
+              ➕ Thêm tài khoản
+            </button>
+            <a
+              href="{% url 'accountmanage' %}"
+              class="btn btn--secondary btn--compact"
+              >← Quay lại</a
+            >
+          </div>
+        </form>
+      </section>
+    </main>
+
+    {% include 'core/sidebar_and_footer.html' %}
   </body>
 </html>

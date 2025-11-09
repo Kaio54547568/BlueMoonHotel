@@ -1,2 +1,2 @@
 psycopg2-binary
-django
+django>=4.2,<4.3
