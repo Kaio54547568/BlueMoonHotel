@@ -132,28 +132,6 @@ Bây giờ bạn có thể mở trình duyệt và truy cập vào `http://127.0
 
 Dự án được tổ chức theo cấu trúc Django chuẩn:
 
-- `/` (Thư mục gốc dự án)
-  - `manage.py` <-- File quản lý chính của Django (dùng để `runserver`, `migrate`...)
-  - `db.sqlite3` <-- CSDL SQLite (dùng cho phát triển local)
-  - `requirements.txt` <-- Danh sách các thư viện Python
-  - `README.md` <-- File README (chính là file này)
-  - `venv/` <-- Thư mục môi trường ảo (được Git bỏ qua)
-- `hotel_mgmt/` <-- 📁 **Thư mục Cấu hình Dự án**
-  - `settings.py` <-- File cài đặt chính (CSDL, Apps...)
-  - `urls.py` <-- File URL tổng (liên kết đến `core.urls`)
-  - `wsgi.py` / `asgi.py`
-- `core/` <-- 📁 **APP CHÍNH** (chứa nghiệp vụ)
-  - `models.py` <-- Định nghĩa các bảng CSDL
-  - `views.py` <-- Chứa logic nghiệp vụ (Backend)
-  - `urls.py` <-- Định nghĩa các đường dẫn URL của app
-  - `tests.py` <-- File kiểm thử
-  - `admin.py` <-- Đăng ký model lên trang Admin
-  - `static/` <-- 📁 Chứa file "tĩnh" (CSS, JS, Images)
-  - `templates/` <-- 📁 Chứa file HTML
-- `design/` <-- 📁 Thư mục thiết kế (Django không dùng, có thể xóa)
-  - `Database/`
-    - `khoi_tao_database.sql`
-
 ```
 BlueMoonProject/ (Thư mục gốc)
 │
