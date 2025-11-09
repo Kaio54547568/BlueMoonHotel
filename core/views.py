@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ReservationForm
 from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro
 from django.contrib import messages
+from django.contrib.auth import authenticate, login 
 
 
 def test(request):
@@ -40,8 +41,8 @@ def nhan_khau_delete(request, id_nhankhau):
     exists = NhanKhau.objects.filter(id_nhankhau=id_nhankhau).exists()
     if(exists):
         nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
-        nhan_khau.delete()
-    return render(request, 'core/nhan_khau_delete.html')
+        nhan_khau.is_deleted=True
+    return render(request, 'core/demomanage_delete.html')
 
 def add_demo(request):
     if request.method == "POST":
@@ -107,6 +108,12 @@ def demomanage(request):
     # for a in nhan_khau_list: 
     #     print(a.id_ho_khau)
     return render(request, 'core/demomanage.html', context)
+def demomanage_delete(request, id_hokhau):
+    exists = HoKhau.objects.filter(id_hokhau=id_hokhau).exists()
+    if(exists):
+        hr = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
+        hr.is_deleted=True
+    return render(request, 'core/hrmanage_delete.html')
 def accountmanage(request):
     # Dữ liệu mẫu cho Tài khoản
     tai_khoan_list = TaiKhoan.objects.all()
@@ -128,6 +135,13 @@ def accountmanage(request):
     }
 
     return render(request, 'core/accountmanage.html', context)
+
+def accountmanage_delete(request, id_taikhoan):
+    exists = TaiKhoan.objects.filter(id_taikhoan=id_taikhoan).exists()
+    if(exists):
+        account = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
+        account.is_deleted=True
+    return render(request, 'core/accountmanage_delete.html')
 def accountmanage_addaccount(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -150,6 +164,10 @@ def accountmanage_addaccount(request):
     return render(request, 'core/accountmanage_addaccount.html')
 
 def view_taikhoan(request, id_taikhoan):
+
+    user = authenticate(request, username="admin", password="2005")
+    login(request, user)
+    
     taikhoan = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
     return render(request, 'core/accountmanage_view.html', {'taikhoan': taikhoan})
 def edit_taikhoan(request, id_taikhoan):
@@ -200,6 +218,13 @@ def hrmanage(request):
     }
 
     return render(request, 'core/hrmanage.html', context)
+
+def hrmanage_delete(request, id_hokhau):
+    exists = HoKhau.objects.filter(id_hokhau=id_hokhau).exists()
+    if(exists):
+        hr = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
+        hr.is_deleted=True
+    return render(request, 'core/hrmanage_delete.html')
 
 def add_hokhau(request):
     if request.method == "POST":

@@ -24,6 +24,9 @@
       <div class="btn-group">
         <a href="{% url 'edit_taikhoan' taikhoan.id_taikhoan %}" class="hrbtn">✏️ Chỉnh sửa</a>
         <a href="/accountmanage/" class="hrbtn danger">← Quay lại</a>
+        <button class="hrbtn">
+            <a href="{% url 'accountmanage_delete' taikhoan.id_taikhoan %}">Xóa nhân khẩu {{ nhan_khau.ho_ten }}</a>
+        </button>
       </div>
     </section>
   </main>

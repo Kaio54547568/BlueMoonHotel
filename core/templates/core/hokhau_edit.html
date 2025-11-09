@@ -36,6 +36,9 @@
 
         <div class="form-actions">
           <button type="submit" class="hrbtn">💾 Lưu thay đổi</button>
+          <button class="hrbtn">
+            <a href="{% url 'hrmanage_delete' hokhau.id_hokhau %}">Xóa hộ khẩu {{ hokhau.id_hokhau }}</a>
+          </button>
           <a href="{% url 'hokhau_detail' hokhau.id_hokhau %}" class="hrbtn cancel">↩ Quay lại</a>
         </div>
       </form>

@@ -3,6 +3,7 @@ from django.db import models
 class VaiTro(models.Model):
     id_vaitro = models.AutoField(primary_key=True)
     ten_vaitro = models.CharField(max_length=50)
+    
     class Meta:
         db_table = 'vaitro'   
     def __str__(self):
@@ -14,6 +15,7 @@ class HoKhau(models.Model):
     id_hokhau = models.AutoField(primary_key=True)
     so_can_ho = models.CharField(max_length=20)
     dien_tich = models.FloatField(null=True, blank=True)
+    is_deleted = models.BooleanField()
     class Meta:
         db_table = 'hokhau'   
     def __str__(self):
@@ -25,6 +27,7 @@ class NhanKhau(models.Model):
     id_nhankhau = models.AutoField(primary_key=True)
     ho_ten = models.CharField(max_length=100)
     ngay_sinh = models.DateField(null=True, blank=True)
+    is_deleted = models.BooleanField()
     cccd = models.CharField(
         max_length=12,
         null=True,
@@ -51,6 +54,7 @@ class TaiKhoan(models.Model):
     username = models.CharField(max_length=50, unique=True)  # CITEXT có thể bỏ qua
     password = models.CharField(max_length=255)
     vaitro = models.ForeignKey(VaiTro, on_delete=models.CASCADE, related_name='tai_khoan', db_column='id_vaitro')
+    is_deleted = models.BooleanField()
     class Meta:
         db_table = 'taikhoan'   
     def __str__(self):
