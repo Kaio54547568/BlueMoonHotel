@@ -116,7 +116,10 @@ class DotThuPhi(models.Model):
         max_length=6, choices=TrangThaiDotThu.choices, default=TrangThaiDotThu.DRAFT
     )
     id_khoanthu = models.ForeignKey(
-        KhoanThu, on_delete=models.RESTRICT, db_column='id_khoanthu', related_name='dot_thus'
+        'core.KhoanThu',             # <- dùng chuỗi
+        on_delete=models.RESTRICT,
+        db_column='id_khoanthu',
+        related_name='dot_thus'
     )
 
     class Meta:
@@ -134,11 +137,17 @@ class HoaDon(models.Model):
     id_hoadon = models.IntegerField(primary_key=True)
     tong_tien = models.DecimalField(max_digits=15, decimal_places=2)
     ngay_nop = models.DateField(null=True, blank=True)
-    id_hokhau = models.ForeignKey(
-        HoKhau, on_delete=models.RESTRICT, db_column='id_hokhau', related_name='hoa_dons'
-    )
     id_dotthu = models.ForeignKey(
-        DotThuPhi, on_delete=models.RESTRICT, db_column='id_dotthu', related_name='hoa_dons'
+        'core.DotThuPhi',            # <- dùng chuỗi
+        on_delete=models.RESTRICT,
+        db_column='id_dotthu',
+        related_name='hoa_dons'
+    )
+    id_hokhau = models.ForeignKey(
+        'core.HoKhau',               # <- dùng chuỗi (cho đồng bộ)
+        on_delete=models.RESTRICT,
+        db_column='id_hokhau',
+        related_name='hoa_dons'
     )
 
     class Meta:

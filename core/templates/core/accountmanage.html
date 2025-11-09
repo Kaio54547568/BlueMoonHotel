@@ -6,63 +6,102 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>accountmanage'</title>
 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/accountmanage.css' %}" />
   </head>
   <body>
     {% include 'core/header.html'%}
 
-    <div class="hrcontainer">
-      <div class="search-bar">
-        <form method="get" action="{% url 'accountmanage' %}">
-          <input
-            type="text"
-            name="search_id"
-            placeholder="Nhập ID tai khoan..."
-            value="{{ query }}"
-          />
-          <button type="submit">Tìm kiếm</button>
-          {% if query %}
-          <a href="{% url 'accountmanage' %}">Hiện tất cả</a>
-          {% endif %}
-        </form>
-      </div>
+    <main class="main-section">
+      <div class="container-wide" style="width: 80%; max-width: 980px">
+        <!-- Search -->
+        <section
+          class="brutalist-panel brutalist-panel--wide search-panel"
+          style="margin-bottom: 18px"
+        >
+          <form
+            method="get"
+            action="{% url 'accountmanage' %}"
+            class="search-form"
+          >
+            <input
+              class="brutalist-input"
+              type="text"
+              name="search_id"
+              placeholder="Nhập ID tài khoản..."
+              value="{{ query }}"
+            />
+            <button class="btn btn--yellow btn--compact" type="submit">
+              Tìm kiếm
+            </button>
+            {% if query %}
+            <a
+              class="btn btn--yellow btn--compact"
+              href="{% url 'accountmanage' %}"
+              >Hiện tất cả</a
+            >
+            {% endif %}
+          </form>
+        </section>
 
-      <div class="hrmember-list">
-        <h1>Danh sách Tài Khoản</h1>
-        <table border="1" cellpadding="5" style="width: 80%; margin: 0 auto">
-          <tr>
-            <th>ID tài khoản</th>
-            <th>username</th>
-            <th>pass</th>
-            <th>Vai trò</th>
-          </tr>
-          {% for hk in tai_khoan_list %}
-          <tr>
-            <td>
-              <a href="{% url 'view_taikhoan' hk.id_taikhoan %}">
-                {{ hk.id_taikhoan }}
-              </a>
-            </td>
+        <!-- Data -->
+        <section class="brutalist-panel brutalist-panel--wide data-panel">
+          <h1
+            class="text-uc"
+            style="
+              text-align: center;
+              border-bottom: 2px solid #000;
+              padding-bottom: 10px;
+              margin-bottom: 16px;
+            "
+          >
+            Danh sách Tài Khoản
+          </h1>
 
-            <td>{{ hk.username}}</td>
-            <td>{{ hk.password }}</td>
-            <td>{{ hk.vaitro}}</td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="3">Không có dữ liệu</td>
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
+          <table class="brutalist-table">
+            <thead>
+              <tr>
+                <th>ID tài khoản</th>
+                <th>Username</th>
+                <th>Pass</th>
+                <th>Vai trò</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for hk in tai_khoan_list %}
+              <tr>
+                <td>
+                  <a href="{% url 'view_taikhoan' hk.id_taikhoan %}"
+                    >{{ hk.id_taikhoan }}</a
+                  >
+                </td>
+                <td>{{ hk.username }}</td>
+                <td>{{ hk.password }}</td>
+                <td>{{ hk.vaitro }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4">Không có dữ liệu</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-      <div class="hrbutton-bar">
-        <button class="hrbtn">
-          <a href="/accountmanage/addaccount">Thêm tài khoản</a>
-        </button>
+          <div
+            class="hrbutton-bar"
+            style="display: flex; justify-content: center; margin-top: 12px"
+          >
+            <a
+              class="btn btn--yellow btn--compact"
+              href="{% url 'addaccount' %}"
+              >+ Thêm tài khoản</a
+            >
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
+
     {% include 'core/sidebar_and_footer.html' %}
   </body>
 </html>

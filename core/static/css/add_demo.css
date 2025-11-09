@@ -1,30 +1,11 @@
-/* Nền trắng đồng bộ */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  font-family: Arial, sans-serif;
-}
-
-/* Căn giữa khối form */
 .main-section {
-  margin-top: 80px; /* chừa topbar */
-  display: flex;
-  justify-content: center;
-  padding: 20px;
+  /* nếu muốn khác mặc định */
+  margin-top: 80px;
 }
-
-/* Panel brutalist giống các trang trước */
 .brutalist-panel {
+  /* hoặc dùng .brutalist-panel--narrow thay cho width tay */
   width: 520px;
-  background: #fff;
-  border: 4px solid #4b9ad7;
-  border-radius: 12px;
-  box-shadow: 10px 10px 0 #5d9ed0;
-  padding: 24px 28px;
 }
-
 .add-form h2 {
   text-align: center;
   margin-bottom: 18px;
@@ -32,46 +13,4 @@ body {
   padding-bottom: 10px;
   text-transform: uppercase;
   font-weight: 900;
-}
-
-/* Input brutalist */
-.form-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.form-row label {
-  font-weight: 700;
-}
-
-.brutalist-input {
-  padding: 10px 12px;
-  border: 2px solid #000;
-  border-radius: 8px;
-  background: #fff;
-  outline: none;
-  transition: box-shadow 0.2s ease, transform 0.05s ease;
-}
-.brutalist-input:focus {
-  box-shadow: 6px 6px 0 #000;
-  transform: translate(-2px, -2px);
-}
-
-/* Hàng nút */
-.form-actions {
-  margin-top: 18px;
-  display: flex;
-  justify-content: center;
-}
-
-/* Bảo đảm nút gọn – nếu chưa có trong hrmanage.css thì để thêm: */
-.brutalist-card__button--compact {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: auto !important;
-  padding: 0.6rem 1.25rem;
-  flex: 0 0 auto !important;
-  white-space: nowrap;
 }
