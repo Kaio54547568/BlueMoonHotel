@@ -2,10 +2,11 @@ from calendar import day_name
 from pyexpat.errors import messages
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ReservationForm
-from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro
+from .forms import ReservationForm, KhoanThuForm
+from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu
 from django.contrib import messages
 from django.contrib.auth import authenticate, login 
+from django.http import HttpResponse # <-- ĐÃ THÊM IMPORT NÀY
 
 
 def test(request):
@@ -13,20 +14,17 @@ def test(request):
 
     return render(request, 'core/test.html', {'ho_khau_list': ds_ho_khau})
 def edit_nhan_khau(request, id_nhankhau):
-    nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
-
+    nk = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
     if request.method == "POST":
-        nhan_khau.ho_ten = request.POST.get('ho_ten')
-        nhan_khau.ngay_sinh = request.POST.get('ngay_sinh') or None
-        nhan_khau.cccd = request.POST.get('cccd') or None
-        nhan_khau.quan_he_chu_ho = request.POST.get('quan_he_chu_ho') or None
+        nk.ho_ten = request.POST.get('ho_ten')
+        nk.ngay_sinh = request.POST.get('ngay_sinh') or None
+        nk.cccd = request.POST.get('cccd') or None
+        nk.quan_he_chu_ho = request.POST.get('quan_he_chu_ho') or None
         ho_khau_id = request.POST.get('ho_khau_id')
 
         if ho_khau_id:
-            try:
-                nhan_khau.ho_khau = HoKhau.objects.get(id_hokhau=ho_khau_id)
-            except HoKhau.DoesNotExist:
-                pass
+            # gán FK bằng _id là nhanh và đúng kiểu
+            nk.id_hokhau_id = ho_khau_id
 
         nhan_khau.save()
         return redirect('nhan_khau_profile', id_nhankhau=nhan_khau.id_nhankhau)
@@ -285,3 +283,78 @@ def home(request):
 def profile(request):
     profile = NhanKhau.objects.all()
     return render(request, 'core/profile.html', {'profile': profile})
+
+
+#============= Kế toán Views =================
+def accountant_home(request):
+    return render(request, 'core/Accountant.html')
+def fee_collection_period(request):
+    return render(request, 'core/FeeCollectionPeriod.html')
+def statistics_view(request):
+    return render(request, 'core/Statistics.html')
+def fee_management(request):
+    khoan_thu_list = KhoanThu.objects.all() # Lấy dữ liệu từ database
+    total_count = khoan_thu_list.count()
+    form = KhoanThuForm()
+    context = {
+        'khoan_thu_list': khoan_thu_list, 
+        'total_count': total_count,      
+        'form': form, 
+    }
+    return render(request, 'core/FeeManagement.html', context)
+
+def view_khoanthu_detail_modal(request, pk):
+    khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
+    if not request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        pass 
+    return render(request, 'core/ViewFeeDetailModal.html', {'khoan_thu': khoan_thu})
+
+def add_khoanthu(request):
+    if request.method == 'POST':
+        form = KhoanThuForm(request.POST)
+        if form.is_valid():
+            khoan_thu = form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest': 
+                messages.success(request, "Khoản thu mới đã được tạo thành công!")
+                return HttpResponse(status=200)
+            else:
+                return redirect('fee_management')
+        else:
+            context = {'form': form}
+            return render(request, 'core/AddFeeModal.html', context) 
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = KhoanThuForm()
+        context = {'form': form}
+        return render(request, 'core/AddFeeModal.html', context)
+    else:
+        form = KhoanThuForm()
+        context = {'form': form, 'page_title': "TẠO KHOẢN THU MỚI"}
+        return render(request, 'core/AddFee.html', context)
+
+def edit_khoanthu(request, pk):
+    khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
+
+    if request.method == 'POST':
+        form = KhoanThuForm(request.POST, instance=khoan_thu)
+        
+        if form.is_valid():
+            form.save() 
+            messages.success(request, f"Khoản thu '{khoan_thu.ten_khoanthu}' đã được cập nhật thành công!")
+            return HttpResponse(status=200) 
+        else:
+            context = {'form': form, 'khoan_thu': khoan_thu}
+            return render(request, 'core/EditFeeModal.html', context)
+            
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = KhoanThuForm(instance=khoan_thu)
+        context = {'form': form, 'khoan_thu': khoan_thu}
+        return render(request, 'core/EditFeeModal.html', context) 
+    else:
+        form = KhoanThuForm(instance=khoan_thu)
+        context = {
+            'form': form, 
+            'khoan_thu': khoan_thu,
+            'page_title': f"CHỈNH SỬA KHOẢN THU - {khoan_thu.ten_khoanthu}",
+        }
+        return render(request, 'core/EditFee.html', context)

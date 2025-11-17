@@ -1,3 +1,4 @@
+<<<<<<< HEAD
  * {
   margin: 0;
   padding: 0;
@@ -80,21 +81,25 @@ body {
   background-color: #ffe36e;
 }
 
+=======
+>>>>>>> e35cc35eaa5234710fdc600ab856baa6cda2e342
 .main-content {
   padding: 30px;
-  flex: 1; 
+  flex: 1;
 }
-
 .main-content h1 {
   text-align: center;
   margin-bottom: 25px;
 }
 
+/* Lưới danh sách */
 .household-list {
+  /* dùng util có sẵn cũng được: .grid-autofit-260 */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
 }
+<<<<<<< HEAD
 
 .card {
   background: #ffffff;
@@ -160,3 +165,5 @@ body {
   font-weight: bold;
   color: black;
 }
+=======
+>>>>>>> e35cc35eaa5234710fdc600ab856baa6cda2e342

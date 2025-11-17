@@ -1,26 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>accountmanage'</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Account – View</title>
 
-  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-  <link rel="stylesheet" href="{% static 'css/accountmanage_view.css' %}">
-</head>
-<body>  
-  {% include 'core/header.html'%}
-  <main class="main-section">
-    <section class="profile-card">
-      <h2>{{ taikhoan.username }}</h2>
-      <ul>
-        <li><strong>ID tài khoản:</strong> {{ taikhoan.id_taikhoan }}</li>
-        <li><strong>Tên đăng nhập:</strong> {{ taikhoan.username }}</li>
-        <li><strong>Mật khẩu:</strong> ********</li>
-        <li><strong>Vai trò:</strong> {{ taikhoan.vaitro.ten_vaitro }}</li>
-      </ul>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/accountmanage_view.css' %}" />
+  </head>
+  <body>
+    {% include 'core/header.html'%}
 
+<<<<<<< HEAD
       <div class="btn-group">
         <a href="{% url 'edit_taikhoan' taikhoan.id_taikhoan %}" class="hrbtn">✏️ Chỉnh sửa</a>
         <a href="/accountmanage/" class="hrbtn danger">← Quay lại</a>
@@ -31,6 +24,44 @@
     </section>
   </main>
           {% include 'core/sidebar_and_footer.html' %}
+=======
+    <main class="main-section">
+      <section class="brutalist-panel brutalist-panel--narrow profile-card">
+        <h2
+          class="text-uc"
+          style="
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 18px;
+          "
+        >
+          {{ taikhoan.username }}
+        </h2>
+>>>>>>> e35cc35eaa5234710fdc600ab856baa6cda2e342
 
+        <ul class="profile-list">
+          <li><strong>ID tài khoản:</strong> {{ taikhoan.id_taikhoan }}</li>
+          <li><strong>Tên đăng nhập:</strong> {{ taikhoan.username }}</li>
+          <li><strong>Mật khẩu:</strong> ********</li>
+          <li><strong>Vai trò:</strong> {{ taikhoan.vaitro.ten_vaitro }}</li>
+        </ul>
+
+        <div class="form-actions" style="margin-top: 16px">
+          <a
+            href="{% url 'edit_taikhoan' taikhoan.id_taikhoan %}"
+            class="btn btn--yellow btn--compact"
+            >✎ Chỉnh sửa</a
+          >
+          <a
+            href="{% url 'accountmanage' %}"
+            class="btn btn--secondary btn--compact"
+            >← Quay lại</a
+          >
+        </div>
+      </section>
+    </main>
+
+    {% include 'core/sidebar_and_footer.html' %}
   </body>
 </html>
