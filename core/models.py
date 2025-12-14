@@ -1,6 +1,6 @@
 # backend/models.py
 from django.db import models
-from django.contrib.postgres.fields import CITextField
+# ĐÃ XÓA DÒNG IMPORT GÂY LỖI: from django.contrib.postgres.fields import CITextField
 
 # ===== ENUM choices (map PostgreSQL ENUM sang Python choices) =====
 class LoaiBienDong(models.TextChoices):
@@ -14,7 +14,8 @@ class TrangThaiDotThu(models.TextChoices):
 
 # ===== 1) VaiTro =====
 class VaiTro(models.Model):
-    id_vaitro = models.IntegerField(primary_key=True)
+    # SỬA: Dùng AutoField để ID tự tăng (1, 2, 3...)
+    id_vaitro = models.AutoField(primary_key=True)
     ten_vaitro = models.CharField(max_length=50)
 
     class Meta:
@@ -26,8 +27,12 @@ class VaiTro(models.Model):
 
 # ===== 2) TaiKhoan =====
 class TaiKhoan(models.Model):
-    id_taikhoan = models.IntegerField(primary_key=True)
-    username = CITextField(unique=True)  # citext -> case-insensitive
+    # SỬA: Dùng AutoField
+    id_taikhoan = models.AutoField(primary_key=True)
+    
+    # SỬA QUAN TRỌNG: Thay CITextField bằng CharField để sửa lỗi crash server
+    username = models.CharField(max_length=50, unique=True)  
+    
     password = models.CharField(max_length=255)
     id_vaitro = models.ForeignKey(
         VaiTro, on_delete=models.RESTRICT, db_column='id_vaitro', related_name='taikhoans'
@@ -42,7 +47,7 @@ class TaiKhoan(models.Model):
 
 # ===== 3) HoKhau =====
 class HoKhau(models.Model):
-    id_hokhau = models.IntegerField(primary_key=True)
+    id_hokhau = models.AutoField(primary_key=True) # SỬA
     so_can_ho = models.CharField(max_length=20, unique=True)
     dien_tich = models.FloatField(null=True, blank=True)
 
@@ -55,7 +60,7 @@ class HoKhau(models.Model):
 
 # ===== 4) NhanKhau =====
 class NhanKhau(models.Model):
-    id_nhankhau = models.IntegerField(primary_key=True)
+    id_nhankhau = models.AutoField(primary_key=True) # SỬA
     ho_ten = models.CharField(max_length=100)
     ngay_sinh = models.DateField(null=True, blank=True)
     cccd = models.CharField(max_length=12, unique=True, null=True, blank=True)
@@ -76,7 +81,7 @@ class NhanKhau(models.Model):
 
 # ===== 5) BienDongNhanKhau =====
 class BienDongNhanKhau(models.Model):
-    id_biendong = models.IntegerField(primary_key=True)
+    id_biendong = models.AutoField(primary_key=True) # SỬA
     loai_biendong = models.CharField(max_length=8, choices=LoaiBienDong.choices)
     ngay_batdau = models.DateField()
     ngay_ketthuc = models.DateField(null=True, blank=True)
@@ -94,7 +99,7 @@ class BienDongNhanKhau(models.Model):
 
 # ===== 6) KhoanThu =====
 class KhoanThu(models.Model):
-    id_khoanthu = models.IntegerField(primary_key=True)
+    id_khoanthu = models.AutoField(primary_key=True) # SỬA
     ten_khoanthu = models.CharField(max_length=100)
     don_gia = models.DecimalField(max_digits=15, decimal_places=2)
     don_vi_tinh = models.CharField(max_length=20)
@@ -108,7 +113,7 @@ class KhoanThu(models.Model):
 
 # ===== 7) DotThuPhi =====
 class DotThuPhi(models.Model):
-    id_dotthu = models.IntegerField(primary_key=True)
+    id_dotthu = models.AutoField(primary_key=True) # SỬA
     ten_dotthu = models.CharField(max_length=100)
     ngay_batdau = models.DateField()
     ngay_ketthuc = models.DateField(null=True, blank=True)
@@ -116,7 +121,7 @@ class DotThuPhi(models.Model):
         max_length=6, choices=TrangThaiDotThu.choices, default=TrangThaiDotThu.DRAFT
     )
     id_khoanthu = models.ForeignKey(
-        'core.KhoanThu',             # <- dùng chuỗi
+        'core.KhoanThu',            
         on_delete=models.RESTRICT,
         db_column='id_khoanthu',
         related_name='dot_thus'
@@ -134,17 +139,17 @@ class DotThuPhi(models.Model):
 
 # ===== 8) HoaDon =====
 class HoaDon(models.Model):
-    id_hoadon = models.IntegerField(primary_key=True)
+    id_hoadon = models.AutoField(primary_key=True) # SỬA
     tong_tien = models.DecimalField(max_digits=15, decimal_places=2)
     ngay_nop = models.DateField(null=True, blank=True)
     id_dotthu = models.ForeignKey(
-        'core.DotThuPhi',            # <- dùng chuỗi
+        'core.DotThuPhi',            
         on_delete=models.RESTRICT,
         db_column='id_dotthu',
         related_name='hoa_dons'
     )
     id_hokhau = models.ForeignKey(
-        'core.HoKhau',               # <- dùng chuỗi (cho đồng bộ)
+        'core.HoKhau',               
         on_delete=models.RESTRICT,
         db_column='id_hokhau',
         related_name='hoa_dons'
