@@ -2,13 +2,19 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("logintest/", views.login_view, name="logintest"),
+    path("signintest/", views.register, name="signintest"),
+    path("profiletest/", views.profile, name="profiletest"),
+    path("logouttest/", views.user_logout, name="logouttest"),
+
     path('', views.home, name='home'),
     path('accountmanage', views.accountmanage, name='accountmanage'),
     path('accountmanage/addaccount', views.accountmanage_addaccount, name='accountmanage_addaccount'),
     # alias:
     path('accountmanage/addaccount/', views.accountmanage_addaccount, name='addaccount'),
     path('accountmanage/change/<int:id_taikhoan>/', views.edit_taikhoan, name='edit_taikhoan'),
-    path('accountmanage/view/<int:id_taikhoan>/', views.view_taikhoan, name='view_taikhoan'),  # 👈 thêm dòng này
+    path('accountmanage/view/<int:id_taikhoan>/', views.view_taikhoan, name='view_taikhoan'),  
+    path('accountmanage/delete/<int:id_taikhoan>/', views.accountmanage_delete, name='accountmanage_delete'),  
 
 
     path('demomanage', views.demomanage, name='demomanage'),
@@ -25,6 +31,7 @@ urlpatterns = [
     path('ho-khau/them/', views.add_hokhau, name='add_hokhau'),
     path('hokhau_detail/<int:id_hokhau>/', views.hokhau_detail, name='hokhau_detail'),
     path('ho-khau/<int:id_hokhau>/edit/', views.edit_hokhau, name='hokhau_edit'),
+    path('ho-khau/<int:id_hokhau>/delete/', views.hrmanage_delete, name='hrmanage_delete'),
 
 
     path('hredit/', views.hredit, name='hredit'),

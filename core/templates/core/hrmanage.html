@@ -6,40 +6,29 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>hrmanage</title>
 
-    <!-- nếu dùng Django, đổi thành:  và  -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/hrmanage.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
-  </head>
-  <body>
-    <header class="topbar">
-      <button
-        id="btnOpen"
-        class="icon-btn"
-        aria-controls="sidebar"
-        aria-expanded="false"
-        aria-label="Mở menu"
-      >
-        ☰ Menu
-      </button>
-      <h1>BLUEMOON - Dashboard</h1>
-    </header>
-    <div class="search-bar">
-      <form method="get" action="{% url 'hrmanage' %}">
-        <input
-          type="text"
-          name="search_id"
-          placeholder="Nhập ID nhân khẩu..."
-          value="{{ query }}"
-        />
-        <button type="submit">Tìm kiếm</button>
-        {% if query %}
-        <a href="{% url 'hrmanage' %}">Hiện tất cả</a>
-        {% endif %}
-      </form>
-    </div>
-    <main class="main-content">
-      <h1>Danh sách hộ khẩu</h1>
+  <!-- nếu dùng Django, đổi thành:  và  -->
+  <link rel="stylesheet" href="{% static 'css/hrmanage.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}? v=2">
+</head>
+<body>  
+  <header class="topbar">
+    <button id="btnOpen" class="icon-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Mở menu">
+      ☰ Menu
+    </button>
+    <h1>BLUEMOON - Dashboard</h1>
+  </header>
+  <div class="search-bar">
+    <form method="get" action="{% url 'hrmanage' %}">
+      <input type="text" name="search_id" placeholder="Nhập ID nhân khẩu..." value="{{ query }}">
+      <button type="submit">Tìm kiếm</button>
+      {% if query %}
+      <a href="{% url 'hrmanage' %}">Hiện tất cả</a>
+      {% endif %}
+    </form>
+  </div>
+  <main class="main-content">
+  
+  <h1>Danh sách hộ khẩu</h1>
       <div class="household-list">
         {% for hk in ho_khau_list %}
         <div class="brutalist-card">

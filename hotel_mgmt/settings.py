@@ -1,6 +1,7 @@
 """
 Django settings for hotel_mgmt project.
 """
+AUTH_USER_MODEL = "core.Taikhoan"
 
 from pathlib import Path
 
@@ -117,6 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -131,5 +133,6 @@ STATICFILES_DIRS = [
     BASE_DIR / "core" / "static"
 ]
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, "static")

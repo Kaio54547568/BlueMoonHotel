@@ -1,6 +1,29 @@
 # backend/models.py
 from django.db import models
-# ĐÃ XÓA DÒNG IMPORT GÂY LỖI: from django.contrib.postgres.fields import CITextField
+from django.contrib.postgres.fields import CITextField
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+
+
+
+class TaiKhoanManager(BaseUserManager):
+    def create_user(self, username, password=None, **extra_fields):
+        if not username:
+            raise ValueError("Username là bắt buộc")
+
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)   # ✅ hash chuẩn Django
+        user.save()
+        return user
+    
+
+    def create_superuser(self, username, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        return self.create_user(username, password, **extra_fields)
+
+
+
 
 # ===== ENUM choices (map PostgreSQL ENUM sang Python choices) =====
 class LoaiBienDong(models.TextChoices):
@@ -17,63 +40,43 @@ class VaiTro(models.Model):
     # SỬA: Dùng AutoField để ID tự tăng (1, 2, 3...)
     id_vaitro = models.AutoField(primary_key=True)
     ten_vaitro = models.CharField(max_length=50)
-
     class Meta:
-        managed = False
+        managed = True
         db_table = 'vaitro'
 
     def __str__(self):
         return self.ten_vaitro
-
-# ===== 2) TaiKhoan =====
-class TaiKhoan(models.Model):
-    # SỬA: Dùng AutoField
-    id_taikhoan = models.AutoField(primary_key=True)
-    
-    # SỬA QUAN TRỌNG: Thay CITextField bằng CharField để sửa lỗi crash server
-    username = models.CharField(max_length=50, unique=True)  
-    
-    password = models.CharField(max_length=255)
-    id_vaitro = models.ForeignKey(
-        VaiTro, on_delete=models.RESTRICT, db_column='id_vaitro', related_name='taikhoans'
-    )
-
-    class Meta:
-        managed = False
-        db_table = 'taikhoan'
-
-    def __str__(self):
-        return str(self.username)
-
-# ===== 3) HoKhau =====
+# =======================
+# Bảng Hộ khẩu
+# =======================
 class HoKhau(models.Model):
-    id_hokhau = models.AutoField(primary_key=True) # SỬA
-    so_can_ho = models.CharField(max_length=20, unique=True)
+    id_hokhau = models.AutoField(primary_key=True)
+    so_can_ho = models.CharField(max_length=20)
     dien_tich = models.FloatField(null=True, blank=True)
-
+    is_deleted = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     class Meta:
-        managed = False
         db_table = 'hokhau'
 
-    def __str__(self):
-        return f'Hộ {self.id_hokhau} - {self.so_can_ho}'
 
 # ===== 4) NhanKhau =====
 class NhanKhau(models.Model):
     id_nhankhau = models.AutoField(primary_key=True) # SỬA
     ho_ten = models.CharField(max_length=100)
     ngay_sinh = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     cccd = models.CharField(max_length=12, unique=True, null=True, blank=True)
     quan_he_chu_ho = models.CharField(max_length=50, null=True, blank=True)
     id_hokhau = models.ForeignKey(
-        HoKhau, on_delete=models.RESTRICT, db_column='id_hokhau', related_name='nhan_khaus'
+        HoKhau, on_delete=models.RESTRICT, db_column='id_hokhau', related_name='nhan_khaus', default=1
     )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'nhankhau'
         indexes = [
-            models.Index(fields=['id_hokhau'], name='idx_nhankhau_hokhau'),
+            models.Index(fields=['id_hokhau'], name='id_hokhau'),
         ]
 
     def __str__(self):
@@ -87,15 +90,36 @@ class BienDongNhanKhau(models.Model):
     ngay_ketthuc = models.DateField(null=True, blank=True)
     ly_do = models.TextField(null=True, blank=True)
     id_nhankhau = models.ForeignKey(
-        NhanKhau, on_delete=models.CASCADE, db_column='id_nhankhau', related_name='bien_dongs'
+        NhanKhau, on_delete=models.CASCADE, db_column='id_nhankhau', related_name='nhankhau',
+        default=1
     )
+    class Meta:
+            managed = True
+            db_table = 'biendongnhankhau'
+
+# =======================
+# Bảng Tài khoản
+# =======================
+class TaiKhoan(AbstractBaseUser, PermissionsMixin):
+    id_taikhoan = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=50, unique=True)  # CITEXT có thể bỏ qua
+    vaitro = models.ForeignKey(VaiTro, on_delete=models.SET_NULL,
+        null=True,          # ✅ cho phép null
+        blank=True, related_name='vaitro', db_column='id_vaitro')
+
+    is_deleted = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)   # 🔥 BẮT BUỘC
+
+    objects = TaiKhoanManager()
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+
+
 
     class Meta:
-        managed = False
-        db_table = 'biendongnhankhau'
-        indexes = [
-            models.Index(fields=['id_nhankhau'], name='idx_biendong_nhankhau'),
-        ]
+        db_table = 'taikhoan'   
 
 # ===== 6) KhoanThu =====
 class KhoanThu(models.Model):
@@ -105,7 +129,7 @@ class KhoanThu(models.Model):
     don_vi_tinh = models.CharField(max_length=20)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'khoanthu'
 
     def __str__(self):
@@ -124,11 +148,12 @@ class DotThuPhi(models.Model):
         'core.KhoanThu',            
         on_delete=models.RESTRICT,
         db_column='id_khoanthu',
-        related_name='dot_thus'
+        related_name='dot_thus',
+        default=1
     )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'dotthuphi'
         indexes = [
             models.Index(fields=['id_khoanthu'], name='idx_dotthu_khoanthu'),
@@ -146,17 +171,19 @@ class HoaDon(models.Model):
         'core.DotThuPhi',            
         on_delete=models.RESTRICT,
         db_column='id_dotthu',
-        related_name='hoa_dons'
+        related_name='hoa_dons',
+        default=1
     )
     id_hokhau = models.ForeignKey(
         'core.HoKhau',               
         on_delete=models.RESTRICT,
         db_column='id_hokhau',
-        related_name='hoa_dons'
+        related_name='hoa_dons',
+        default=1
     )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'hoadon'
         constraints = [
             models.UniqueConstraint(fields=['id_hokhau', 'id_dotthu'], name='uq_hoadon_hokhau_dotthu'),
