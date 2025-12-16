@@ -1,28 +1,37 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Danh sách Hộ khẩu</title>
+    <title>Đăng nhập</title>
 </head>
 <body>
-    <h1>Danh sách Hộ khẩu</h1>
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>ID</th>
-            <th>Số căn hộ</th>
-            <th>Diện tích (m²)</th>
-        </tr>
-        {% for hk in ho_khau_list %}
-        <tr>
-            <td>{{ hk.id_ho_khau }}</td>
-            <td>{{ hk.so_can_ho }}</td>
-            <td>{{ hk.dien_tich }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3">Không có dữ liệu</td>
-        </tr>
-        {% endfor %}
-    </table>
+
+    <h2>ĐĂNG NHẬP</h2>
+
+    <form method="post" action="/logintest/">
+        <!-- Django cần csrf_token, nếu dùng backend khác thì bỏ dòng này -->
+        {% csrf_token %}
+
+        <p>
+            <label for="username">Tên đăng nhập:</label><br>
+            <input type="text" id="username" name="username" required>
+        </p>
+
+        <p>
+            <label for="password">Mật khẩu:</label><br>
+            <input type="password" id="password" name="password" required>
+        </p>
+
+        <p>
+            <button type="submit">Đăng nhập</button>
+        </p>
+    </form>
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
 </body>
 </html>

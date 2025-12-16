@@ -5,9 +5,84 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ReservationForm, KhoanThuForm
 from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu
 from django.contrib import messages
-from django.contrib.auth import authenticate, login 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse # <-- ĐÃ THÊM IMPORT NÀY
+from django.contrib.auth.hashers import make_password
 
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+
+
+def user_logout(request):
+    logout(request)
+#    messages.success(request, "Bạn đã đăng xuất.")
+    return redirect("logintest")
+
+
+@login_required(login_url="logintest")
+def profile(request):
+    current_user= request.user
+    print(request.user.is_authenticated)
+    if request.user.is_authenticated: 
+        return redirect("logintest")
+    return render(request, "core/profiletest.html", {
+        "user": current_user
+    })
+
+
+def register(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+
+        # 1. Kiểm tra dữ liệu
+        if not username or not password1 or not password2:
+            messages.error(request, "Vui lòng nhập đầy đủ thông tin.")
+            return redirect("register")
+
+        if password1 != password2:
+            messages.error(request, "Mật khẩu không khớp.")
+            return redirect("register")
+
+        if TaiKhoan.objects.filter(username=username).exists():
+            messages.error(request, "Tên đăng nhập đã tồn tại.")
+            return redirect("register")
+
+        # 2. Tạo tài khoản
+        taikhoan = TaiKhoan.objects.create(
+            username=username,
+            password=make_password(password1),  # 🔐 mã hóa mật khẩu
+            is_active=True,
+            is_staff=False
+        )
+
+        # 3. Tự động đăng nhập sau khi đăng ký
+        login(request, taikhoan)
+
+        messages.success(request, "Đăng ký thành công!")
+        return redirect("home")
+
+    return render(request, "core/register.html")
+
+def login_view(request):
+    if request.method == "POST":
+        username_request = request.POST.get("username")
+        password_request = request.POST.get("password")
+
+        user = authenticate(request, username=username_request, password=password_request)
+        print(username_request+'\n'+password_request)
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            return render(request, "core/test.html", {
+                "error": "Sai tên đăng nhập hoặc mật khẩu"
+            })
+
+    return render(request, "core/test.html")
 
 def test(request):
     ds_ho_khau = HoKhau.objects.all()  # Lấy toàn bộ dữ liệu tro bảng HoKhau
@@ -65,68 +140,68 @@ def add_demo(request):
         return redirect('demomanage/adddemo')  # reload lại form trống    
 
     return render(request, 'core/demomanage_add.html')
-def login(request):
-    # Xử lý khi người dùng NHẤN NÚT (gửi form)
-    if request.method == 'POST':
+# def login(request):
+#     # Xử lý khi người dùng NHẤN NÚT (gửi form)
+#     if request.method == 'POST':
         
-        # Xác định xem form Admin hay User được gửi
-        if 'username_admin' in request.POST:
-            user_nhap = request.POST.get('username_admin')
-            pass_nhap = request.POST.get('password_admin')
-            # Đảm bảo tên vai trò này KHỚP CHÍNH XÁC với CSDL của bạn
-            vaitro_mong_muon = 1 # (1 = admin)
+#         # Xác định xem form Admin hay User được gửi
+#         if 'username_admin' in request.POST:
+#             user_nhap = request.POST.get('username_admin')
+#             pass_nhap = request.POST.get('password_admin')
+#             # Đảm bảo tên vai trò này KHỚP CHÍNH XÁC với CSDL của bạn
+#             vaitro_mong_muon = 1 # (1 = admin)
         
-        elif 'username_user' in request.POST:
-            user_nhap = request.POST.get('username_user')
-            pass_nhap = request.POST.get('password_user')
-            # Đảm bảo tên vai trò này KHỚP CHÍNH XÁC với CSDL của bạn
-            vaitro_mong_muon = 3 # (3 = kế toán, hoặc vai trò người dùng)
+#         elif 'username_user' in request.POST:
+#             user_nhap = request.POST.get('username_user')
+#             pass_nhap = request.POST.get('password_user')
+#             # Đảm bảo tên vai trò này KHỚP CHÍNH XÁC với CSDL của bạn
+#             vaitro_mong_muon = 3 # (3 = kế toán, hoặc vai trò người dùng)
         
-        else:
-            user_nhap = None
+#         else:
+#             user_nhap = None
 
-        if user_nhap:
-            try:
-                # Bước 2: Tìm tài khoản trong CSDL
-                tai_khoan = TaiKhoan.objects.get(username=user_nhap) 
+#         if user_nhap:
+#             try:
+#                 # Bước 2: Tìm tài khoản trong CSDL
+#                 tai_khoan = TaiKhoan.objects.get(username=user_nhap) 
                 
-                # Bước 3: Kiểm tra mật khẩu
-                if pass_nhap == tai_khoan.password:
+#                 # Bước 3: Kiểm tra mật khẩu
+#                 if pass_nhap == tai_khoan.password:
                     
-                    # === SỬA LẠI DÒNG NÀY ===
-                    # Bước 4: Kiểm tra vai trò (So sánh SỐ với SỐ)
-                    if tai_khoan.vaitro_id == vaitro_mong_muon:
-                    # === KẾT THÚC SỬA ===
+#                     # === SỬA LẠI DÒNG NÀY ===
+#                     # Bước 4: Kiểm tra vai trò (So sánh SỐ với SỐ)
+#                     if tai_khoan.vaitro_id == vaitro_mong_muon:
+#                     # === KẾT THÚC SỬA ===
                         
-                        # BƯỚC 5: ĐĂNG NHẬP
-                        # Dùng hàm 'auth_login' chúng ta đã import
-                        request.session['id_taikhoan'] = tai_khoan.id_taikhoan
+#                         # BƯỚC 5: ĐĂNG NHẬP
+#                         # Dùng hàm 'auth_login' chúng ta đã import
+#                         request.session['id_taikhoan'] = tai_khoan.id_taikhoan
                         
-                        # Dựa theo thông tin trước đó, 1=Admin, 3=Kế toán
+#                         # Dựa theo thông tin trước đó, 1=Admin, 3=Kế toán
                         
-                        if vaitro_mong_muon == 3: # NẾU LÀ KẾ TOÁN
-                            return redirect('accountant_home') # <-- Đi đến trang Kế toán
-                        else: # NẾU LÀ ADMIN HOẶC VAI TRÒ KHÁC
-                            return redirect('home') # <-- Đi đến trang chủ chung
-                    else:
-                        # Vai trò sai
-                        messages.error(request, "Bạn đang đăng nhập ở form không đúng vai trò!")
-                else:
-                    # Mật khẩu sai
-                    messages.error(request, "Mật khẩu không đúng!")
+#                         if vaitro_mong_muon == 3: # NẾU LÀ KẾ TOÁN
+#                             return redirect('accountant_home') # <-- Đi đến trang Kế toán
+#                         else: # NẾU LÀ ADMIN HOẶC VAI TRÒ KHÁC
+#                             return redirect('home') # <-- Đi đến trang chủ chung
+#                     else:
+#                         # Vai trò sai
+#                         messages.error(request, "Bạn đang đăng nhập ở form không đúng vai trò!")
+#                 else:
+#                     # Mật khẩu sai
+#                     messages.error(request, "Mật khẩu không đúng!")
 
-            except TaiKhoan.DoesNotExist:
-                # Không tìm thấy username
-                messages.error(request, "Tên đăng nhập không tồn tại!")
+#             except TaiKhoan.DoesNotExist:
+#                 # Không tìm thấy username
+#                 messages.error(request, "Tên đăng nhập không tồn tại!")
         
-        # Nếu có bất kỳ lỗi nào, render lại trang login
-        # (Template sẽ tự động hiển thị các 'messages' lỗi)
-        return render(request, 'core/login.html')
+#         # Nếu có bất kỳ lỗi nào, render lại trang login
+#         # (Template sẽ tự động hiển thị các 'messages' lỗi)
+#         return render(request, 'core/login.html')
 
-    else:
-        # Xử lý khi người dùng MỞ TRANG (yêu cầu GET)
-        # Chỉ cần hiển thị trang login
-        return render(request, 'core/login.html')
+#     else:
+#         # Xử lý khi người dùng MỞ TRANG (yêu cầu GET)
+#         # Chỉ cần hiển thị trang login
+#         return render(request, 'core/login.html')
 
 def demomanage(request):
     nhan_khau_list = NhanKhau.objects.all()
