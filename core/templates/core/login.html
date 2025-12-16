@@ -16,15 +16,15 @@
   <body>
     <div class="wrapper" id="loginCard">
       <div class="flip">
-        <!-- Mặt trước: User -->
-        <form class="panel panel--user" action="">
-          <h1>Người dùng</h1>
+        
+        <form class="panel panel--user" action="" method="POST">
+          {% csrf_token %} <h1>Người dùng</h1>
           <div class="input-box">
-            <input type="text" placeholder="Tên đăng nhập" required />
+            <input type="text" name="username_user" placeholder="Tên đăng nhập (Kế toán)" required />
             <i class="bx bxs-user"></i>
           </div>
           <div class="input-box">
-            <input type="password" placeholder="Mật khẩu" required />
+            <input type="password" name="password_user" placeholder="Mật khẩu" required />
             <i class="bx bxs-lock-alt"></i>
           </div>
 
@@ -50,15 +50,14 @@
           </div>
         </form>
 
-        <!-- Mặt sau: Admin -->
-        <form class="panel panel--admin" action="">
-          <h1>Admin</h1>
+        <form class="panel panel--admin" action="" method="POST">
+          {% csrf_token %} <h1>Admin</h1>
           <div class="input-box">
-            <input type="text" placeholder="Tên đăng nhập" required />
+            <input type="text" name="username_admin" placeholder="Tên đăng nhập Admin" required />
             <i class="bx bxs-id-card"></i>
           </div>
           <div class="input-box">
-            <input type="password" placeholder="Mật khẩu" required />
+            <input type="password" name="password_admin" placeholder="Mật khẩu" required />
             <i class="bx bxs-lock"></i>
           </div>
 

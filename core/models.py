@@ -37,7 +37,8 @@ class TrangThaiDotThu(models.TextChoices):
 
 # ===== 1) VaiTro =====
 class VaiTro(models.Model):
-    id_vaitro = models.IntegerField(primary_key=True)
+    # SỬA: Dùng AutoField để ID tự tăng (1, 2, 3...)
+    id_vaitro = models.AutoField(primary_key=True)
     ten_vaitro = models.CharField(max_length=50)
     class Meta:
         managed = True
@@ -60,7 +61,7 @@ class HoKhau(models.Model):
 
 # ===== 4) NhanKhau =====
 class NhanKhau(models.Model):
-    id_nhankhau = models.IntegerField(primary_key=True)
+    id_nhankhau = models.AutoField(primary_key=True) # SỬA
     ho_ten = models.CharField(max_length=100)
     ngay_sinh = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -83,7 +84,7 @@ class NhanKhau(models.Model):
 
 # ===== 5) BienDongNhanKhau =====
 class BienDongNhanKhau(models.Model):
-    id_biendong = models.IntegerField(primary_key=True)
+    id_biendong = models.AutoField(primary_key=True) # SỬA
     loai_biendong = models.CharField(max_length=8, choices=LoaiBienDong.choices)
     ngay_batdau = models.DateField()
     ngay_ketthuc = models.DateField(null=True, blank=True)
@@ -122,7 +123,7 @@ class TaiKhoan(AbstractBaseUser, PermissionsMixin):
 
 # ===== 6) KhoanThu =====
 class KhoanThu(models.Model):
-    id_khoanthu = models.IntegerField(primary_key=True)
+    id_khoanthu = models.AutoField(primary_key=True) # SỬA
     ten_khoanthu = models.CharField(max_length=100)
     don_gia = models.DecimalField(max_digits=15, decimal_places=2)
     don_vi_tinh = models.CharField(max_length=20)
@@ -136,7 +137,7 @@ class KhoanThu(models.Model):
 
 # ===== 7) DotThuPhi =====
 class DotThuPhi(models.Model):
-    id_dotthu = models.IntegerField(primary_key=True)
+    id_dotthu = models.AutoField(primary_key=True) # SỬA
     ten_dotthu = models.CharField(max_length=100)
     ngay_batdau = models.DateField()
     ngay_ketthuc = models.DateField(null=True, blank=True)
@@ -144,7 +145,7 @@ class DotThuPhi(models.Model):
         max_length=6, choices=TrangThaiDotThu.choices, default=TrangThaiDotThu.DRAFT
     )
     id_khoanthu = models.ForeignKey(
-        'core.KhoanThu',             # <- dùng chuỗi
+        'core.KhoanThu',            
         on_delete=models.RESTRICT,
         db_column='id_khoanthu',
         related_name='dot_thus',
@@ -163,18 +164,18 @@ class DotThuPhi(models.Model):
 
 # ===== 8) HoaDon =====
 class HoaDon(models.Model):
-    id_hoadon = models.IntegerField(primary_key=True)
+    id_hoadon = models.AutoField(primary_key=True) # SỬA
     tong_tien = models.DecimalField(max_digits=15, decimal_places=2)
     ngay_nop = models.DateField(null=True, blank=True)
     id_dotthu = models.ForeignKey(
-        'core.DotThuPhi',            # <- dùng chuỗi
+        'core.DotThuPhi',            
         on_delete=models.RESTRICT,
         db_column='id_dotthu',
         related_name='hoa_dons',
         default=1
     )
     id_hokhau = models.ForeignKey(
-        'core.HoKhau',               # <- dùng chuỗi (cho đồng bộ)
+        'core.HoKhau',               
         on_delete=models.RESTRICT,
         db_column='id_hokhau',
         related_name='hoa_dons',

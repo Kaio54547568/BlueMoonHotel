@@ -1,3 +1,5 @@
+
+from django.http import HttpResponse 
 from calendar import day_name
 from pyexpat.errors import messages
 from webbrowser import get
@@ -84,10 +86,88 @@ def login_view(request):
 
     return render(request, "core/test.html")
 
-def test(request):
-    ds_ho_khau = HoKhau.objects.all()  # Lấy toàn bộ dữ liệu tro bảng HoKhau
 
+# ========================================================
+# 1. HÀM LOGIN & HOME (PHIÊN BẢN CHÍNH THỨC - ĐÃ FIX LỖI)
+# ========================================================
+
+def login(request):
+    # Nếu đã có session thì vào thẳng trang chủ, không cần đăng nhập lại
+    if request.session.get('id_taikhoan'):
+        return redirect('home')
+
+    if request.method == 'POST':
+        # Lấy dữ liệu từ form (tên input đã khớp với file HTML mới)
+        user_nhap = None
+        if 'username_admin' in request.POST:
+            user_nhap = request.POST.get('username_admin')
+            pass_nhap = request.POST.get('password_admin')
+            vaitro_mong_muon = 1
+        elif 'username_user' in request.POST:
+            user_nhap = request.POST.get('username_user')
+            pass_nhap = request.POST.get('password_user')
+            vaitro_mong_muon = 3
+        
+        if user_nhap:
+            try:
+                tai_khoan = TaiKhoan.objects.get(username=user_nhap)
+                
+                # So sánh mật khẩu (Không mã hóa: 2005 == 2005)
+                if pass_nhap == tai_khoan.password:
+                    
+                    # Kiểm tra vai trò
+                    real_role = getattr(tai_khoan, 'id_vaitro_id', None)
+                    if real_role is None: 
+                        real_role = getattr(tai_khoan, 'vaitro_id', None)
+                    
+                    if real_role == vaitro_mong_muon:
+                        # === LƯU SESSION ===
+                        request.session['id_taikhoan'] = tai_khoan.id_taikhoan
+                        # Các dòng này đảm bảo Session được lưu chặt chẽ
+                        request.session.modified = True 
+                        request.session.save()
+                        
+                        # === CHUYỂN HƯỚNG VỀ TRANG CHỦ ===
+                        if real_role == 3:
+                            return redirect('accountant_home')
+                        else:
+                            return redirect('home')
+                    else:
+                        messages.error(request, "Bạn đang đăng nhập sai vai trò!")
+                else:
+                    messages.error(request, "Mật khẩu không đúng!")
+
+            except TaiKhoan.DoesNotExist:
+                messages.error(request, "Tên đăng nhập không tồn tại!")
+        
+    return render(request, 'core/login.html')
+
+def home(request):
+    # Kiểm tra bảo mật: Chưa đăng nhập thì đuổi về Login
+    id_tk = request.session.get('id_taikhoan')
+    if not id_tk:
+        return redirect('login')
+        
+    # Đã đăng nhập -> Hiển thị trang chủ
+    HoKhaus = HoKhau.objects.all()
+    return render(request, 'core/home.html', {'home': HoKhaus})
+
+def accountant_home(request):
+    # Kiểm tra bảo mật
+    id_tk = request.session.get('id_taikhoan')
+    if not id_tk:
+         return redirect('login')
+         
+    return render(request, 'core/Accountant.html')
+
+# ========================================================
+# 2. CÁC HÀM CHỨC NĂNG KHÁC (GIỮ NGUYÊN)
+# ========================================================
+
+def test(request):
+    ds_ho_khau = HoKhau.objects.all()
     return render(request, 'core/test.html', {'ho_khau_list': ds_ho_khau})
+
 def edit_nhan_khau(request, id_nhankhau):
     nk = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
     if request.method == "POST":
@@ -98,13 +178,12 @@ def edit_nhan_khau(request, id_nhankhau):
         ho_khau_id = request.POST.get('ho_khau_id')
 
         if ho_khau_id:
-            # gán FK bằng _id là nhanh và đúng kiểu
             nk.id_hokhau_id = ho_khau_id
 
-        nhan_khau.save()
-        return redirect('nhan_khau_profile', id_nhankhau=nhan_khau.id_nhankhau)
+        nk.save()
+        return redirect('nhan_khau_profile', id_nhankhau=nk.id_nhankhau)
 
-    return render(request, 'core/demomanage_edit.html', {'nhan_khau': nhan_khau})
+    return render(request, 'core/demomanage_edit.html', {'nhan_khau': nk})
 
 def nhan_khau_profile(request, id_nhankhau):
     nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
@@ -135,9 +214,9 @@ def add_demo(request):
                 ho_khau=hokhau
             )
         except HoKhau.DoesNotExist:
-            pass  # có thể hiển thị thông báo lỗi sau
+            pass 
 
-        return redirect('demomanage/adddemo')  # reload lại form trống    
+        return redirect('demomanage/adddemo')   
 
     return render(request, 'core/demomanage_add.html')
 # def login(request):
@@ -205,39 +284,19 @@ def add_demo(request):
 
 def demomanage(request):
     nhan_khau_list = NhanKhau.objects.all()
-    for nhan_khau in nhan_khau_list:
-        print(nhan_khau.id_nhankhau)
-    # nhan_khau_list = [
-    #             NhanKhau(1, "nguyen van a", "1990-05-10", "012345678901", "Chủ hộ", 1),
-    #             NhanKhau(2, "nguyen van a", "1995-07-21", "012345678902", "Vợ", 1),
-    #             NhanKhau(3, "nguyen van a", "2010-11-03", "012345678903", "Con", 1),
-    #             NhanKhau(4, "nguyen van a", "1988-01-15", "012345678904", "Anh trai", 1),
-    #             NhanKhau(5, "nguyen van a", "1992-09-29", "012345678905", "Em gái", 1),
-    #             NhanKhau(6, "nguyen van a", "1975-12-11", "012345678906", "Bố", 1),
-    #             NhanKhau(7, "nguyen van a", "1978-06-05", "012345678907", "Mẹ", 1),
-    #             NhanKhau(8, "nguyen van a", "2000-02-22", "012345678908", "Con trai", 1),
-    #             NhanKhau(9, "nguyen van a", "2002-03-14", "012345678909", "Con gái", 1),
-    #             NhanKhau(10,"nguyen van a",  "1983-08-19", "012345678910", "Cô", 1),
-    #         ]
     query = request.GET.get('search_id', 'demomanage')
     if query:
         try:
-            print(query)
-            # lọc theo ID nhân khẩu nếu người dùng nhập
             for a in nhan_khau_list:
                 if(a.id_nhankhau==int(query)):
                     nhan_khau_list= [a]
-                    print(a.id_nhankhau)
-                print(a.id_nhankhau)
         except ValueError:
-            nhan_khau_list = NhanKhau.objects.all()  # nếu không nhập, hiển thị tất cả
+            nhan_khau_list = NhanKhau.objects.all()
 
     context = {
         'nhan_khau_list': nhan_khau_list,
         'query': query,
     }
-    # for a in nhan_khau_list: 
-    #     print(a.id_ho_khau)
     return render(request, 'core/demomanage.html', context)
 def demomanage_delete(request, id_hokhau):
     exists = HoKhau.objects.filter(id_hokhau=id_hokhau).exists()
@@ -245,22 +304,19 @@ def demomanage_delete(request, id_hokhau):
         hr = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
         hr.is_deleted=True
     return render(request, 'core/hrmanage_delete.html')
+
 def accountmanage(request):
-    # Dữ liệu mẫu cho Tài khoản
     tai_khoan_list = TaiKhoan.objects.all()
     query = request.GET.get('search_id', 'hrmanage')
     if query:
         try:
-            print(query)
-            # lọc theo ID nhân khẩu nếu người dùng nhập
             for a in tai_khoan_list:
                 if(a.id_taikhoan==int(query)):
                     tai_khoan_list= [a]
-                    print(a.id_taikhoan)
-                print(a.id_taikhoan)
         except ValueError:
-            tai_khoan_list= TaiKhoan.objects.all()  # nếu không nhập, hiển thị tất cả
-        context = {
+            tai_khoan_list= TaiKhoan.objects.all()
+    
+    context = {
         'tai_khoan_list': tai_khoan_list,
         'query': query,
     }
@@ -273,17 +329,18 @@ def accountmanage_delete(request, id_taikhoan):
         account = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
         account.is_deleted=True
     return render(request, 'core/accountmanage_delete.html')
+
 def accountmanage_addaccount(request):
     if request.method == "POST":
         username = request.POST.get('username')
-        password = request.POST.get('password')
+        password_raw = request.POST.get('password') 
         vaitro_id = request.POST.get('vaitro_id')
 
         try:
             vaitro = VaiTro.objects.get(id_vaitro=vaitro_id)
             TaiKhoan.objects.create(
                 username=username,
-                password=password,
+                password=password_raw,
                 vaitro=vaitro
             )
             messages.success(request, f"Tài khoản '{username}' đã được thêm thành công!")
@@ -301,17 +358,18 @@ def view_taikhoan(request, id_taikhoan):
     
     taikhoan = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
     return render(request, 'core/accountmanage_view.html', {'taikhoan': taikhoan})
+
 def edit_taikhoan(request, id_taikhoan):
     taikhoan = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
 
     if request.method == "POST":
         username = request.POST.get('username')
-        password = request.POST.get('password')
+        password_raw = request.POST.get('password')
         vaitro_id = request.POST.get('vaitro_id')
 
         taikhoan.username = username
-        if password.strip():  # chỉ cập nhật nếu có nhập mật khẩu mới
-            taikhoan.password = password
+        if password_raw.strip():
+            taikhoan.password = password_raw
 
         try:
             vaitro = VaiTro.objects.get(id_vaitro=vaitro_id)
@@ -325,25 +383,23 @@ def edit_taikhoan(request, id_taikhoan):
         return redirect('edit_taikhoan', id_taikhoan=id_taikhoan)
 
     return render(request, 'core/accountmanage_change.html', {'taikhoan': taikhoan})
+
 def hredit(request):
     nhan_khau_list = HoKhau.objects.all()
     return render(request, 'core/hredit.html', {'nhan_khau_list': nhan_khau_list})
 
 def hrmanage(request):
-    ds_ho_khau = HoKhau.objects.all()  # Lấy toàn bộ dữ liệu tro bảng HoKhau
+    ds_ho_khau = HoKhau.objects.all()
     query = request.GET.get('search_id', 'hrmanage')
     if query:
         try:
-            print(query)
-            # lọc theo ID nhân khẩu nếu người dùng nhập
             for a in ds_ho_khau:
                 if(a.id_hokhau==int(query)):
                     ds_ho_khau= [a]
-                    print(a.id_hokhau)
-                print(a.id_hokhau)
         except ValueError:
-            ds_ho_khau = HoKhau.objects.all()  # nếu không nhập, hiển thị tất cả
-        context = {
+            ds_ho_khau = HoKhau.objects.all()
+    
+    context = {
         'ho_khau_list': ds_ho_khau,
         'query': query,
     }
@@ -410,23 +466,18 @@ def edit_hokhau(request, id_hokhau):
 def HoKhaus_list(request):
     HoKhaus = HoKhau.objects.all()
     return render(request, 'core/HoKhaus_list.html', {'HoKhaus': HoKhaus})
-def home(request):
-    HoKhaus = HoKhau.objects.all()
-    return render(request, 'core/home.html', {'home': home})
+
 def profile(request):
     profile = NhanKhau.objects.all()
     return render(request, 'core/profile.html', {'profile': profile})
 
 
-#============= Kế toán Views =================
-def accountant_home(request):
-    return render(request, 'core/Accountant.html')
 def fee_collection_period(request):
     return render(request, 'core/FeeCollectionPeriod.html')
 def statistics_view(request):
     return render(request, 'core/Statistics.html')
 def fee_management(request):
-    khoan_thu_list = KhoanThu.objects.all() # Lấy dữ liệu từ database
+    khoan_thu_list = KhoanThu.objects.all()
     total_count = khoan_thu_list.count()
     form = KhoanThuForm()
     context = {
