@@ -70,6 +70,7 @@ def register(request):
     return render(request, "core/register.html")
 
 def login_view(request):
+    print("abdcsfds")
     if request.method == "POST":
         username_request = request.POST.get("username")
         password_request = request.POST.get("password")
@@ -91,62 +92,62 @@ def login_view(request):
 # 1. HÀM LOGIN & HOME (PHIÊN BẢN CHÍNH THỨC - ĐÃ FIX LỖI)
 # ========================================================
 
-def login(request):
-    # Nếu đã có session thì vào thẳng trang chủ, không cần đăng nhập lại
-    if request.session.get('id_taikhoan'):
-        return redirect('home')
+# def login(request):
+#     # Nếu đã có session thì vào thẳng trang chủ, không cần đăng nhập lại
+#     if request.session.get('id_taikhoan'):
+#         return redirect('home')
 
-    if request.method == 'POST':
-        # Lấy dữ liệu từ form (tên input đã khớp với file HTML mới)
-        user_nhap = None
-        if 'username_admin' in request.POST:
-            user_nhap = request.POST.get('username_admin')
-            pass_nhap = request.POST.get('password_admin')
-            vaitro_mong_muon = 1
-        elif 'username_user' in request.POST:
-            user_nhap = request.POST.get('username_user')
-            pass_nhap = request.POST.get('password_user')
-            vaitro_mong_muon = 3
+#     if request.method == 'POST':
+#         # Lấy dữ liệu từ form (tên input đã khớp với file HTML mới)
+#         user_nhap = None
+#         if 'username_admin' in request.POST:
+#             user_nhap = request.POST.get('username_admin')
+#             pass_nhap = request.POST.get('password_admin')
+#             vaitro_mong_muon = 1
+#         elif 'username_user' in request.POST:
+#             user_nhap = request.POST.get('username_user')
+#             pass_nhap = request.POST.get('password_user')
+#             vaitro_mong_muon = 3
         
-        if user_nhap:
-            try:
-                tai_khoan = TaiKhoan.objects.get(username=user_nhap)
+#         if user_nhap:
+#             try:
+#                 tai_khoan = TaiKhoan.objects.get(username=user_nhap)
                 
-                # So sánh mật khẩu (Không mã hóa: 2005 == 2005)
-                if pass_nhap == tai_khoan.password:
+#                 # So sánh mật khẩu (Không mã hóa: 2005 == 2005)
+#                 if pass_nhap == tai_khoan.password:
                     
-                    # Kiểm tra vai trò
-                    real_role = getattr(tai_khoan, 'id_vaitro_id', None)
-                    if real_role is None: 
-                        real_role = getattr(tai_khoan, 'vaitro_id', None)
+#                     # Kiểm tra vai trò
+#                     real_role = getattr(tai_khoan, 'id_vaitro_id', None)
+#                     if real_role is None: 
+#                         real_role = getattr(tai_khoan, 'vaitro_id', None)
                     
-                    if real_role == vaitro_mong_muon:
-                        # === LƯU SESSION ===
-                        request.session['id_taikhoan'] = tai_khoan.id_taikhoan
-                        # Các dòng này đảm bảo Session được lưu chặt chẽ
-                        request.session.modified = True 
-                        request.session.save()
+#                     if real_role == vaitro_mong_muon:
+#                         # === LƯU SESSION ===
+#                         request.session['id_taikhoan'] = tai_khoan.id_taikhoan
+#                         # Các dòng này đảm bảo Session được lưu chặt chẽ
+#                         request.session.modified = True 
+#                         request.session.save()
                         
-                        # === CHUYỂN HƯỚNG VỀ TRANG CHỦ ===
-                        if real_role == 3:
-                            return redirect('accountant_home')
-                        else:
-                            return redirect('home')
-                    else:
-                        messages.error(request, "Bạn đang đăng nhập sai vai trò!")
-                else:
-                    messages.error(request, "Mật khẩu không đúng!")
+#                         # === CHUYỂN HƯỚNG VỀ TRANG CHỦ ===
+#                         if real_role == 3:
+#                             return redirect('accountant_home')
+#                         else:
+#                             return redirect('home')
+#                     else:
+#                         messages.error(request, "Bạn đang đăng nhập sai vai trò!")
+#                 else:
+#                     messages.error(request, "Mật khẩu không đúng!")
 
-            except TaiKhoan.DoesNotExist:
-                messages.error(request, "Tên đăng nhập không tồn tại!")
+#             except TaiKhoan.DoesNotExist:
+#                 messages.error(request, "Tên đăng nhập không tồn tại!")
         
-    return render(request, 'core/login.html')
+#     return render(request, 'core/login.html')
 
 def home(request):
-    # Kiểm tra bảo mật: Chưa đăng nhập thì đuổi về Login
-    id_tk = request.session.get('id_taikhoan')
-    if not id_tk:
-        return redirect('login')
+    # # Kiểm tra bảo mật: Chưa đăng nhập thì đuổi về Login
+    # id_tk = request.session.get('id_taikhoan')
+    # if not id_tk:
+    #     return redirect('login')
         
     # Đã đăng nhập -> Hiển thị trang chủ
     HoKhaus = HoKhau.objects.all()
