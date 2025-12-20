@@ -20,16 +20,16 @@ from django.contrib.auth import authenticate, login, logout
 def user_logout(request):
     logout(request)
 #    messages.success(request, "Bạn đã đăng xuất.")
-    return redirect("logintest")
+    return redirect("login")
 
 
-@login_required(login_url="logintest")
+@login_required(login_url="login")
 def profile(request):
     current_user= request.user
     print(request.user.is_authenticated)
     if request.user.is_authenticated: 
-        return redirect("logintest")
-    return render(request, "core/profiletest.html", {
+        return redirect("login")
+    return render(request, "core/profile.html", {
         "user": current_user
     })
 
@@ -39,24 +39,38 @@ def register(request):
         username = request.POST.get("username")
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
-
+        vaitro_string = request.POST.get("vaitro")
+        match vaitro_string: 
+            case "admin":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=1)
+        match vaitro_string: 
+            case "user":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=2)
+        match vaitro_string: 
+            case "ketoan":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=3)
+        
         # 1. Kiểm tra dữ liệu
         if not username or not password1 or not password2:
-            messages.error(request, "Vui lòng nhập đầy đủ thông tin.")
-            return redirect("register")
+            return render(request, "core/register.html", {
+                "error": "Vui lòng nhập đầy đủ thông tin."
+            })
 
         if password1 != password2:
-            messages.error(request, "Mật khẩu không khớp.")
-            return redirect("register")
+            return render(request, "core/register.html", {
+                "error": "Mật khẩu không khớp"
+            })
 
         if TaiKhoan.objects.filter(username=username).exists():
-            messages.error(request, "Tên đăng nhập đã tồn tại.")
-            return redirect("register")
+            return render(request, "core/register.html", {
+                "error": "Tên đăng nhập đã tồn tại "
+            })
 
         # 2. Tạo tài khoản
         taikhoan = TaiKhoan.objects.create(
             username=username,
             password=make_password(password1),  # 🔐 mã hóa mật khẩu
+            vaitro=vaitro,
             is_active=True,
             is_staff=False
         )
@@ -79,13 +93,18 @@ def login_view(request):
         print(username_request+'\n'+password_request)
         if user is not None:
             login(request, user)
-            return redirect("home")
+            id_vaitro= request.user.vaitro.id_vaitro
+            if id_vaitro is not None:
+                if id_vaitro == 1 or id_vaitro==2:
+                    return redirect("home")
+                if id_vaitro == 3:
+                    return redirect("accountant_home")
         else:
-            return render(request, "core/test.html", {
+            return render(request, "core/dangnhap.html", {
                 "error": "Sai tên đăng nhập hoặc mật khẩu"
             })
 
-    return render(request, "core/test.html")
+    return render(request, "core/dangnhap.html")
 
 
 # ========================================================
