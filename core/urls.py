@@ -25,7 +25,7 @@ urlpatterns = [
 
     path('test/', views.test, name='test'),
     path('profile/', views.profile, name='profile'),
-    path('login/', views.login, name='login'),
+ #   path('login/', views.login, name='login'),
 
     path('hrmanage/', views.hrmanage, name='hrmanage'),
     path('ho-khau/them/', views.add_hokhau, name='add_hokhau'),
