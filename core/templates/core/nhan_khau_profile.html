@@ -18,10 +18,10 @@
     <main class="page-wrap">
       <section class="brutalist-panel nk-profile">
         <div class="nk-grid">
-          <!-- TODO: ẢNH ĐẠI DIỆN CỦA NHÂN KHẨU -->
+         <!-- TODO: ẢNH ĐẠI DIỆN CỦA NHÂN KHẨU -->
           <figure class="nk-avatar">
             <img
-              src="{{ nhan_khau.avatar_url|default:'/static/img/avatar-placeholder.png' }}"
+              src="{% static 'img/default-avatar.jpg' %}"
               alt="Ảnh đại diện"
             />
           </figure>
@@ -59,15 +59,6 @@
                 ✏️ Sửa thông tin
               </a>
 
-<<<<<<< HEAD
-    
-  </main>
-          {% include 'core/sidebar_and_footer.html' %}
-          
-        </body>
-        </html>
-        
-=======
               <a
                 href="{% url 'nhan_khau_delete' nhan_khau.id_nhankhau %}"
                 class="brutalist-card__button brutalist-card__button--primary brutalist-card__button--xs"
@@ -83,4 +74,3 @@
     {% include 'core/sidebar_and_footer.html' %}
   </body>
 </html>
->>>>>>> e35cc35eaa5234710fdc600ab856baa6cda2e342
