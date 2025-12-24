@@ -23,6 +23,15 @@
     <label>Nhập lại mật khẩu</label>
     <input type="password" name="password2" required>
 
+    <!-- 🔥 CHỌN VAI TRÒ -->
+    <label>Vai trò</label>
+    <select name="vaitro" required>
+      <option value="">-- Chọn vai trò --</option>
+      <option value="admin">Admin</option>
+      <option value="user">User</option>
+      <option value="ketoan">Kế toán</option>
+    </select>
+
     <button type="submit">Đăng ký</button>
   </form>
 
@@ -30,6 +39,10 @@
     <a href="{% url 'login' %}">Đăng nhập</a>
   </p>
 </div>
+
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
 
 </body>
 </html>
