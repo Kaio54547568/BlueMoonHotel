@@ -29,20 +29,23 @@
           <!-- Thông tin -->
           <div class="nk-info">
             <h2 class="nk-name">{{ nhan_khau.ho_ten }}</h2>
+            <div class="display: flex;
+justify-content: center;">
 
-            <ul class="nk-meta">
-              <li><span>ID:</span> {{ nhan_khau.id_nhankhau }}</li>
-              <li>
-                <span>Ngày sinh:</span> {{ nhan_khau.ngay_sinh|date:"d/m/Y" }}
-              </li>
-              <li><span>CCCD:</span> {{ nhan_khau.cccd|default:"—" }}</li>
-              <li>
-                <span>Quan hệ chủ hộ:</span> {{ nhan_khau.quan_he_chu_ho }}
-              </li>
-              <li>
-                <span>ID hộ khẩu:</span> {{ nhan_khau.ho_khau.id_hokhau }}
-              </li>
-            </ul>
+<ul class="nk-meta">
+  <li><span>ID:</span> {{ nhan_khau.id_nhankhau }}</li>
+  <li>
+    <span>Ngày sinh:</span> {{ nhan_khau.ngay_sinh|date:"d/m/Y" }}
+  </li>
+  <li><span>CCCD:</span> {{ nhan_khau.cccd|default:"—" }}</li>
+  <li>
+    <span>Quan hệ chủ hộ:</span> {{ nhan_khau.quan_he_chu_ho }}
+  </li>
+  <li>
+    <span>ID hộ khẩu:</span> {{ nhan_khau.id_hokhau_id }}
+  </li>
+</ul>
+</div>
 
             <div class="button-row nk-actions">
               <a

@@ -172,8 +172,8 @@ class DotThuPhi(models.Model):
         return self.ten_dotthu
 
 # ===== 8) HoaDon =====
-class HoaDon(models.Model):
-    id_hoadon = models.IntegerField(primary_key=True) 
+class HoaDon (models.Model):
+    id_hoadon = models.AutoField(primary_key=True) # SỬA
     tong_tien = models.DecimalField(max_digits=15, decimal_places=2)
     ngay_nop = models.DateField(null=True, blank=True)
     id_dotthu = models.ForeignKey(

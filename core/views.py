@@ -20,13 +20,16 @@ from django.utils import timezone
 # views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-
+def home(request):
+    HoKhaus = HoKhau.objects.all()
+    return render(request, 'core/mainpage.html')
 
 def user_logout(request):
     logout(request)
 #    messages.success(request, "Bạn đã đăng xuất.")
     return redirect("home")
 
+@login_required(login_url="login")
 
 def profile(request):
     print("adsgdgd")
@@ -104,15 +107,15 @@ def login_view(request):
             id_vaitro= request.user.vaitro.id_vaitro
             if id_vaitro is not None:
                 if id_vaitro == 1 or id_vaitro==2:
-                    return redirect("home")
+                    return redirect("admin_home")
                 if id_vaitro == 3:
                     return redirect("accountant_home")
         else:
-            return render(request, "core/dangnhap.html", {
+            return render(request, "core/login.html", {
                 "error": "Sai tên đăng nhập hoặc mật khẩu"
             })
 
-    return render(request, "core/dangnhap.html")
+    return render(request, "core/login.html")
 
 
 # ========================================================
@@ -170,7 +173,7 @@ def login_view(request):
         
 #     return render(request, 'core/login.html')
 
-def home(request):
+def admin_home(request):
     # # Kiểm tra bảo mật: Chưa đăng nhập thì đuổi về Login
     # id_tk = request.session.get('id_taikhoan')
     # if not id_tk:
@@ -178,13 +181,12 @@ def home(request):
         
     # Đã đăng nhập -> Hiển thị trang chủ
     HoKhaus = HoKhau.objects.all()
-    return render(request, 'core/home.html', {'home': HoKhaus})
+    return render(request, 'core/home.html', {'admin_home': HoKhaus})
+@login_required(login_url="login")
 
 def accountant_home(request):
     # Kiểm tra bảo mật
-    id_tk = request.session.get('id_taikhoan')
-    if not id_tk:
-        return redirect('login')
+
         
     return render(request, 'core/Accountant.html')
 
@@ -195,6 +197,7 @@ def accountant_home(request):
 def test(request):
     ds_ho_khau = HoKhau.objects.all()
     return render(request, 'core/test.html', {'ho_khau_list': ds_ho_khau})
+@login_required(login_url="login")
 
 def edit_nhan_khau(request, id_nhankhau):
     nk = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
@@ -216,6 +219,7 @@ def edit_nhan_khau(request, id_nhankhau):
 def nhan_khau_profile(request, id_nhankhau):
     nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
     return render(request, 'core/nhan_khau_profile.html', {'nhan_khau': nhan_khau})
+@login_required(login_url="login")
 
 def nhan_khau_delete(request, id_nhankhau):
     exists = NhanKhau.objects.filter(id_nhankhau=id_nhankhau).exists()
@@ -223,6 +227,7 @@ def nhan_khau_delete(request, id_nhankhau):
         nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
         nhan_khau.is_deleted=True
     return render(request, 'core/demomanage_delete.html')
+@login_required(login_url="login")
 
 def add_demo(request):
     if request.method == "POST":
@@ -308,10 +313,11 @@ def add_demo(request):
 #         # Xử lý khi người dùng MỞ TRANG (yêu cầu GET)
 #         # Chỉ cần hiển thị trang login
 #         return render(request, 'core/login.html')
+@login_required(login_url="login")
 
 def demomanage(request):
     nhan_khau_list = NhanKhau.objects.all()
-    query = request.GET.get('search_id', 'demomanage')
+    query = request.GET.get('search_id', '')
     if query:
         try:
             for a in nhan_khau_list:
@@ -325,16 +331,19 @@ def demomanage(request):
         'query': query,
     }
     return render(request, 'core/demomanage.html', context)
+@login_required(login_url="login")
+
 def demomanage_delete(request, id_hokhau):
     exists = HoKhau.objects.filter(id_hokhau=id_hokhau).exists()
     if(exists):
         hr = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
         hr.is_deleted=True
     return render(request, 'core/hrmanage_delete.html')
+@login_required(login_url="login")
 
 def accountmanage(request):
     tai_khoan_list = TaiKhoan.objects.all()
-    query = request.GET.get('search_id', 'hrmanage')
+    query = request.GET.get('search_id', '')
     user = request.user
     print(user.is_authenticated)
     if user.is_authenticated:
@@ -358,6 +367,7 @@ def accountmanage(request):
     return render(request, "core/message.html", {
         "error": "Bạn không có quyền truy cập trang này"
     })
+@login_required(login_url="login")
 
 def accountmanage_delete(request, id_taikhoan):
     exists = TaiKhoan.objects.filter(id_taikhoan=id_taikhoan).exists()
@@ -365,27 +375,53 @@ def accountmanage_delete(request, id_taikhoan):
         account = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
         account.is_deleted=True
     return render(request, 'core/accountmanage_delete.html')
+@login_required(login_url="login")
 
 def accountmanage_addaccount(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        password_raw = request.POST.get('password') 
-        vaitro_id = request.POST.get('vaitro_id')
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+        vaitro_string = request.POST.get("vaitro")
+        match vaitro_string: 
+            case "admin":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=1)
+        match vaitro_string: 
+            case "user":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=2)
+        match vaitro_string: 
+            case "ketoan":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=3)
+        
+        # 1. Kiểm tra dữ liệu
+        if not username or not password1 or not password2:
+            return render(request, "core/register.html", {
+                "error": "Vui lòng nhập đầy đủ thông tin."
+            })
 
-        try:
-            vaitro = VaiTro.objects.get(id_vaitro=vaitro_id)
-            TaiKhoan.objects.create(
-                username=username,
-                password=password_raw,
-                vaitro=vaitro
-            )
-            messages.success(request, f"Tài khoản '{username}' đã được thêm thành công!")
-        except VaiTro.DoesNotExist:
-            messages.error(request, "ID vai trò không tồn tại!")
+        if password1 != password2:
+            return render(request, "core/register.html", {
+                "error": "Mật khẩu không khớp"
+            })
 
-        return redirect('/accountmanage/addaccount')
+        if TaiKhoan.objects.filter(username=username).exists():
+            return render(request, "core/register.html", {
+                "error": "Tên đăng nhập đã tồn tại "
+            })
 
-    return render(request, 'core/accountmanage_addaccount.html')
+        # 2. Tạo tài khoản
+        taikhoan = TaiKhoan.objects.create(
+            username=username,
+            password=make_password(password1),  # 🔐 mã hóa mật khẩu
+            vaitro=vaitro,
+            is_active=True,
+            is_staff=False
+        )
+
+    return render(request, 'core/accountmanage_addaccount.html', {
+                "error": "Tạo tài khoản thành công "
+            })
+@login_required(login_url="login")
 
 def view_taikhoan(request, id_taikhoan):
 
@@ -394,6 +430,7 @@ def view_taikhoan(request, id_taikhoan):
     
     taikhoan = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
     return render(request, 'core/accountmanage_view.html', {'taikhoan': taikhoan})
+@login_required(login_url="login")
 
 def edit_taikhoan(request, id_taikhoan):
     taikhoan = get_object_or_404(TaiKhoan, id_taikhoan=id_taikhoan)
@@ -425,15 +462,12 @@ def edit_taikhoan(request, id_taikhoan):
         })
     return render(request, 'core/accountmanage_change.html', {'taikhoan': taikhoan})
 
-def hredit(request):
-    nhan_khau_list = HoKhau.objects.all()
-    print(1)
-    return render(request, 'core/hredit.html', {'nhan_khau_list': nhan_khau_list})
+@login_required(login_url="login")
 
 def hrmanage(request):
     print(2)
     ds_ho_khau = HoKhau.objects.all()
-    query = request.GET.get('search_id', 'hrmanage')
+    query = request.GET.get('search_id', '')
     if query:
         try:
             for a in ds_ho_khau:
@@ -448,6 +482,7 @@ def hrmanage(request):
     }
 
     return render(request, 'core/hrmanage.html', context)
+@login_required(login_url="login")
 
 def hrmanage_delete(request, id_hokhau):
     exists = HoKhau.objects.filter(id_hokhau=id_hokhau).exists()
@@ -455,6 +490,7 @@ def hrmanage_delete(request, id_hokhau):
         hr = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
         hr.is_deleted=True
     return render(request, 'core/hrmanage_delete.html')
+@login_required(login_url="login")
 
 def add_hokhau(request):
     if request.method == "POST":
@@ -474,6 +510,7 @@ def add_hokhau(request):
         return redirect('add_hokhau')
 
     return render(request, 'core/add_hokhau.html')
+@login_required(login_url="login")
 
 def hokhau_detail(request, id_hokhau):
     print(3)
@@ -486,6 +523,7 @@ def hokhau_detail(request, id_hokhau):
         'thanh_vien': thanh_vien
     })
 
+@login_required(login_url="login")
 
 def edit_hokhau(request, id_hokhau):
     hokhau = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
@@ -502,17 +540,19 @@ def edit_hokhau(request, id_hokhau):
                 hokhau.dien_tich = float(dien_tich) if dien_tich else None
                 hokhau.save()
                 messages.success(request, "Cập nhật thông tin hộ khẩu thành công!")
-                return redirect('hokhau_detail', id_hokhau=id_hokhau)
+                return redirect('hrmanage')
             except ValueError:
                 messages.error(request, "Diện tích phải là số hợp lệ!")
 
     return render(request, 'core/hokhau_edit.html', {'hokhau': hokhau})
+@login_required(login_url="login")
 
 def HoKhaus_list(request):
     HoKhaus = HoKhau.objects.all()
     return render(request, 'core/HoKhaus_list.html', {'HoKhaus': HoKhaus})
 
 
+@login_required(login_url="login")
 
 #============= Kế toán Views =================
 def accountant_home(request):
@@ -535,12 +575,14 @@ def fee_management(request):
         'query': query
     }
     return render(request, 'core/FeeManagement.html', context)
+@login_required(login_url="login")
 
 def view_khoanthu_detail_modal(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
     if not request.headers.get('x-requested-with') == 'XMLHttpRequest':
         pass 
     return render(request, 'core/ViewFeeDetailModal.html', {'khoan_thu': khoan_thu})
+@login_required(login_url="login")
 
 def add_khoanthu(request):
     if request.method == 'POST':
@@ -570,7 +612,7 @@ def add_khoanthu(request):
         form = KhoanThuForm()
     
     return render(request, 'core/AddFeeModal.html', {'form': form})
-
+@login_required(login_url="login")
 def edit_khoanthu(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
 
@@ -599,7 +641,8 @@ def edit_khoanthu(request, pk):
             'page_title': f"CHỈNH SỬA KHOẢN THU - {khoan_thu.ten_khoanthu}",
         }
         return render(request, 'core/EditFee.html', context)
-     
+@login_required(login_url="login")
+
 def delete_khoanthu(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk)
 
@@ -609,7 +652,8 @@ def delete_khoanthu(request, pk):
             return JsonResponse({'status': 'success', 'message': 'Khoản thu đã được xóa thành công!'})
         return redirect('fee_management')
     return render(request, 'core/DeleteFeeModal.html', {'khoan_thu': khoan_thu})
-
+@login_required(login_url="login")
+    
 #Quản lý đợt thu phí
 def fee_collection_period(request):
     query = request.GET.get('search_dotthu')
@@ -625,6 +669,7 @@ def fee_collection_period(request):
         'query': query
     }
     return render(request, 'core/FeeCollectionPeriod.html', context)
+@login_required(login_url="login")
 
 def view_dotthu_detail_modal(request, pk):
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk)
@@ -637,6 +682,7 @@ def view_dotthu_detail_modal(request, pk):
         'tat_ca_ho_khau': tat_ca_ho_khau # Biến này dùng để hiển thị trong phần "Thêm hộ"
     }
     return render(request, 'core/ViewPeriodDetailModal.html', context)
+@login_required(login_url="login")
 
 def update_payment_status(request):
     invoice_ids = request.POST.getlist('invoice_ids[]') # Nhận danh sách ID từ AJAX
@@ -652,6 +698,7 @@ def update_payment_status(request):
         return JsonResponse({'status': 'success', 'message': 'Cập nhật trạng thái thành công'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+@login_required(login_url="login")
 
 def create_invoices_for_period(request):
     id_dotthu = request.POST.get('id_dotthu')
@@ -689,6 +736,7 @@ def create_invoices_for_period(request):
         'danh_sach_hoa_don': danh_sach_hoa_don,
         'tat_ca_ho_khau': tat_ca_ho_khau
     })
+@login_required(login_url="login")
 
 def add_dotthu(request):
     if request.method == 'POST':
@@ -707,6 +755,7 @@ def add_dotthu(request):
     else:
         form = DotThuPhiForm()
     return render(request, 'core/AddPeriodModal.html', {'form': form})
+@login_required(login_url="login")
 
 def edit_dotthu(request, pk):
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk) 
@@ -722,7 +771,8 @@ def edit_dotthu(request, pk):
             
     form = DotThuPhiForm(instance=dot_thu)
     return render(request, 'core/EditPeriodModal.html', {'form': form, 'dot_thu': dot_thu})
-     
+@login_required(login_url="login")
+
 def delete_dotthu(request, pk):
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk)
     if request.method == 'POST':
@@ -731,6 +781,7 @@ def delete_dotthu(request, pk):
             return JsonResponse({'status': 'success', 'message': 'Đợt thu phí đã được xóa thành công!'})
         return redirect('fee_collection_period')
     return render(request, 'core/DeletePeriodModal.html', {'dot_thu': dot_thu})
+@login_required(login_url="login")
 
 #Thống kê
 def statistics_view(request):
@@ -785,6 +836,7 @@ def statistics_view(request):
         'selected_year': year,
     }
     return render(request, 'core/Statistics.html', context)
+@login_required(login_url="login")
 
 def export_finance_excel(request):
     year_str = request.GET.get('year', str(timezone.now().year))

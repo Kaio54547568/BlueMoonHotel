@@ -8,12 +8,17 @@
 
   <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
   <link rel="stylesheet" href="{% static 'css/accountmanage.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
   {% include 'core/header.html'%}
-  <p>đã xóa hộ khẩu</p>
+  <p style="  font-size: 40px;">đã xóa hộ khẩu</p>
+  <button
+              type="submit"
+              class="brutalist-card__button brutalist-card__button--secondary"
+            >
   <a href="{% url 'hrmanage' %}" class="hrbtn">← Quay lại danh sách</a>
-
+  </button>
   {% include 'core/sidebar_and_footer.html' %}
 
   </body>

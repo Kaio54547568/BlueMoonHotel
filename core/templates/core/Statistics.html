@@ -147,16 +147,8 @@
     {% include 'core/Sidebar.html' %}
 
     <main>
-        <header class="main-header">
-            <div class="header-left">
-                <button id="sidebarToggleBtn" class="toggle-btn"><i class="fa-solid fa-bars"></i></button>
-                <h1>Thống kê <span>Tài chính</span></h1>
-                <p>Báo cáo doanh thu & mục tiêu chung cư BlueMoon</p>
-            </div>
-            <div class="header-right">
-                <div class="user-avatar">KT</div>
-            </div>
-        </header>
+          {% include 'core/accountant_header.html' %}
+
 
         <div class="stats-container">
             <div class="stats-header-card">
