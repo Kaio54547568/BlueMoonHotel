@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ cá nhân - BLUEMOON Hotel</title>
-    <link rel="stylesheet" href="{% static 'css/style_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_profile.css' %}">\
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}? v=2">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
     
 </head>
 <body>
-    <header>
-        <h1>👤 Thông tin cá nhân</h1>
-        <p>Trang quản lý thông tin người dùng trong hệ thống BLUEMOON</p>
-    </header>
-
+        {% include 'core/header.html'%}
     <main class="profile-container">
         <section class="profile-card">
             <div class="avatar">
@@ -26,11 +26,10 @@
             </div>
         </section>
 
-    
+        
     </main>
-
-    <footer>
-        © 2025 BLUEMOON Hotel Management System
-    </footer>
+    
+    {% include 'core/sidebar_and_footer.html' %}
+    
 </body>
 </html>
