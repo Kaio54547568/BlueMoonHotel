@@ -25,68 +25,71 @@ from django.contrib.auth import authenticate, login, logout
 def user_logout(request):
     logout(request)
 #    messages.success(request, "Bạn đã đăng xuất.")
-    return redirect("login")
+    return redirect("home")
 
 
-@login_required(login_url="login")
 def profile(request):
-    current_user= request.user
-    print(request.user.is_authenticated)
-    if request.user.is_authenticated: 
-        return redirect("login")
-    return render(request, "core/profile.html", {
-        "user": current_user
+    print("adsgdgd")
+    user= request.user
+    print(user.is_authenticated)
+    if user.is_authenticated:
+        id_vaitro= user.vaitro.id_vaitro
+        if id_vaitro is not None:
+            return render(request, "core/profile.html", {
+                "user": user
+                })
+    return render(request, "core/message.html", {
+        "error": "Bạn chưa đăng nhập"
     })
 
-
-def register(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
-        vaitro_string = request.POST.get("vaitro")
-        match vaitro_string: 
-            case "admin":
-                vaitro=get_object_or_404(VaiTro, id_vaitro=1)
-        match vaitro_string: 
-            case "user":
-                vaitro=get_object_or_404(VaiTro, id_vaitro=2)
-        match vaitro_string: 
-            case "ketoan":
-                vaitro=get_object_or_404(VaiTro, id_vaitro=3)
+# def register(request):
+#     if request.method == "POST":
+#         username = request.POST.get("username")
+#         password1 = request.POST.get("password1")
+#         password2 = request.POST.get("password2")
+#         vaitro_string = request.POST.get("vaitro")
+#         match vaitro_string: 
+#             case "admin":
+#                 vaitro=get_object_or_404(VaiTro, id_vaitro=1)
+#         match vaitro_string: 
+#             case "user":
+#                 vaitro=get_object_or_404(VaiTro, id_vaitro=2)
+#         match vaitro_string: 
+#             case "ketoan":
+#                 vaitro=get_object_or_404(VaiTro, id_vaitro=3)
         
-        # 1. Kiểm tra dữ liệu
-        if not username or not password1 or not password2:
-            return render(request, "core/register.html", {
-                "error": "Vui lòng nhập đầy đủ thông tin."
-            })
+#         # 1. Kiểm tra dữ liệu
+#         if not username or not password1 or not password2:
+#             return render(request, "core/register.html", {
+#                 "error": "Vui lòng nhập đầy đủ thông tin."
+#             })
 
-        if password1 != password2:
-            return render(request, "core/register.html", {
-                "error": "Mật khẩu không khớp"
-            })
+#         if password1 != password2:
+#             return render(request, "core/register.html", {
+#                 "error": "Mật khẩu không khớp"
+#             })
 
-        if TaiKhoan.objects.filter(username=username).exists():
-            return render(request, "core/register.html", {
-                "error": "Tên đăng nhập đã tồn tại "
-            })
+#         if TaiKhoan.objects.filter(username=username).exists():
+#             return render(request, "core/register.html", {
+#                 "error": "Tên đăng nhập đã tồn tại "
+#             })
 
-        # 2. Tạo tài khoản
-        taikhoan = TaiKhoan.objects.create(
-            username=username,
-            password=make_password(password1),  # 🔐 mã hóa mật khẩu
-            vaitro=vaitro,
-            is_active=True,
-            is_staff=False
-        )
+#         # 2. Tạo tài khoản
+#         taikhoan = TaiKhoan.objects.create(
+#             username=username,
+#             password=make_password(password1),  # 🔐 mã hóa mật khẩu
+#             vaitro=vaitro,
+#             is_active=True,
+#             is_staff=False
+#         )
 
-        # 3. Tự động đăng nhập sau khi đăng ký
-        login(request, taikhoan)
+#         # 3. Tự động đăng nhập sau khi đăng ký
+#         login(request, taikhoan)
 
-        messages.success(request, "Đăng ký thành công!")
-        return redirect("home")
+#         messages.success(request, "Đăng ký thành công!")
+#         return redirect("home")
 
-    return render(request, "core/register.html")
+
 
 def login_view(request):
     print("abdcsfds")
@@ -181,8 +184,8 @@ def accountant_home(request):
     # Kiểm tra bảo mật
     id_tk = request.session.get('id_taikhoan')
     if not id_tk:
-         return redirect('login')
-         
+        return redirect('login')
+        
     return render(request, 'core/Accountant.html')
 
 # ========================================================
@@ -209,7 +212,7 @@ def edit_nhan_khau(request, id_nhankhau):
         return redirect('nhan_khau_profile', id_nhankhau=nk.id_nhankhau)
 
     return render(request, 'core/demomanage_edit.html', {'nhan_khau': nk})
-
+@login_required(login_url="login")
 def nhan_khau_profile(request, id_nhankhau):
     nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
     return render(request, 'core/nhan_khau_profile.html', {'nhan_khau': nhan_khau})
@@ -228,16 +231,15 @@ def add_demo(request):
         cccd = request.POST.get('cccd')
         quan_he_chu_ho = request.POST.get('quan_he_chu_ho')
         ho_khau_id = request.POST.get('ho_khau_id')
-
         try:
-            hokhau = HoKhau.objects.get(id_hokhau=ho_khau_id)
-            NhanKhau.objects.create(
-                ho_ten=ho_ten,
-                ngay_sinh=ngay_sinh or None,
-                cccd=cccd or None,
-                quan_he_chu_ho=quan_he_chu_ho or None,
-                ho_khau=hokhau
-            )
+            if HoKhau.objects.filter(id_hokhau=ho_khau_id).exists():
+                NhanKhau.objects.create(
+                    ho_ten=ho_ten,
+                    ngay_sinh=ngay_sinh or None,
+                    cccd=cccd or None,
+                    quan_he_chu_ho=quan_he_chu_ho or None,
+                    id_hokhau_id=int(ho_khau_id)
+                )
         except HoKhau.DoesNotExist:
             pass 
 
@@ -333,20 +335,29 @@ def demomanage_delete(request, id_hokhau):
 def accountmanage(request):
     tai_khoan_list = TaiKhoan.objects.all()
     query = request.GET.get('search_id', 'hrmanage')
-    if query:
-        try:
-            for a in tai_khoan_list:
-                if(a.id_taikhoan==int(query)):
-                    tai_khoan_list= [a]
-        except ValueError:
-            tai_khoan_list= TaiKhoan.objects.all()
-    
-    context = {
-        'tai_khoan_list': tai_khoan_list,
-        'query': query,
-    }
+    user = request.user
+    print(user.is_authenticated)
+    if user.is_authenticated:
+        id_vaitro= request.user.vaitro.id_vaitro
+        if id_vaitro is not None:
+            if id_vaitro == 1:
+                if query:
+                    try:
+                        for a in tai_khoan_list:
+                            if(a.id_taikhoan==int(query)):
+                                tai_khoan_list= [a]
+                    except ValueError:
+                        tai_khoan_list= TaiKhoan.objects.all()
+                
+                context = {
+                    'tai_khoan_list': tai_khoan_list,
+                    'query': query,
+                }
 
-    return render(request, 'core/accountmanage.html', context)
+                return render(request, 'core/accountmanage.html', context)
+    return render(request, "core/message.html", {
+        "error": "Bạn không có quyền truy cập trang này"
+    })
 
 def accountmanage_delete(request, id_taikhoan):
     exists = TaiKhoan.objects.filter(id_taikhoan=id_taikhoan).exists()
@@ -391,29 +402,36 @@ def edit_taikhoan(request, id_taikhoan):
         username = request.POST.get('username')
         password_raw = request.POST.get('password')
         vaitro_id = request.POST.get('vaitro_id')
-
-        taikhoan.username = username
-        if password_raw.strip():
-            taikhoan.password = password_raw
-
         try:
             vaitro = VaiTro.objects.get(id_vaitro=vaitro_id)
             taikhoan.vaitro = vaitro
         except VaiTro.DoesNotExist:
-            messages.error(request, "ID vai trò không tồn tại.")
-            return redirect('edit_taikhoan', id_taikhoan=id_taikhoan)
+            return render(request, "core/message.html", {
+                "error": "ID vai trò không tồn tại"
+            })
+        if not taikhoan.username==username:
+            if not TaiKhoan.objects.filter(username=username).exists():
+                taikhoan.username=username
+            else:
+                return render(request, "core/message.html", {
+                    "error": "username này đã tồn tại"
+                })
+
+        taikhoan.set_password(password_raw)
 
         taikhoan.save()
-        messages.success(request, f"Đã cập nhật thông tin cho tài khoản {username}.")
-        return redirect('edit_taikhoan', id_taikhoan=id_taikhoan)
-
+        return render(request, "core/message.html", {
+            "error": "Thay đổi thông tin thành công"
+        })
     return render(request, 'core/accountmanage_change.html', {'taikhoan': taikhoan})
 
 def hredit(request):
     nhan_khau_list = HoKhau.objects.all()
+    print(1)
     return render(request, 'core/hredit.html', {'nhan_khau_list': nhan_khau_list})
 
 def hrmanage(request):
+    print(2)
     ds_ho_khau = HoKhau.objects.all()
     query = request.GET.get('search_id', 'hrmanage')
     if query:
@@ -458,8 +476,10 @@ def add_hokhau(request):
     return render(request, 'core/add_hokhau.html')
 
 def hokhau_detail(request, id_hokhau):
-    hokhau = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
-    thanh_vien = NhanKhau.objects.filter(ho_khau=hokhau)
+    print(3)
+    hokhau = HoKhau.objects.get( id_hokhau=id_hokhau)
+    print(hokhau.id_hokhau )
+    thanh_vien = NhanKhau.objects.filter(id_hokhau_id=id_hokhau)
 
     return render(request, 'core/hokhau_detail.html', {
         'hokhau': hokhau,
@@ -492,9 +512,6 @@ def HoKhaus_list(request):
     HoKhaus = HoKhau.objects.all()
     return render(request, 'core/HoKhaus_list.html', {'HoKhaus': HoKhaus})
 
-def profile(request):
-    profile = NhanKhau.objects.all()
-    return render(request, 'core/profile.html', {'profile': profile})
 
 
 #============= Kế toán Views =================
