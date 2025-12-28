@@ -1,17 +1,22 @@
-
-from django.http import HttpResponse 
+import json
+from unicodedata import decimal
+from django.http import HttpResponse, JsonResponse
 from calendar import day_name
 from pyexpat.errors import messages
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ReservationForm, KhoanThuForm
-from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu
+from .forms import ReservationForm, KhoanThuForm, DotThuPhiForm
+from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu, DotThuPhi, HoaDon
+from datetime import datetime, timezone
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse # <-- ĐÃ THÊM IMPORT NÀY
+from django.db.models import Q,Sum, Count
 from django.contrib.auth.hashers import make_password
-
+from django.db.models.functions import ExtractMonth
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+from django.utils import timezone 
 # views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -20,16 +25,16 @@ from django.contrib.auth import authenticate, login, logout
 def user_logout(request):
     logout(request)
 #    messages.success(request, "Bạn đã đăng xuất.")
-    return redirect("logintest")
+    return redirect("login")
 
 
-@login_required(login_url="logintest")
+@login_required(login_url="login")
 def profile(request):
     current_user= request.user
     print(request.user.is_authenticated)
     if request.user.is_authenticated: 
-        return redirect("logintest")
-    return render(request, "core/profiletest.html", {
+        return redirect("login")
+    return render(request, "core/profile.html", {
         "user": current_user
     })
 
@@ -39,24 +44,38 @@ def register(request):
         username = request.POST.get("username")
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
-
+        vaitro_string = request.POST.get("vaitro")
+        match vaitro_string: 
+            case "admin":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=1)
+        match vaitro_string: 
+            case "user":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=2)
+        match vaitro_string: 
+            case "ketoan":
+                vaitro=get_object_or_404(VaiTro, id_vaitro=3)
+        
         # 1. Kiểm tra dữ liệu
         if not username or not password1 or not password2:
-            messages.error(request, "Vui lòng nhập đầy đủ thông tin.")
-            return redirect("register")
+            return render(request, "core/register.html", {
+                "error": "Vui lòng nhập đầy đủ thông tin."
+            })
 
         if password1 != password2:
-            messages.error(request, "Mật khẩu không khớp.")
-            return redirect("register")
+            return render(request, "core/register.html", {
+                "error": "Mật khẩu không khớp"
+            })
 
         if TaiKhoan.objects.filter(username=username).exists():
-            messages.error(request, "Tên đăng nhập đã tồn tại.")
-            return redirect("register")
+            return render(request, "core/register.html", {
+                "error": "Tên đăng nhập đã tồn tại "
+            })
 
         # 2. Tạo tài khoản
         taikhoan = TaiKhoan.objects.create(
             username=username,
             password=make_password(password1),  # 🔐 mã hóa mật khẩu
+            vaitro=vaitro,
             is_active=True,
             is_staff=False
         )
@@ -79,13 +98,18 @@ def login_view(request):
         print(username_request+'\n'+password_request)
         if user is not None:
             login(request, user)
-            return redirect("home")
+            id_vaitro= request.user.vaitro.id_vaitro
+            if id_vaitro is not None:
+                if id_vaitro == 1 or id_vaitro==2:
+                    return redirect("home")
+                if id_vaitro == 3:
+                    return redirect("accountant_home")
         else:
-            return render(request, "core/test.html", {
+            return render(request, "core/dangnhap.html", {
                 "error": "Sai tên đăng nhập hoặc mật khẩu"
             })
 
-    return render(request, "core/test.html")
+    return render(request, "core/dangnhap.html")
 
 
 # ========================================================
@@ -473,18 +497,25 @@ def profile(request):
     return render(request, 'core/profile.html', {'profile': profile})
 
 
-def fee_collection_period(request):
-    return render(request, 'core/FeeCollectionPeriod.html')
-def statistics_view(request):
-    return render(request, 'core/Statistics.html')
+#============= Kế toán Views =================
+def accountant_home(request):
+    return render(request, 'core/Accountant.html')
+#Quan lý khoản thu
 def fee_management(request):
-    khoan_thu_list = KhoanThu.objects.all()
+    query = request.GET.get('search_khoanthu') #Lấy tham số tìm kiếm từ URL
+    khoan_thu_list = KhoanThu.objects.all() # Lấy dữ liệu từ database
+    
+    if query:
+        khoan_thu_list = khoan_thu_list.filter(
+            Q(ten_khoanthu__icontains=query) | Q(id_khoanthu__icontains=query)
+        )
     total_count = khoan_thu_list.count()
     form = KhoanThuForm()
     context = {
         'khoan_thu_list': khoan_thu_list, 
         'total_count': total_count,      
         'form': form, 
+        'query': query
     }
     return render(request, 'core/FeeManagement.html', context)
 
@@ -498,24 +529,30 @@ def add_khoanthu(request):
     if request.method == 'POST':
         form = KhoanThuForm(request.POST)
         if form.is_valid():
-            khoan_thu = form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest': 
-                messages.success(request, "Khoản thu mới đã được tạo thành công!")
-                return HttpResponse(status=200)
-            else:
-                return redirect('fee_management')
+            new_ID = form.cleaned_data.get('id_khoanthu')
+            # Kiểm tra trùng mã khoản thu
+            if KhoanThu.objects.filter(id_khoanthu=new_ID).exists():
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': 'Mã khoản thu này đã tồn tại!'}, status=400)
+                messages.error(request, 'Mã khoản thu này đã tồn tại!')
+                return render(request, 'core/AddFeeModal.html', {'form': form})
+            
+            form.save()
+
+            # Nếu là yêu cầu từ Modal (AJAX)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success'})
+            
+            # Nếu là yêu cầu thông thường, quay lại trang quản lý khoản thu
+            messages.success(request, 'Thêm khoản thu thành công!')
+            return redirect('fee_management')
         else:
-            context = {'form': form}
-            return render(request, 'core/AddFeeModal.html', context) 
-    
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        form = KhoanThuForm()
-        context = {'form': form}
-        return render(request, 'core/AddFeeModal.html', context)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Dữ liệu không hợp lệ!'}, status=400)
     else:
         form = KhoanThuForm()
-        context = {'form': form, 'page_title': "TẠO KHOẢN THU MỚI"}
-        return render(request, 'core/AddFee.html', context)
+    
+    return render(request, 'core/AddFeeModal.html', {'form': form})
 
 def edit_khoanthu(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
@@ -525,11 +562,13 @@ def edit_khoanthu(request, pk):
         
         if form.is_valid():
             form.save() 
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success'})
             messages.success(request, f"Khoản thu '{khoan_thu.ten_khoanthu}' đã được cập nhật thành công!")
-            return HttpResponse(status=200) 
+            return redirect('fee_management')
         else:
             context = {'form': form, 'khoan_thu': khoan_thu}
-            return render(request, 'core/EditFeeModal.html', context)
+            return render(request, 'core/EditFeeModal.html', context, status=400)
             
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = KhoanThuForm(instance=khoan_thu)
@@ -543,3 +582,268 @@ def edit_khoanthu(request, pk):
             'page_title': f"CHỈNH SỬA KHOẢN THU - {khoan_thu.ten_khoanthu}",
         }
         return render(request, 'core/EditFee.html', context)
+     
+def delete_khoanthu(request, pk):
+    khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk)
+
+    if request.method == 'POST':
+        khoan_thu.delete()
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'success', 'message': 'Khoản thu đã được xóa thành công!'})
+        return redirect('fee_management')
+    return render(request, 'core/DeleteFeeModal.html', {'khoan_thu': khoan_thu})
+
+#Quản lý đợt thu phí
+def fee_collection_period(request):
+    query = request.GET.get('search_dotthu')
+    dot_thu_phi_list = DotThuPhi.objects.select_related('id_khoanthu').all()
+    active_count = dot_thu_phi_list.filter(trang_thai='open').count()
+    if query:
+        dot_thu_phi_list = dot_thu_phi_list.filter(
+            Q(ten_dotthu__icontains=query) | Q(id_dotthu__icontains=query)
+        )
+    context = {
+        'dot_thu_phi_list': dot_thu_phi_list,
+        'active_count': active_count,
+        'query': query
+    }
+    return render(request, 'core/FeeCollectionPeriod.html', context)
+
+def view_dotthu_detail_modal(request, pk):
+    dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk)
+    danh_sach_hoa_don = dot_thu.hoa_dons.select_related('id_hokhau').all().order_by('id_hokhau__so_can_ho')
+    ids_da_co = danh_sach_hoa_don.values_list('id_hokhau_id', flat=True)
+    tat_ca_ho_khau = HoKhau.objects.exclude(id_hokhau__in=ids_da_co)
+    context = {
+        'dot_thu': dot_thu,
+        'danh_sach_hoa_don': danh_sach_hoa_don,
+        'tat_ca_ho_khau': tat_ca_ho_khau # Biến này dùng để hiển thị trong phần "Thêm hộ"
+    }
+    return render(request, 'core/ViewPeriodDetailModal.html', context)
+
+def update_payment_status(request):
+    invoice_ids = request.POST.getlist('invoice_ids[]') # Nhận danh sách ID từ AJAX
+    
+    if not invoice_ids:
+        return JsonResponse({'status': 'error', 'message': 'Không có hóa đơn nào được chọn'}, status=400)
+    
+    try:
+        # Cập nhật ngày nộp là ngày hiện tại cho các hóa đơn được chọn
+        HoaDon.objects.filter(id_hoadon__in=invoice_ids, ngay_nop__isnull=True).update(
+            ngay_nop=timezone.now()
+        )
+        return JsonResponse({'status': 'success', 'message': 'Cập nhật trạng thái thành công'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+def create_invoices_for_period(request):
+    id_dotthu = request.POST.get('id_dotthu')
+    hokhau_ids = request.POST.getlist('hokhau_ids[]')
+    multipliers = request.POST.getlist('multipliers[]')
+    prices = request.POST.getlist('prices[]')
+    
+    dot_thu = get_object_or_404(DotThuPhi, id_dotthu=id_dotthu)
+    
+    # Logic gán ID thủ công cho HoaDon
+    last_invoice = HoaDon.objects.all().order_by('id_hoadon').last()
+    next_id = (last_invoice.id_hoadon + 1) if last_invoice else 1
+
+    for hk_id, mult, price in zip(hokhau_ids, multipliers, prices):
+        hokhau = get_object_or_404(HoKhau, id_hokhau=hk_id)
+        
+        if not HoaDon.objects.filter(id_dotthu=dot_thu, id_hokhau=hokhau).exists():
+            # Tính toán: Tổng tiền = Đơn giá x Hệ số
+            final_amount = float(price) * float(mult)
+            
+            HoaDon.objects.create(
+                id_hoadon=next_id,
+                id_dotthu=dot_thu,
+                id_hokhau=hokhau,
+                tong_tien=final_amount # Lưu kết quả đã nhân
+            )
+            next_id += 1
+
+    # Trả về cùng Template để nạp lại bảng bên dưới (phần Chờ thu)
+    danh_sach_hoa_don = dot_thu.hoa_dons.select_related('id_hokhau').all().order_by('id_hokhau__so_can_ho')
+    tat_ca_ho_khau = HoKhau.objects.exclude(id_hokhau__in=danh_sach_hoa_don.values_list('id_hokhau_id', flat=True))
+    
+    return render(request, 'core/ViewPeriodDetailModal.html', {
+        'dot_thu': dot_thu,
+        'danh_sach_hoa_don': danh_sach_hoa_don,
+        'tat_ca_ho_khau': tat_ca_ho_khau
+    })
+
+def add_dotthu(request):
+    if request.method == 'POST':
+        form = DotThuPhiForm(request.POST)
+        if form.is_valid():
+            new_ID = form.cleaned_data.get('id_dotthu')
+            if DotThuPhi.objects.filter(id_dotthu=new_ID).exists():
+                return JsonResponse({'error': 'Mã đợt thu phí này đã tồn tại!'}, status=400)
+            
+            form.save()
+            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success'})
+            
+            return redirect('fee_collection_period') 
+    else:
+        form = DotThuPhiForm()
+    return render(request, 'core/AddPeriodModal.html', {'form': form})
+
+def edit_dotthu(request, pk):
+    dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk) 
+    if request.method == 'POST':
+        form = DotThuPhiForm(request.POST, instance=dot_thu)
+        if form.is_valid():
+            form.save() 
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success'})
+            return redirect('fee_collection_period')
+        else:
+            return render(request, 'core/EditPeriodModal.html', {'form': form, 'dot_thu': dot_thu}, status=400)
+            
+    form = DotThuPhiForm(instance=dot_thu)
+    return render(request, 'core/EditPeriodModal.html', {'form': form, 'dot_thu': dot_thu})
+     
+def delete_dotthu(request, pk):
+    dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk)
+    if request.method == 'POST':
+        dot_thu.delete()
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'success', 'message': 'Đợt thu phí đã được xóa thành công!'})
+        return redirect('fee_collection_period')
+    return render(request, 'core/DeletePeriodModal.html', {'dot_thu': dot_thu})
+
+#Thống kê
+def statistics_view(request):
+    # Lấy năm từ tham số GET, mặc định là năm hiện tại
+    year_str = request.GET.get('year', str(datetime.now().year))
+    try:
+        year = int(year_str)
+    except ValueError:
+        year = datetime.now().year
+
+    # 1. Biểu đồ tròn: Cơ cấu loại khoản thu theo doanh thu trong NĂM ĐÃ CHỌN
+    phi_status = KhoanThu.objects.filter(
+        dot_thuphi__hoa_dons__ngay_nop__year=year
+    ).annotate(
+        total_revenue=Sum('dot_thuphi__hoa_dons__tong_tien')
+    ).order_by('-total_revenue')[:5]
+    
+    pie_labels = [item.ten_khoanthu for item in phi_status]
+    pie_data = [float(item.total_revenue) for item in phi_status]
+
+    # 2. Biểu đồ đường: Xu hướng doanh thu theo tháng
+    monthly_income = HoaDon.objects.filter(ngay_nop__year=year).annotate(
+        month=ExtractMonth('ngay_nop')
+    ).values('month').annotate(total=Sum('tong_tien')).order_by('month')
+
+    line_labels = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"]
+    line_data = [0] * 12 
+    for item in monthly_income:
+        if item['month']:
+            line_data[item['month'] - 1] = float(item['total'])
+    
+    # 3. Tính toán các con số tổng quan
+    tong_da_thu = HoaDon.objects.filter(ngay_nop__year=year).aggregate(Sum('tong_tien'))['tong_tien__sum'] or 0
+    
+    so_ho = HoKhau.objects.filter(is_active=True).count()
+    dot_thus = DotThuPhi.objects.filter(ngay_batdau__year=year)
+    tong_can_thu = 0
+    for dot in dot_thus:
+        # Mục tiêu dự kiến = Đơn giá x Số hộ (Đơn giản hóa)
+        tong_can_thu += float(dot.id_khoanthu.don_gia) * so_ho
+
+    phan_tram = round((float(tong_da_thu) / tong_can_thu) * 100, 1) if tong_can_thu > 0 else 0
+
+    context = {
+        'pie_labels': json.dumps(pie_labels),
+        'pie_data': json.dumps(pie_data),
+        'line_labels': json.dumps(line_labels),
+        'line_data': json.dumps(line_data),
+        'tong_da_thu': tong_da_thu,
+        'tong_can_thu': tong_can_thu,
+        'phan_tram': phan_tram,
+        'selected_year': year,
+    }
+    return render(request, 'core/Statistics.html', context)
+
+def export_finance_excel(request):
+    year_str = request.GET.get('year', str(timezone.now().year))
+    try:
+        year = int(year_str)
+    except ValueError:
+        year = timezone.now().year
+        
+    wb = Workbook()
+    ws = wb.active
+    ws.title = f"Thong ke {year}"
+
+    # Định dạng
+    bold_font = Font(bold=True, color="FFFFFF")
+    center_align = Alignment(horizontal='center', vertical='center')
+    border = Border(
+        left=Side(style='thin'), 
+        right=Side(style='thin'), 
+        top=Side(style='thin'), 
+        bottom=Side(style='thin')
+    )
+    # SỬA TẠI ĐÂY: Dùng PatternFill trực tiếp thay vì openpyxl.styles.PatternFill
+    header_fill = PatternFill(start_color="1976D2", end_color="1976D2", fill_type="solid")
+
+    # Tiêu đề báo cáo
+    ws.merge_cells('A1:C1')
+    ws['A1'] = f"BÁO CÁO TÀI CHÍNH NĂM {year} - CHUNG CƯ BLUEMOON"
+    ws['A1'].font = Font(bold=True, size=14)
+    ws['A1'].alignment = center_align
+
+    # Header bảng
+    headers = ['Tháng', 'Số lượng hóa đơn', 'Doanh thu thực tế (VND)']
+    ws.append([]) # Dòng trống
+    ws.append(headers)
+    
+    # Định dạng dòng Header (Dòng số 3)
+    for cell in ws[3]:
+        cell.font = bold_font
+        cell.fill = header_fill # Sử dụng biến header_fill đã tạo
+        cell.alignment = center_align
+        cell.border = border
+
+    # Lấy dữ liệu và điền vào bảng
+    monthly_data = HoaDon.objects.filter(ngay_nop__year=year).annotate(
+        month=ExtractMonth('ngay_nop')
+    ).values('month').annotate(
+        count=Count('id_hoadon'),
+        total=Sum('tong_tien')
+    ).order_by('month')
+
+    total_year_money = 0
+    for m in range(1, 13):
+        data = next((item for item in monthly_data if item['month'] == m), None)
+        count = data['count'] if data else 0
+        money = float(data['total']) if data else 0
+        total_year_money += money
+        
+        ws.append([f"Tháng {m}", count, money])
+        for cell in ws[ws.max_row]:
+            cell.border = border
+            cell.alignment = Alignment(horizontal='right') if isinstance(cell.value, (int, float)) else center_align
+
+    # Dòng tổng cộng
+    ws.append(["TỔNG CỘNG", "", total_year_money])
+    last_row = ws.max_row
+    ws.cell(row=last_row, column=1).font = Font(bold=True)
+    ws.cell(row=last_row, column=3).font = Font(bold=True)
+    for cell in ws[last_row]:
+        cell.border = border
+
+    # Chỉnh độ rộng cột
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 25
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=BaoCao_BlueMoon_{year}.xlsx'
+    wb.save(response)
+    return response

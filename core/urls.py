@@ -2,10 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("logintest/", views.login_view, name="logintest"),
-    path("signintest/", views.register, name="signintest"),
-    path("profiletest/", views.profile, name="profiletest"),
-    path("logouttest/", views.user_logout, name="logouttest"),
+    path("login/", views.login_view, name="login"),
+    path("register/", views.register, name="register"),
+    path("profile/", views.profile, name="profile"),
+    path("logout/", views.user_logout, name="logout"),
 
     path('', views.home, name='home'),
     path('accountmanage', views.accountmanage, name='accountmanage'),
@@ -43,10 +43,19 @@ urlpatterns = [
 
     path('fee-management/', views.fee_management, name='fee_management'),  # Trang quản lý khoản thu
     path('fee-management/add/', views.add_khoanthu, name='add_khoanthu'),
+    path('fee-management/edit/<int:pk>/',views.edit_khoanthu, name = 'edit_khoanthu'),
+    path('fee-management/delete/<int:pk>/', views.delete_khoanthu, name='delete_khoanthu'),
     path('fee-management/detail/<int:pk>/modal/', views.view_khoanthu_detail_modal, name='view_khoanthu_detail_modal'), 
-    path('fee-management/edit/<int:pk>/', views.edit_khoanthu, name='edit_khoanthu'),
+
 
     path('fee-collection-period/', views.fee_collection_period, name='fee_collection_period'),  # Trang quản lý đợt thu phí
+    path('fee-collection-period/add/', views.add_dotthu, name='add_dotthu'),
+    path('fee-collection-period/edit/<int:pk>/', views.edit_dotthu, name='edit_dotthu'),
+    path('fee-collection-period/delete/<int:pk>/', views.delete_dotthu, name='delete_dotthu'),
+    path('fee-collection-period/detail/<int:pk>/modal/', views.view_dotthu_detail_modal, name='view_dotthu_detail_modal'),
+    path('update-payment-status/', views.update_payment_status, name='update_payment_status'),
+    path('create-invoices/', views.create_invoices_for_period, name='create_invoices_for_period'),
+        
     path('statistics-view/', views.statistics_view, name='statistics_view'),  # Trang thống kê
-    
+    path('statistics/export/', views.export_finance_excel, name='export_finance_excel'),
 ]

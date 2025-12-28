@@ -230,3 +230,19 @@
     margin-top: 3px !important;
     margin-bottom: 0 !important;
 }
+
+/* Nút xác nhận xóa (Màu đỏ đặc) */
+.btn-danger-filled {
+    background-color: #dc3545;
+    color: #fff;
+    border: 1px solid #dc3545;
+}
+.btn-danger-filled:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
+/* Modal xóa thu gọn hơn */
+.delete-modal-width {
+    max-width: 450px;
+}

@@ -1,156 +1,155 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
+<head>
     {% load static %}
+    {% load humanize %}
     <meta charset="UTF-8" />
     <title>Quản Lý Đợt Thu Phí - Chung cư BlueMoon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'css/Accountant.css' %}" />
-  </head>
-  <body>
+    <link rel="stylesheet" href="{% static 'css/fee_management_modal.css' %}"> 
+</head>
+<body>
     {% include 'core/Sidebar.html' %}
-
     <main>
-      <header class="main-header">
-        <div class="header-left">
-          <button id="sidebarToggleBtn" class="toggle-btn">
-            <i class="fa-solid fa-bars"></i>
-          </button>
-          <h1>Chung cư <span>BlueMoon</span></h1>
-          <p>Hệ thống quản lý hiện đại và thông minh cho tòa nhà của bạn</p>
-        </div>
-        <div class="header-right">
-          <button class="lang-btn" style="margin-right: 12px">
-            <img
-              src="https://flagcdn.com/vn.svg"
-              alt="VI"
-              width="22"
-              style="
-                border-radius: 50%;
-                border: 1px solid #d9d9d9;
-                background: #fff;
-                margin-right: 7px;
-              "
-            />
-            <span>VI</span>
-          </button>
-          <div class="user-avatar" id="userMenuBtn">KT</div>
-          {% include 'core/UserMenu.html' %}
-          <div class="user-menu-overlay" id="userMenuOverlay"></div>
-        </div>
-      </header>
-
-      <section class="main-content fee-collection-page">
-        <div class="main-panel data-table-panel" id="fee-collection-container">
-          <div class="income-controls-top">
-            <div class="search-box-container">
-              <input type="text" placeholder="Tìm kiếm đợt thu phí..." />
-              <i class="fa-solid fa-search"></i>
+        <header class="main-header">
+            <div class="header-left">
+                <button id="sidebarToggleBtn" class="toggle-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1>Chung cư <span>BlueMoon</span></h1>
+                <p>Hệ thống quản lý hiện đại và thông minh cho tòa nhà của bạn</p>
             </div>
-            <div class="control-buttons">
-              <button class="btn-filter">
-                <i class="fa-solid fa-filter"></i> Lọc
-              </button>
+            <div class="header-right">
+                <button class="lang-btn" style="margin-right: 12px">
+                    <img src="https://flagcdn.com/vn.svg" alt="VI" width="22" style="border-radius: 50%; border: 1px solid #d9d9d9; background: #fff; margin-right: 7px;"/>
+                    <span>VI</span>
+                </button>
+                <div class="user-avatar" id="userMenuBtn">KT</div>
+                {% include 'core/UserMenu.html' %}
+                <div class="user-menu-overlay" id="userMenuOverlay"></div>
             </div>
-          </div>
+        </header>
 
-          <div class="fee-collection-summary-box">
-            <h3 class="box-title">Tổng quan các đợt thu trong Quý 4/2025</h3>
-            <div class="summary-details">
-              <p>Số đợt thu đang hoạt động: **1**</p>
-              <p>Tổng tiền cần thu: **1.200.000.000 VND**</p>
-              <p>Tiến độ trung bình: **97.5%**</p>
+        <section class="main-content fee-collection-page">
+            <div class="main-panel data-table-panel" id="income-container">
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message-container {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="income-controls-top">
+                    <form method="GET" action="{% url 'fee_collection_period' %}" id="periodSearchForm" style="display: flex; gap: 10px; flex-grow: 1;">
+                        <div class="search-box-container" style="flex-grow: 1;">
+                            <input type="text" 
+                            name="search_dotthu" 
+                            placeholder="Tìm kiếm đợt thu phí..." 
+                            value="{{ query|default:'' }}" />
+                            <i class="fa-solid fa-search" onclick="document.getElementById('periodSearchForm').submit();" style="cursor: pointer;"></i>
+                        </div>
+                        <div class="control-buttons">
+                            <button type="submit" class="btn btn-primary" style="min-width: 120px; height: 100%;">
+                                <i class="fa-solid fa-filter"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="fee-collection-summary-box">
+                    <h3 class="box-title">Tổng quan các đợt thu</h3>
+                    <div class="summary-details">
+                        <p>Số đợt thu đang mở: **{{ active_count|default:"0" }}**</p>
+                        <p>Tổng số đợt thu hệ thống: **{{ dot_thu_phi_list.count }}**</p>
+                        <p>Trạng thái cập nhật: **Mới nhất**</p>
+                    </div>
+                </div>
+
+                <h2 class="table-title">DANH SÁCH ĐỢT THU PHÍ</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã Đợt</th>
+                                <th>Tên Đợt Thu</th>
+                                <th>Khoản thu áp dụng</th>
+                                <th>Thời gian</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dot in dot_thu_phi_list %}
+                            <tr>
+                                <td data-label="Mã Đợt">{{ dot.id_dotthu }}</td>
+                                <td data-label="Tên Đợt Thu">{{ dot.ten_dotthu }}</td>
+                                <td data-label="Khoản thu">
+                                    {{ dot.id_khoanthu.ten_khoanthu }}
+                                </td>
+                                <td data-label="Thời gian">
+                                    {{ dot.ngay_batdau|date:"d/m/Y" }} - {{ dot.ngay_ketthuc|date:"d/m/Y" }}
+                                </td>
+                                <td data-label="Trạng thái">
+                                    {% if dot.trang_thai == 'open' %}
+                                        <span class="status status-active">Mở</span>
+                                    {% elif dot.trang_thai == 'closed' %}
+                                        <span class="status status-inactive">Đóng</span>
+                                    {% else %}
+                                        <span class="status status-draft">Nháp</span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Thao tác">
+                                    <button class="action-btn view-detail modal-trigger" 
+                                            title="Xem chi tiết" 
+                                            data-url="{% url 'view_dotthu_detail_modal' dot.pk %}">
+                                        <i class="fa-solid fa-list-check"></i>
+                                    </button>
+                                    
+                                    <button class="action-btn edit-fee modal-trigger" 
+                                            style="background: #fff3e0; color: #ff9800"
+                                            title="Chỉnh sửa"
+                                            data-url="{% url 'edit_dotthu' dot.pk %}">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+
+                                    <button class="action-btn delete-fee btn-confirm-delete"
+                                            title="Xóa" 
+                                            data-url="{% url 'delete_dotthu' dot.pk %}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Chưa có đợt thu phí nào được tạo.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="income-actions-bottom">
+                    <button id="createNewFeeBtn" class="btn btn-create-new" style="min-width: 200px;" data-url="{% url 'add_dotthu' %}">
+                        <i class="fa-solid fa-plus"></i> Tạo đợt thu mới
+                    </button>
+                </div>
             </div>
-          </div>
+        </section>
 
-          <h2 class="table-title">DANH SÁCH ĐỢT THU PHÍ</h2>
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Mã Đợt</th>
-                  <th>Tên Đợt Thu</th>
-                  <th>Khoản thu áp dụng</th>
-                  <th>Thời gian</th>
-                  <th>Tiến độ</th>
-                  <th>Trạng thái</th>
-                  <th>Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-label="Mã Đợt">DT001</td>
-                  <td data-label="Tên Đợt Thu">Thu Phí QL Quý 4/2025</td>
-                  <td data-label="Khoản thu">Phí Quản Lý</td>
-                  <td data-label="Thời gian">1/10 - 31/10/2025</td>
-                  <td data-label="Tiến độ">95%</td>
-                  <td data-label="Trạng thái">
-                    <span class="status status-active">Đang thu</span>
-                  </td>
-                  <td data-label="Thao tác">
-                    <button class="action-btn view-detail" title="Xem chi tiết">
-                      <i class="fa-solid fa-list-check"></i>
-                    </button>
-                    <button
-                      class="action-btn edit-item"
-                      style="background: #fff3e0; color: var(--orange)"
-                      title="Chỉnh sửa"
-                    >
-                      <i class="fa-solid fa-pen"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td data-label="Mã Đợt">DT002</td>
-                  <td data-label="Tên Đợt Thu">Thu Phí Gửi Xe T9/2025</td>
-                  <td data-label="Khoản thu">Phí Gửi Xe</td>
-                  <td data-label="Thời gian">1/9 - 30/9/2025</td>
-                  <td data-label="Tiến độ">100%</td>
-                  <td data-label="Trạng thái">
-                    <span class="status status-inactive">Đã hoàn tất</span>
-                  </td>
-                  <td data-label="Thao tác">
-                    <button class="action-btn view-detail" title="Xem chi tiết">
-                      <i class="fa-solid fa-list-check"></i>
-                    </button>
-                    <button
-                      class="action-btn edit-item"
-                      style="background: #fff3e0; color: var(--orange)"
-                      title="Chỉnh sửa"
-                    >
-                      <i class="fa-solid fa-pen"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="income-actions-bottom">
-            <button class="btn btn-create-new">
-              <i class="fa-solid fa-plus"></i> Tạo đợt thu mới
-            </button>
-            <button class="btn btn-fix">
-              <i class="fa-solid fa-gear"></i> Chỉnh sửa đợt thu
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <footer>
-        &copy; BlueMoon Apartment 2025. Created by the ChatGPT's son-in-law
-        team.
-      </footer>
+        <footer>
+            &copy; BlueMoon Apartment 2025. Created by the ChatGPT's son-in-law team.
+        </footer>
     </main>
 
-    <script></script>
-  </body>
+    <div id="mainModal" class="modal">
+        <div class="modal-content"></div>
+    </div>
+
+    <script src="{% static 'js/FeeManagement_modal_logic.js' %}"></script>
+</body>
 </html>
