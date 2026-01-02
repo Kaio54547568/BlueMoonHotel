@@ -7,7 +7,7 @@
 }
 .layout {
   display: flex;
-    flex-direction: column; /* sắp theo chiều dọc */
+  flex-direction: column; /* sắp theo chiều dọc */
 
   flex-direction: column; /* header nằm trên cùng */
   height: 100vh;
@@ -18,7 +18,7 @@ body {
   background-color: #9bd4c6; /* màu xanh nhạt */
   height: 100vh;
   display: flex;
-    flex-direction: column; /* sắp theo chiều dọc */
+  flex-direction: column; /* sắp theo chiều dọc */
 
   justify-content: center;
   align-items: center;
@@ -112,4 +112,26 @@ body {
 
 .hrdanger:hover {
   background-color: #ff9999;
+}
+
+/* ===== Force menu icon to BLACK ===== */
+.topbar .icon-btn,
+#btnOpen,
+#btnClose {
+  color: #000 !important;
+}
+
+/* Nếu có icon font <i> */
+.topbar .icon-btn i,
+#btnOpen i,
+#btnClose i {
+  color: #000 !important;
+}
+
+/* Nếu dùng svg */
+.topbar .icon-btn svg,
+#btnOpen svg,
+#btnClose svg {
+  fill: #000 !important;
+  stroke: #000 !important;
 }
