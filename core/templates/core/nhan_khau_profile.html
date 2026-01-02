@@ -65,9 +65,14 @@ justify-content: center;">
               <a
                 href="{% url 'nhan_khau_delete' nhan_khau.id_nhankhau %}"
                 class="brutalist-card__button brutalist-card__button--primary brutalist-card__button--xs"
-              >
+                >
                 🗑️ Xóa {{ nhan_khau.ho_ten }}
               </a>
+              <a href="{% url 'add_tam_vang' nhan_khau.id_nhankhau %}"
+              class="brutalist-card__button brutalist-card__button--primary brutalist-card__button--xs"
+              >
+                    ✏️ Đăng ký tạm vắng
+                  </a>
             </div>
           </div>
         </div>

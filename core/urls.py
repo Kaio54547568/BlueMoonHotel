@@ -23,6 +23,8 @@ urlpatterns = [
     path('demomanage/<int:id_nhankhau>/', views.nhan_khau_profile, name='nhan_khau_profile'),
     path('demomanage/delete/<int:id_nhankhau>/', views.nhan_khau_delete, name='nhan_khau_delete'),
     path('demomanage/<int:id_nhankhau>/edit/', views.edit_nhan_khau, name='edit_nhan_khau'),  
+    path('demomanage/dangkytamvang/<int:id_nhankhau>/', views.add_tam_vang, name='add_tam_vang'),
+    path('demomanage/biendongnhankhau', views.biendong_list, name='biendong_list'),
 
     path('test/', views.test, name='test'),
  #   path('login/', views.login, name='login'),

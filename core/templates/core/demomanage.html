@@ -58,24 +58,36 @@
                 <th>DOB</th>
                 <th>CCCD</th>
                 <th>Quan hệ với chủ hộ</th>
+                <th>Trạng thái cư trú</th>
               </tr>
             </thead>
             <tbody>
-              {% for hk in nhan_khau_list %}
+              {% for item in data %}
               <tr>
                 <td>
-                  <a href="{% url 'nhan_khau_profile' hk.id_nhankhau %}">
-                    {{ hk.id_nhankhau }}
+                  <a href="{% url 'nhan_khau_profile' item.nhan_khau.id_nhankhau %}">
+                    {{ item.nhan_khau.id_nhankhau }}
                   </a>
                 </td>
 
-                <td>{{ hk.ho_ten }}</td>
+                <td>{{ item.nhan_khau.ho_ten }}</td>
                 <!-- NEW: lấy trường tên nhân khẩu -->
 
-                <td>{{ hk.ho_khau }}</td>
-                <td>{{ hk.ngay_sinh }}</td>
-                <td>{{ hk.cccd }}</td>
-                <td>{{ hk.quan_he_chu_ho }}</td>
+                <td>{{ item.nhan_khau.id_hokhau_id }}</td>
+                <td>{{ item.nhan_khau.ngay_sinh }}</td>
+                <td>{{ item.nhan_khau.cccd }}</td>
+                <td>{{ item.nhan_khau.quan_he_chu_ho }}</td>
+                    <td>
+                      {% if item.trang_thai == "tam vang" %}
+                        🔴 Tạm vắng
+                      {% elif item.trang_thai == "tam tru" %}
+                        🟡 Tạm trú
+                      {% elif item.trang_thai == "thuong tru" %}
+                        🟢 Thường trú
+                      {% else %}
+                        ⚪ Chưa xác định
+                      {% endif %}
+                    </td>
               </tr>
               {% empty %}
               <tr>

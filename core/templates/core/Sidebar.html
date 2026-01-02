@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="../styles/Accountant.css" />
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}" />
 <aside class="sidebar" id="sidebar"> <div class="sidebar-logo">
     <i class="fa-solid fa-building-columns"></i>
     <span>BlueMoon</span>
@@ -66,4 +67,5 @@
   </nav>
   <input type="hidden" id="user-role-id" value="{{ user.vaitro.id_vaitro|default:0 }}">
 </aside>
-<script src="../js/Sidebar1.js"></script>
+<script src="{% static 'js/Sidebar1.js' %}"></script>
+

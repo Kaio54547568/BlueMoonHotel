@@ -77,7 +77,7 @@ class NhanKhau(models.Model):
     cccd = models.CharField(max_length=12, unique=True, null=True, blank=True)
     quan_he_chu_ho = models.CharField(max_length=50, null=True, blank=True)
     id_hokhau = models.ForeignKey(
-        HoKhau, on_delete=models.RESTRICT, db_column='id_hokhau', related_name='nhan_khaus', default=1
+        HoKhau, on_delete=models.RESTRICT, db_column='id_hokhau', related_name='ho_khau', default=1
     )
 
     class Meta:
