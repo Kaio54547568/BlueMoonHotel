@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>demomanage</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/demomanage.css' %}" />
+  </head>
+  <body>
+    {% include 'core/header.html' %}
+
+    <h2>Danh sách biến động nhân khẩu</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Họ tên</th>
+      <th>Loại biến động</th>
+      <th>Ngày bắt đầu</th>
+      <th>Ngày kết thúc</th>
+      <th>Lý do</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for bd in biendongs %}
+    <tr>
+      <td>{{ bd.id_biendong }}</td>
+      <td>{{ bd.id_nhankhau.ho_ten }}</td>
+      <td>
+        {% if bd.loai_biendong == "tam vang" %}
+          🔴 Tạm vắng
+        {% elif bd.loai_biendong == "tam tru" %}
+          🟡 Tạm trú
+        {% elif bd.loai_biendong == "thuong tru" %}
+          🟢 Thường trú
+        {% else %}
+          ⚪ Không xác định
+        {% endif %}
+      </td>
+      <td>{{ bd.ngay_batdau }}</td>
+      <td>
+        {{ bd.ngay_ketthuc|default:"—" }}
+      </td>
+      <td>
+        {{ bd.ly_do|default:"—" }}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6">Chưa có bản ghi biến động nào</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    {% include 'core/sidebar_and_footer.html' %}
+  </body>
+</html>
