@@ -371,28 +371,29 @@ def biendong_list(request):
         {'biendongs': biendongs}
     )
 @login_required(login_url="login")
-def add_tam_vang(request, id_nhankhau):
+def dang_ky_bdbk(request, id_nhankhau):
     nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
 
     if request.method == "POST":
         ngay_batdau = request.POST.get('ngay_batdau')
         ngay_ketthuc = request.POST.get('ngay_ketthuc')
+        loai_bien_dong = request.POST.get('loai_bien_dong')
         ly_do = request.POST.get('ly_do')
 
         with transaction.atomic():
             BienDongNhanKhau.objects.create(
-                loai_biendong="tam vang",      # 🔒 cố định
+                loai_biendong=loai_bien_dong,      # 🔒 cố định
                 ngay_batdau=ngay_batdau or timezone.now().date(),
                 ngay_ketthuc=ngay_ketthuc or None,
                 ly_do=ly_do or None,
                 id_nhankhau=nhan_khau
             )
 
-        return redirect('demomanage/adddemo')  # hoặc trang chi tiết nhân khẩu
+        return redirect('biendong_list')  # hoặc trang chi tiết nhân khẩu
 
     return render(
         request,
-        'core/add_tam_vang.html',
+        'core/dangkybdnk.html',
         {'nhan_khau': nhan_khau}
     )
 @login_required(login_url="login")
