@@ -3,10 +3,12 @@ from unicodedata import decimal
 from django.http import HttpResponse, JsonResponse
 from calendar import day_name
 from pyexpat.errors import messages
+from django.db import transaction
+
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ReservationForm, KhoanThuForm, DotThuPhiForm
-from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu, DotThuPhi, HoaDon
+from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu, DotThuPhi, HoaDon, BienDongNhanKhau
 from datetime import datetime, timezone
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -236,14 +238,21 @@ def add_demo(request):
         cccd = request.POST.get('cccd')
         quan_he_chu_ho = request.POST.get('quan_he_chu_ho')
         ho_khau_id = request.POST.get('ho_khau_id')
+        loai_bien_dong_query = request.POST.get('loai_dang_ky_cu_tru')
         try:
             if HoKhau.objects.filter(id_hokhau=ho_khau_id).exists():
-                NhanKhau.objects.create(
+                nhan_khau = NhanKhau.objects.create(
                     ho_ten=ho_ten,
                     ngay_sinh=ngay_sinh or None,
                     cccd=cccd or None,
                     quan_he_chu_ho=quan_he_chu_ho or None,
                     id_hokhau_id=int(ho_khau_id)
+                )
+                BienDongNhanKhau.objects.create(
+                    loai_biendong="thuong tru",   
+                    ngay_batdau=timezone.now().date(),
+                    id_nhankhau=nhan_khau,
+                    ly_do="Dang ky nhan khau moi"
                 )
         except HoKhau.DoesNotExist:
             pass 
@@ -251,6 +260,7 @@ def add_demo(request):
         return redirect('demomanage/adddemo')   
 
     return render(request, 'core/demomanage_add.html')
+
 # def login(request):
 #     # Xử lý khi người dùng NHẤN NÚT (gửi form)
 #     if request.method == 'POST':
@@ -326,11 +336,65 @@ def demomanage(request):
         except ValueError:
             nhan_khau_list = NhanKhau.objects.all()
 
+    data = []
+    for nk in nhan_khau_list:
+        bien_dong = (
+            BienDongNhanKhau.objects
+            .filter(id_nhankhau=nk)
+            .order_by('-ngay_batdau')
+            .first()
+        )
+
+        trang_thai = bien_dong.loai_biendong if bien_dong else "Chưa xác định"
+
+        data.append({
+            'nhan_khau': nk,
+            'trang_thai': trang_thai
+        })
     context = {
-        'nhan_khau_list': nhan_khau_list,
+        'data': data,
         'query': query,
     }
     return render(request, 'core/demomanage.html', context)
+
+@login_required(login_url="login")
+def biendong_list(request):
+    biendongs = (
+        BienDongNhanKhau.objects
+        .select_related('id_nhankhau')
+        .order_by('-ngay_batdau')
+    )
+
+    return render(
+        request,
+        'core/biendong_list.html',
+        {'biendongs': biendongs}
+    )
+@login_required(login_url="login")
+def add_tam_vang(request, id_nhankhau):
+    nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
+
+    if request.method == "POST":
+        ngay_batdau = request.POST.get('ngay_batdau')
+        ngay_ketthuc = request.POST.get('ngay_ketthuc')
+        ly_do = request.POST.get('ly_do')
+
+        with transaction.atomic():
+            BienDongNhanKhau.objects.create(
+                loai_biendong="tam vang",      # 🔒 cố định
+                ngay_batdau=ngay_batdau or timezone.now().date(),
+                ngay_ketthuc=ngay_ketthuc or None,
+                ly_do=ly_do or None,
+                id_nhankhau=nhan_khau
+            )
+
+        return redirect('demomanage/adddemo')  # hoặc trang chi tiết nhân khẩu
+
+    return render(
+        request,
+        'core/add_tam_vang.html',
+        {'nhan_khau': nhan_khau}
+    )
 @login_required(login_url="login")
 
 def demomanage_delete(request, id_hokhau):
