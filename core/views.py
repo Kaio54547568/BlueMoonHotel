@@ -616,11 +616,13 @@ def HoKhaus_list(request):
     return render(request, 'core/HoKhaus_list.html', {'HoKhaus': HoKhaus})
 
 
-@login_required(login_url="login")
 
 #============= Kế toán Views =================
+@login_required(login_url="login")
 def accountant_home(request):
     return render(request, 'core/Accountant.html')
+
+@login_required(login_url="login")
 #Quan lý khoản thu
 def fee_management(request):
     query = request.GET.get('search_khoanthu') #Lấy tham số tìm kiếm từ URL
@@ -639,15 +641,15 @@ def fee_management(request):
         'query': query
     }
     return render(request, 'core/FeeManagement.html', context)
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def view_khoanthu_detail_modal(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
     if not request.headers.get('x-requested-with') == 'XMLHttpRequest':
         pass 
     return render(request, 'core/ViewFeeDetailModal.html', {'khoan_thu': khoan_thu})
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def add_khoanthu(request):
     if request.method == 'POST':
         form = KhoanThuForm(request.POST)
@@ -661,11 +663,9 @@ def add_khoanthu(request):
                 return render(request, 'core/AddFeeModal.html', {'form': form})
             
             form.save()
-
             # Nếu là yêu cầu từ Modal (AJAX)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'success'})
-            
             # Nếu là yêu cầu thông thường, quay lại trang quản lý khoản thu
             messages.success(request, 'Thêm khoản thu thành công!')
             return redirect('fee_management')
@@ -674,8 +674,8 @@ def add_khoanthu(request):
                 return JsonResponse({'error': 'Dữ liệu không hợp lệ!'}, status=400)
     else:
         form = KhoanThuForm()
-    
     return render(request, 'core/AddFeeModal.html', {'form': form})
+
 @login_required(login_url="login")
 def edit_khoanthu(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk) 
@@ -705,8 +705,8 @@ def edit_khoanthu(request, pk):
             'page_title': f"CHỈNH SỬA KHOẢN THU - {khoan_thu.ten_khoanthu}",
         }
         return render(request, 'core/EditFee.html', context)
+    
 @login_required(login_url="login")
-
 def delete_khoanthu(request, pk):
     khoan_thu = get_object_or_404(KhoanThu, id_khoanthu=pk)
 
@@ -733,8 +733,8 @@ def fee_collection_period(request):
         'query': query
     }
     return render(request, 'core/FeeCollectionPeriod.html', context)
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def view_dotthu_detail_modal(request, pk):
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk)
     danh_sach_hoa_don = dot_thu.hoa_dons.select_related('id_hokhau').all().order_by('id_hokhau__so_can_ho')
@@ -746,8 +746,8 @@ def view_dotthu_detail_modal(request, pk):
         'tat_ca_ho_khau': tat_ca_ho_khau # Biến này dùng để hiển thị trong phần "Thêm hộ"
     }
     return render(request, 'core/ViewPeriodDetailModal.html', context)
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def update_payment_status(request):
     invoice_ids = request.POST.getlist('invoice_ids[]') # Nhận danh sách ID từ AJAX
     
@@ -762,8 +762,8 @@ def update_payment_status(request):
         return JsonResponse({'status': 'success', 'message': 'Cập nhật trạng thái thành công'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def create_invoices_for_period(request):
     id_dotthu = request.POST.get('id_dotthu')
     hokhau_ids = request.POST.getlist('hokhau_ids[]')
@@ -771,8 +771,6 @@ def create_invoices_for_period(request):
     prices = request.POST.getlist('prices[]')
     
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=id_dotthu)
-    
-    # Logic gán ID thủ công cho HoaDon
     last_invoice = HoaDon.objects.all().order_by('id_hoadon').last()
     next_id = (last_invoice.id_hoadon + 1) if last_invoice else 1
 
@@ -787,11 +785,9 @@ def create_invoices_for_period(request):
                 id_hoadon=next_id,
                 id_dotthu=dot_thu,
                 id_hokhau=hokhau,
-                tong_tien=final_amount # Lưu kết quả đã nhân
+                tong_tien=final_amount 
             )
             next_id += 1
-
-    # Trả về cùng Template để nạp lại bảng bên dưới (phần Chờ thu)
     danh_sach_hoa_don = dot_thu.hoa_dons.select_related('id_hokhau').all().order_by('id_hokhau__so_can_ho')
     tat_ca_ho_khau = HoKhau.objects.exclude(id_hokhau__in=danh_sach_hoa_don.values_list('id_hokhau_id', flat=True))
     
@@ -800,8 +796,8 @@ def create_invoices_for_period(request):
         'danh_sach_hoa_don': danh_sach_hoa_don,
         'tat_ca_ho_khau': tat_ca_ho_khau
     })
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def add_dotthu(request):
     if request.method == 'POST':
         form = DotThuPhiForm(request.POST)
@@ -819,8 +815,8 @@ def add_dotthu(request):
     else:
         form = DotThuPhiForm()
     return render(request, 'core/AddPeriodModal.html', {'form': form})
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def edit_dotthu(request, pk):
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk) 
     if request.method == 'POST':
@@ -835,8 +831,8 @@ def edit_dotthu(request, pk):
             
     form = DotThuPhiForm(instance=dot_thu)
     return render(request, 'core/EditPeriodModal.html', {'form': form, 'dot_thu': dot_thu})
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def delete_dotthu(request, pk):
     dot_thu = get_object_or_404(DotThuPhi, id_dotthu=pk)
     if request.method == 'POST':
@@ -845,9 +841,9 @@ def delete_dotthu(request, pk):
             return JsonResponse({'status': 'success', 'message': 'Đợt thu phí đã được xóa thành công!'})
         return redirect('fee_collection_period')
     return render(request, 'core/DeletePeriodModal.html', {'dot_thu': dot_thu})
-@login_required(login_url="login")
 
 #Thống kê
+@login_required(login_url="login")
 def statistics_view(request):
     # Lấy năm từ tham số GET, mặc định là năm hiện tại
     year_str = request.GET.get('year', str(datetime.now().year))
@@ -900,8 +896,8 @@ def statistics_view(request):
         'selected_year': year,
     }
     return render(request, 'core/Statistics.html', context)
-@login_required(login_url="login")
 
+@login_required(login_url="login")
 def export_finance_excel(request):
     year_str = request.GET.get('year', str(timezone.now().year))
     try:
@@ -922,7 +918,6 @@ def export_finance_excel(request):
         top=Side(style='thin'), 
         bottom=Side(style='thin')
     )
-    # SỬA TẠI ĐÂY: Dùng PatternFill trực tiếp thay vì openpyxl.styles.PatternFill
     header_fill = PatternFill(start_color="1976D2", end_color="1976D2", fill_type="solid")
 
     # Tiêu đề báo cáo
@@ -980,3 +975,30 @@ def export_finance_excel(request):
     response['Content-Disposition'] = f'attachment; filename=BaoCao_BlueMoon_{year}.xlsx'
     wb.save(response)
     return response
+
+@login_required(login_url="login")
+def invoice_history(request):
+    query = request.GET.get('search_invoice', '')
+    selected_month = request.GET.get('month', '')
+    selected_year = request.GET.get('year', '')
+    invoice_list = HoaDon.objects.select_related('id_hokhau', 'id_dotthu').all().order_by('-ngay_nop')
+    if query:
+        invoice_list = invoice_list.filter(
+            Q(id_hoadon__icontains=query) | 
+            Q(id_hokhau__so_can_ho__icontains=query)
+        )
+
+    if selected_month:
+        invoice_list = invoice_list.annotate(month=ExtractMonth('ngay_nop')).filter(month=selected_month)
+    if selected_year:
+        invoice_list = invoice_list.annotate(year=ExtractYear('ngay_nop')).filter(year=selected_year)
+    context = {
+        'invoice_list': invoice_list,
+        'query': query,
+        'selected_month': selected_month,
+        'selected_year': selected_year,
+        'years': range(2020, datetime.now().year+1),
+        'months': range(1, 13),
+
+    }
+    return render(request, 'core/InvoiceHistory.html', context)

@@ -14,24 +14,8 @@
 <body>
     {% include 'core/Sidebar.html' %}
     <main>
-        <header class="main-header">
-            <div class="header-left">
-                <button id="sidebarToggleBtn" class="toggle-btn">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <h1>Chung cư <span>BlueMoon</span></h1>
-                <p>Hệ thống quản lý hiện đại và thông minh cho tòa nhà của bạn</p>
-            </div>
-            <div class="header-right">
-                <button class="lang-btn" style="margin-right: 12px">
-                    <img src="https://flagcdn.com/vn.svg" alt="VI" width="22" style="border-radius: 50%; border: 1px solid #d9d9d9; background: #fff; margin-right: 7px;"/>
-                    <span>VI</span>
-                </button>
-                <div class="user-avatar" id="userMenuBtn">KT</div>
-                {% include 'core/UserMenu.html' %}
-                <div class="user-menu-overlay" id="userMenuOverlay"></div>
-            </div>
-        </header>
+    
+         {% include 'core/accountant_header.html' %}
 
         <section class="main-content fee-collection-page">
             <div class="main-panel data-table-panel" id="income-container">

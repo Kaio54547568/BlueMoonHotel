@@ -31,7 +31,6 @@ class LoaiBienDong(models.TextChoices):
     TAM_VANG = 'tam_vang', 'Tạm vắng'
 
 class DonViTinh(models.TextChoices):
-    M2 = 'm2', 'Mét vuông(m²)'
     NGUOI = 'nguoi', 'Người'
     HO = 'ho', 'Hộ gia đình'
     THANG = 'thang', 'Tháng'
