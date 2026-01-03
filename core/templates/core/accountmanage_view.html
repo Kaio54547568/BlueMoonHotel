@@ -9,30 +9,30 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/accountmanage_view.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar_and_footer.css' %}" />
   </head>
   <body>
     {% include 'core/header.html'%}
 
- <main class="page-wrap">
-         <section class="brutalist-panel nk-profile">
+    <main class="page-wrap">
+      <section class="brutalist-panel nk-profile">
+        <ul class="nk-meta">
+          <li><strong>ID tài khoản:</strong> {{ taikhoan.id_taikhoan }}</li>
+          <li><strong>Tên đăng nhập:</strong> {{ taikhoan.username }}</li>
+          <li><strong>Mật khẩu:</strong> ********</li>
+          <li><strong>Vai trò:</strong> {{ taikhoan.vaitro.ten_vaitro }}</li>
+        </ul>
 
-   <ul class="nk-meta">
-     <li><strong>ID tài khoản:</strong> {{ taikhoan.id_taikhoan }}</li>
-     <li><strong>Tên đăng nhập:</strong> {{ taikhoan.username }}</li>
-     <li><strong>Mật khẩu:</strong> ********</li>
-     <li><strong>Vai trò:</strong> {{ taikhoan.vaitro.ten_vaitro }}</li>
-    </ul>
-    
-    <div class="form-actions" style="margin-top: 16px">
-      <a
-      href="{% url 'edit_taikhoan' taikhoan.id_taikhoan %}"
-      class="btn btn--yellow btn--compact"
+        <div class="form-actions" style="margin-top: 16px">
+          <a
+            href="{% url 'edit_taikhoan' taikhoan.id_taikhoan %}"
+            class="btn btn--yellow btn--compact"
             >✎ Chỉnh sửa</a
           >
           <a
-          href="{% url 'accountmanage' %}"
-          class="btn btn--secondary btn--compact"
-          >← Quay lại</a
+            href="{% url 'accountmanage' %}"
+            class="btn btn--secondary btn--compact"
+            >← Quay lại</a
           >
         </div>
       </section>
@@ -40,4 +40,4 @@
 
     {% include 'core/sidebar_and_footer.html' %}
   </body>
-  </html>
+</html>

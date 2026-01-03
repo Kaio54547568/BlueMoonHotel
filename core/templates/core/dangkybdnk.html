@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/add_demo.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar_and_footer.css' %}" />
   </head>
   <body>
     {% include 'core/header.html' %}
@@ -17,43 +18,50 @@
       <section class="add-form brutalist-panel">
         <h2>Đăng ký biến động trạng thái cư trú</h2>
 
-<p>
-  Nhân khẩu: <strong>{{ nhan_khau.ho_ten }}</strong>
-</p>
+        <p>Nhân khẩu: <strong>{{ nhan_khau.ho_ten }}</strong></p>
 
-<form method="post">
-  {% csrf_token %}
+        <form method="post">
+          {% csrf_token %}
 
-  <div class="form-row">
-    <label>Trạng thái cư trú muốn đăng ký:</label>
-    <select type="date" name="loai_bien_dong" required>
-      <option value="" disabled selected>-- Chọn loại cư trú --</option>
-      <option value="tam tru">Tạm vắng</option>
-      <option value="thuong tru">Thường trú</option>
-      <option value="tam tru">Tạm trú</option>
-    </select>
-  </div>
+          <div class="form-row">
+            <label>Trạng thái cư trú muốn đăng ký:</label>
+            <select type="date" name="loai_bien_dong" required>
+              <option value="" disabled selected>-- Chọn loại cư trú --</option>
+              <option value="tam tru">Tạm vắng</option>
+              <option value="thuong tru">Thường trú</option>
+              <option value="tam tru">Tạm trú</option>
+            </select>
+          </div>
 
-  <div class="form-row">
-    <label>Ngày bắt đầu:</label>
-    <input type="date" name="ngay_batdau" required  placeholder="Mặc định là ngày hôm nay"/>
-  </div>
+          <div class="form-row">
+            <label>Ngày bắt đầu:</label>
+            <input
+              type="date"
+              name="ngay_batdau"
+              required
+              placeholder="Mặc định là ngày hôm nay"
+            />
+          </div>
 
-  <div class="form-row">
-    <label>Ngày kết thúc:</label>
-    <input type="date" name="ngay_ketthuc" placeholder="Nếu đăng ký thường trú thì bỏ trống trường này" />
-  </div>
+          <div class="form-row">
+            <label>Ngày kết thúc:</label>
+            <input
+              type="date"
+              name="ngay_ketthuc"
+              placeholder="Nếu đăng ký thường trú thì bỏ trống trường này"
+            />
+          </div>
 
-  <div class="form-row">
-    <label>Lý do:</label>
-    <textarea name="ly_do"></textarea>
-  </div>
+          <div class="form-row">
+            <label>Lý do:</label>
+            <textarea name="ly_do"></textarea>
+          </div>
 
-  <button type="submit">Đăng ký </button>
-</form>
-</section>
+          <button type="submit">Đăng ký</button>
+        </form>
+      </section>
     </main>
   </body>
 
-{% include 'core/sidebar_and_footer.html' %}
+  {% include 'core/sidebar_and_footer.html' %}
 </html>

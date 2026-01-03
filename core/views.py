@@ -249,11 +249,12 @@ def add_demo(request):
                     id_hokhau_id=int(ho_khau_id)
                 )
                 BienDongNhanKhau.objects.create(
-                    loai_biendong="thuong tru",   
-                    ngay_batdau=timezone.now().date(),
-                    id_nhankhau=nhan_khau,
-                    ly_do="Dang ky nhan khau moi"
-                )
+                loai_biendong=LoaiBienDong.TAM_TRU,  # hoặc TAM_VANG
+                ngay_batdau=timezone.now().date(),
+                id_nhankhau=nhan_khau,
+                ly_do="Dang ky nhan khau moi"
+            )
+
         except HoKhau.DoesNotExist:
             pass 
 
@@ -981,3 +982,33 @@ def export_finance_excel(request):
     response['Content-Disposition'] = f'attachment; filename=BaoCao_BlueMoon_{year}.xlsx'
     wb.save(response)
     return response
+
+# views.py
+
+def normalize_loai(raw: str) -> str:
+    s = (raw or "").strip().lower()
+    s = s.replace(" ", "_")  # "tam tru" -> "tam_tru"
+    return s
+
+LOAI_LABEL = {
+    "tam_vang": "🔴 Tạm vắng",
+    "tam_tru": "🟡 Tạm trú",
+    # nếu DB bạn không có thuong_tru thì cứ để hiển thị fallback
+    "thuong_tru": "🟢 Thường trú",
+}
+
+@login_required(login_url="login")
+def biendong_list(request):
+    biendongs = (
+        BienDongNhanKhau.objects
+        .select_related('id_nhankhau')
+        .order_by('-ngay_batdau')
+    )
+
+    # gán field tạm cho template dùng
+    for bd in biendongs:
+        key = normalize_loai(bd.loai_biendong)
+        bd.loai_key = key
+        bd.loai_label = LOAI_LABEL.get(key, f"⚪ Không xác định ({bd.loai_biendong})")
+
+    return render(request, 'core/biendong_list.html', {'biendongs': biendongs})

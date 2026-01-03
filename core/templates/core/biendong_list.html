@@ -4,60 +4,67 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>demomanage</title>
+    <title>Biến động nhân khẩu</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/demomanage.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar_and_footer.css' %}" />
   </head>
+
   <body>
     {% include 'core/header.html' %}
 
-    <h2>Danh sách biến động nhân khẩu</h2>
+    <main class="main-section">
+      <div class="container-wide">
+        <section class="brutalist-panel brutalist-panel--wide data-panel">
+          <h1
+            class="text-uc"
+            style="
+              text-align: center;
+              border-bottom: 2px solid #000;
+              padding-bottom: 10px;
+              margin-bottom: 16px;
+            "
+          >
+            Danh sách biến động nhân khẩu
+          </h1>
 
-<table border="1" cellpadding="8" cellspacing="0">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Họ tên</th>
-      <th>Loại biến động</th>
-      <th>Ngày bắt đầu</th>
-      <th>Ngày kết thúc</th>
-      <th>Lý do</th>
-    </tr>
-  </thead>
+          <table class="brutalist-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Loại biến động</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+                <th>Lý do</th>
+              </tr>
+            </thead>
 
-  <tbody>
-    {% for bd in biendongs %}
-    <tr>
-      <td>{{ bd.id_biendong }}</td>
-      <td>{{ bd.id_nhankhau.ho_ten }}</td>
-      <td>
-        {% if bd.loai_biendong == "tam vang" %}
-          🔴 Tạm vắng
-        {% elif bd.loai_biendong == "tam tru" %}
-          🟡 Tạm trú
-        {% elif bd.loai_biendong == "thuong tru" %}
-          🟢 Thường trú
-        {% else %}
-          ⚪ Không xác định
-        {% endif %}
-      </td>
-      <td>{{ bd.ngay_batdau }}</td>
-      <td>
-        {{ bd.ngay_ketthuc|default:"—" }}
-      </td>
-      <td>
-        {{ bd.ly_do|default:"—" }}
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="6">Chưa có bản ghi biến động nào</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+            <tbody>
+              {% for bd in biendongs %}
+              <tr>
+                <td>{{ bd.id_biendong }}</td>
+                <td>{{ bd.id_nhankhau.ho_ten }}</td>
+                <td>{{ bd.loai_label }}</td>
+
+                <td>{{ bd.ngay_batdau }}</td>
+                <td>{{ bd.ngay_ketthuc|default:"—" }}</td>
+                <td>{{ bd.ly_do|default:"—" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" style="text-align: center">
+                  Chưa có bản ghi biến động nào
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
 
     {% include 'core/sidebar_and_footer.html' %}
   </body>

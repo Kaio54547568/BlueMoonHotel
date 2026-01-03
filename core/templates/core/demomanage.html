@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/demomanage.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar_and_footer.css' %}" />
   </head>
   <body>
     {% include 'core/header.html' %}
@@ -65,7 +66,9 @@
               {% for item in data %}
               <tr>
                 <td>
-                  <a href="{% url 'nhan_khau_profile' item.nhan_khau.id_nhankhau %}">
+                  <a
+                    href="{% url 'nhan_khau_profile' item.nhan_khau.id_nhankhau %}"
+                  >
                     {{ item.nhan_khau.id_nhankhau }}
                   </a>
                 </td>
@@ -77,17 +80,12 @@
                 <td>{{ item.nhan_khau.ngay_sinh }}</td>
                 <td>{{ item.nhan_khau.cccd }}</td>
                 <td>{{ item.nhan_khau.quan_he_chu_ho }}</td>
-                    <td>
-                      {% if item.trang_thai == "tam vang" %}
-                        🔴 Tạm vắng
-                      {% elif item.trang_thai == "tam tru" %}
-                        🟡 Tạm trú
-                      {% elif item.trang_thai == "thuong tru" %}
-                        🟢 Thường trú
-                      {% else %}
-                        ⚪ Chưa xác định
-                      {% endif %}
-                    </td>
+                <td>
+                  {% if item.trang_thai == "tam vang" %} 🔴 Tạm vắng {% elif
+                  item.trang_thai == "tam tru" %} 🟡 Tạm trú {% elif
+                  item.trang_thai == "thuong tru" %} 🟢 Thường trú {% else %} ⚪
+                  Chưa xác định {% endif %}
+                </td>
               </tr>
               {% empty %}
               <tr>
@@ -104,8 +102,6 @@
             >
               ➕ Thêm nhân khẩu
             </a>
-           
-            
           </div>
         </section>
       </main>
