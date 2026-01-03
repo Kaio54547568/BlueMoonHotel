@@ -841,3 +841,34 @@ body {
 .brand-name {
   color: #2563eb !important;
 }
+
+/* 1) Đảm bảo body không bị thằng nào tạo layer overlay */
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 2) Cho toàn bộ nội dung nằm trên các background decoration */
+.page,
+.container,
+.grid,
+.stats,
+.hero,
+.panel,
+.stat-card {
+  position: relative;
+  z-index: 2;
+}
+
+/* 3) Nếu bạn có SVG/shape background, ép nó xuống dưới */
+.bg-shape,
+.bg,
+.background,
+.decor,
+.hero-bg,
+.topbar-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}

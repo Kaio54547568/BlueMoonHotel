@@ -5,19 +5,6 @@
   --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
-<<<<<<< HEAD
-=======
-/* Reset cơ bản */
-* {
-  box-sizing: border-box;
-}
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff;
-}
->>>>>>> e35cc35eaa5234710fdc600ab856baa6cda2e342
-
 /* Topbar */
 .topbar {
   position: fixed;

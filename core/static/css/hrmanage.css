@@ -14,7 +14,7 @@
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
 }
- * {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -27,10 +27,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
-
-
-
-
 
 .topbar {
   background-color: #1e3a8a;
@@ -100,8 +96,8 @@ body {
   background: #ffffff;
   border-radius: 10px;
   padding: 18px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.12);
-  transition: transform .15s ease-in-out;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease-in-out;
 }
 
 .card:hover {
@@ -261,4 +257,82 @@ h1 {
   text-align: center;
   font-size: 16px;
   font-weight: 600;
+}
+
+/* ===== Force menu icon to BLACK ===== */
+.topbar .icon-btn,
+#btnOpen,
+#btnClose {
+  color: #000 !important;
+}
+
+/* Nếu có icon font <i> */
+.topbar .icon-btn i,
+#btnOpen i,
+#btnClose i {
+  color: #000 !important;
+}
+
+/* Nếu dùng svg */
+.topbar .icon-btn svg,
+#btnOpen svg,
+#btnClose svg {
+  fill: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Topbar */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px; /* chiều cao header */
+  background-color: #ffffff;
+  color: white;
+  /* display: flex; */
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 1000; /* luôn nằm trên các phần khác */
+}
+
+.topbar h1 {
+  font-size: 18px;
+  margin: 0;
+}
+.icon-btn {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+.icon-btn:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+/* HRMANAGE: force topbar white (override sidebar.css) */
+header.topbar {
+  background: #fff !important;
+  color: #111 !important;
+}
+
+header.topbar h1 {
+  color: #1e3a8a !important;
+}
+
+header.topbar .icon-btn {
+  color: #1e3a8a !important;
+  border-color: rgba(30, 58, 138, 0.18) !important;
+}
+
+header.topbar {
+  justify-content: flex-start !important;
+}
+
+header.topbar h1 {
+  margin-left: 12px;
 }

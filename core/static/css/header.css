@@ -499,3 +499,73 @@ footer {
     right: 15px !important;
   }
 }
+
+/* =========================
+   HEADER WHITE + SHADOW ONLY
+   (dán cuối file CSS)
+========================= */
+
+/* Nếu bạn đang dùng .main-header */
+.main-header {
+  background: #fff !important; /* bỏ xanh */
+  color: #111 !important;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08) !important; /* shadow nhẹ */
+  border: 0 !important;
+  position: sticky; /* header bám top cho “xịn” */
+  top: 0;
+  z-index: 2000;
+}
+
+/* Nếu bạn đang dùng .topbar (CSS quản lý cũ) */
+.topbar {
+  background: #fff !important; /* bỏ navy */
+  color: #111 !important;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08) !important;
+  border: 0 !important;
+}
+
+.topbar h1 {
+  color: var(--primary, #1976d2) !important; /* chữ xanh như ảnh */
+}
+
+/* Nút menu (hamburger) + icon trong header */
+.icon-btn,
+.main-header button,
+.topbar button {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--primary, #1976d2) !important;
+}
+
+/* Nếu trong header có link/icon bị inherit màu trắng từ CSS cũ */
+.topbar a,
+.main-header a {
+  color: inherit;
+}
+
+/* Fix menu icon bị trắng: ép màu cho mọi thứ trong nút */
+.topbar .icon-btn,
+.topbar #btnOpen,
+.topbar button.icon-btn {
+  color: var(--primary) !important;
+}
+
+/* Nếu dùng <i> hoặc icon font */
+.topbar .icon-btn i,
+.topbar #btnOpen i {
+  color: var(--primary) !important;
+}
+
+/* Nếu dùng svg */
+.topbar .icon-btn svg,
+.topbar #btnOpen svg {
+  fill: var(--primary) !important;
+  stroke: var(--primary) !important;
+}
+
+/* Nếu icon nằm trong path */
+.topbar .icon-btn svg path,
+.topbar #btnOpen svg path {
+  fill: var(--primary) !important;
+  stroke: var(--primary) !important;
+}

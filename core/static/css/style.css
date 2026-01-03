@@ -57,27 +57,46 @@ body {
 }
 
 /* ===== Topbar dùng chung ===== */
+/* ===== Topbar (WHITE + SHADOW) ===== */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 1000;
+
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 12px 20px;
-  color: #fff;
-  background: var(--brand-navy);
+
+  background: #fff; /* ✅ bỏ xanh */
+  color: #111;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
 }
+
 .topbar h1 {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
+  color: var(--brand-navy); /* ✅ chữ xanh */
 }
+
 .icon-btn {
-  background: none;
+  background: transparent;
   border: none;
-  color: #fff;
+  color: var(--brand-navy); /* ✅ icon xanh */
   font-size: 22px;
   cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.icon-btn:hover {
+  background: rgba(30, 58, 138, 0.08);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid rgba(30, 58, 138, 0.25);
+  outline-offset: 2px;
 }
 
 /* ===== Search bar dùng chung ===== */
@@ -379,4 +398,176 @@ body {
 .brutalist-panel:hover {
   transform: translateY(-6px); /* nổi lên 6px */
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22), 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ================================
+   SIMPLE BUTTON OVERRIDE (Manager)
+   Dán ở CUỐI file để đè lên hiệu ứng cũ
+================================ */
+
+/* 1) Bỏ hiệu ứng quét sáng */
+.btn::before,
+.brutalist-card__button::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* 2) Base button: đơn giản, phẳng, không bay nhảy */
+.btn,
+.brutalist-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto; /* nếu bạn muốn full width thì đổi lại 100% */
+  padding: 10px 16px;
+  border-radius: 8px;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: none; /* bỏ kiểu hét uppercase nếu muốn đơn giản hơn */
+  text-decoration: none;
+
+  border: 1px solid transparent;
+  box-shadow: none !important;
+  transform: none !important;
+
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* 3) Hover/Active: chỉ đổi màu nhẹ, không transform */
+.btn:hover,
+.brutalist-card__button:hover,
+.btn:active,
+.brutalist-card__button:active {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 4) Focus: viền focus gọn, không "đập vào mắt" */
+.btn:focus-visible,
+.brutalist-card__button:focus-visible {
+  outline: 2px solid rgba(30, 58, 138, 0.35);
+  outline-offset: 2px;
+}
+
+/* 5) Các biến thể màu (giữ đúng hệ màu bạn đang dùng) */
+.btn--secondary,
+.brutalist-card__button--secondary {
+  background: var(--btn-blue, #578cc5);
+  border-color: var(--btn-blue-border, #2d5f99);
+  color: #fff;
+}
+.btn--secondary:hover,
+.brutalist-card__button--secondary:hover {
+  background: #3f78b6;
+  border-color: #2d5f99;
+}
+
+.btn--primary,
+.brutalist-card__button--primary {
+  background: var(--btn-red, #ff4141);
+  border-color: var(--btn-red-border, #b80000);
+  color: #fff;
+}
+.btn--primary:hover,
+.brutalist-card__button--primary:hover {
+  background: #e63636;
+  border-color: #b80000;
+}
+
+.btn--yellow,
+.brutalist-card__button--yellow {
+  background: var(--yellow, #fff4b2);
+  border-color: var(--yellow-dark, #c2a700);
+  color: #000;
+}
+.btn--yellow:hover,
+.brutalist-card__button--yellow:hover {
+  background: #ffeaa0;
+  border-color: var(--yellow-dark, #c2a700);
+}
+
+/* 6) Size helpers giữ nguyên tinh thần “đơn giản” */
+.btn--xs,
+.brutalist-card__button--xs {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+.btn--compact,
+.brutalist-card__button--compact {
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   GLOBAL MENU ICON FIX (ALL PAGES)
+   -> ép icon menu luôn đen (trên header trắng)
+   DÁN CUỐI FILE style.css
+========================================== */
+
+/* Nút menu (hamburger) */
+.topbar .icon-btn,
+.topbar #btnOpen,
+.topbar #btnClose {
+  color: #000 !important;
+}
+
+/* Nếu icon là <i> (fontawesome/bootstrap icon) */
+.topbar .icon-btn i,
+.topbar #btnOpen i,
+.topbar #btnClose i {
+  color: #000 !important;
+}
+
+/* Nếu icon là SVG */
+.topbar .icon-btn svg,
+.topbar #btnOpen svg,
+.topbar #btnClose svg {
+  fill: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Nếu SVG có path */
+.topbar .icon-btn svg path,
+.topbar #btnOpen svg path,
+.topbar #btnClose svg path {
+  fill: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Hover nhẹ cho dễ nhìn */
+.topbar .icon-btn:hover,
+.topbar #btnOpen:hover,
+.topbar #btnClose:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Green button variant */
+.btn--green,
+.brutalist-card__button--green {
+  background: #22c55e; /* xanh lá */
+  border-color: #15803d; /* xanh đậm viền */
+  color: #fff;
+}
+
+.btn--green:hover,
+.brutalist-card__button--green:hover {
+  background: #16a34a;
+  border-color: #14532d;
+}
+
+.add-hokhau-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.add-hokhau-btn {
+  width: auto !important; /* bỏ 100% */
+  min-width: 220px; /* vừa tay */
+  padding: 12px 28px; /* nhìn “đã” hơn */
+  font-size: 16px;
+  border-radius: 10px;
 }
