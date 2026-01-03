@@ -1,0 +1,62 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin_profile_menu.css' %}" />
+
+<div class="adm-shell" id="admShell">
+  <!-- Nút avatar -->
+  <button
+    class="adm-profile-btn"
+    id="admProfileBtn"
+    type="button"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <span class="adm-avatar"> {{ user.username|slice:":1"|upper }} </span>
+  </button>
+
+  <!-- Dropdown (giờ sẽ neo theo shell) -->
+  <div class="adm-profile-pop" id="admProfilePop" aria-hidden="true">
+    <div class="adm-pop-head">
+      <div class="adm-avatar-xl">{{ user.username|slice:":1"|upper }}</div>
+
+      <div class="adm-meta">
+        <div class="adm-name">{{ user.username }}</div>
+        <div class="adm-role">Vai trò: {{ user.vaitro.ten_vaitro }}</div>
+      </div>
+    </div>
+
+    <div class="adm-pop-body">
+      <a class="adm-item" href="/profile">
+        <span class="adm-ico adm-ico--user">
+          <i class="fa-solid fa-user"></i>
+        </span>
+        <span class="adm-txt">
+          <span class="adm-title">Tài khoản</span>
+          <span class="adm-desc">Quản lý hồ sơ của bạn.</span>
+        </span>
+      </a>
+
+      <a class="adm-item" href="#" id="admLogoutBtn">
+        <span class="adm-ico adm-ico--logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </span>
+        <span class="adm-txt">
+          <span class="adm-title adm-title--danger">Đăng xuất</span>
+          <span class="adm-desc">Thoát khỏi phiên làm việc.</span>
+        </span>
+      </a>
+    </div>
+
+    <form
+      id="admLogoutForm"
+      action="/logout/"
+      method="POST"
+      style="display: none"
+    >
+      {% csrf_token %}
+    </form>
+  </div>
+</div>
+
+<div class="adm-pop-overlay" id="admPopOverlay" hidden></div>
+
+<script src="{% static 'js/admin_profile_menu.js' %}"></script>
