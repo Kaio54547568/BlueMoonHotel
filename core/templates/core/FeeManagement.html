@@ -16,7 +16,6 @@
     {% include 'core/Sidebar.html' %} 
     <main>
          {% include 'core/accountant_header.html' %}
-
         <section class="main-content income-management-page">
             <div class="main-panel data-table-panel" id="income-container">
                 
@@ -53,8 +52,7 @@
                 <div class="income-summary-box">
                     <h3 class="box-title">Tổng quan Khoản thu</h3>
                     <div class="summary-details">
-                        <p>Tổng số Khoản Thu đã định nghĩa: **{{ total_count|default:"0" }}**</p>
-                        <p>Đơn giá trung bình (Tạm tính): **— VND**</p>
+                        <p>Tổng số Khoản Thu đã định nghĩa: {{ total_count|default:"0" }}</p>
                     </div>
                 </div>
 
@@ -92,7 +90,7 @@
                                             data-url="{% url 'edit_khoanthu' pk=item.id_khoanthu %}"> 
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <button class="action-btn delete-fee btn-confirm-delete"
+                                    <button class="action-btn delete-fee modal-trigger"
                                             title="Xóa" 
                                             data-url="{% url 'delete_khoanthu' pk=item.id_khoanthu %}"
                                             data-name="{{item.ten_khoanthu}}">

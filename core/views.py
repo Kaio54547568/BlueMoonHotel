@@ -183,7 +183,7 @@ def admin_home(request):
         
     # Đã đăng nhập -> Hiển thị trang chủ
     HoKhaus = HoKhau.objects.all()
-    return render(request, 'core/home.html', {'admin_home': HoKhaus})
+    return render(request, 'core/admin_home.html', {'admin_home': HoKhaus})
 @login_required(login_url="login")
 
 def accountant_home(request):
@@ -716,8 +716,8 @@ def delete_khoanthu(request, pk):
             return JsonResponse({'status': 'success', 'message': 'Khoản thu đã được xóa thành công!'})
         return redirect('fee_management')
     return render(request, 'core/DeleteFeeModal.html', {'khoan_thu': khoan_thu})
+
 @login_required(login_url="login")
-    
 #Quản lý đợt thu phí
 def fee_collection_period(request):
     query = request.GET.get('search_dotthu')
@@ -1002,3 +1002,32 @@ def invoice_history(request):
 
     }
     return render(request, 'core/InvoiceHistory.html', context)
+
+@login_required(login_url="login")
+def view_invoice_detail_modal(request, pk):
+    hoadon = get_object_or_404(
+        HoaDon.objects.select_related('id_hokhau', 'id_dotthu__id_khoanthu'), 
+        id_hoadon=pk)
+    return render(request, 'core/ViewInvoiceDetailModal.html', {'hoadon': hoadon})
+
+@login_required(login_url="login")
+def delete_invoice_modal(request, pk):
+    hoadon = get_object_or_404(HoaDon, id_hoadon=pk)
+    
+    if request.method == 'POST':
+        if hoadon.ngay_nop is None:
+            hoadon.delete()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'status': 'success', 
+                    'message': f'Hóa đơn #{pk} đã được xóa thành công!'
+                })
+            return redirect('invoice_history')
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Không thể xóa hóa đơn đã thanh toán!'
+                }, status=400)
+            return redirect('invoice_history')
+    return render(request, 'core/DeleteInvoiceModal.html', {'hoadon': hoadon})

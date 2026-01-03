@@ -55,6 +55,8 @@ urlpatterns = [
         
     path('statistics_view/', views.statistics_view, name='statistics_view'),  # Trang thống kê
     path('statistics/export/', views.export_finance_excel, name='export_finance_excel'),
-    path('invoice_history/',views.invoice_history, name='invoice_history'),  # Trang lịch sử hóa đơn
 
+    path('invoice_history/',views.invoice_history, name='invoice_history'),  # Trang lịch sử hóa đơn
+    path('invoice_history/detail/<int:pk>/modal/', views.view_invoice_detail_modal, name='view_invoice_detail_modal'),
+    path('invoice_history/delete/<int:pk>/', views.delete_invoice_modal, name='delete_invoice_modal'),
 ]

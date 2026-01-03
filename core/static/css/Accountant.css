@@ -1068,3 +1068,81 @@ footer {
     gap: 5px;
     border: 1px solid #ffa39e;
 }
+.history-panel {
+    width: 100% !important;
+    max-width: none !important;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 24px !important;
+}
+
+/* Định dạng cột Mã Hóa Đơn giống Mã KT/Mã Đợt */
+.invoice-id {
+    color: var(--primary);
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Đồng bộ hóa các Badge trạng thái */
+.badge-paid {
+    background: #e6f7d9 !important;
+    color: #52c41a !important;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #b7eb8f;
+}
+
+.badge-unpaid {
+    background: #fff1f0 !important;
+    color: #f5222d !important;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #ffa39e;
+}
+
+/* Đồng bộ hóa bộ lọc (Filter) */
+.filter-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    outline: none;
+    background: #fff;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    color: #444;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+/* Tinh chỉnh bảng dữ liệu */
+.data-table td {
+    vertical-align: middle;
+}
+
+.amount-positive {
+    color: #d32f2f; /* Màu đỏ cho số tiền cần thu */
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+}

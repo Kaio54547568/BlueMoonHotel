@@ -6,39 +6,10 @@
     <meta charset="UTF-8">
     <title>Lịch sử hóa đơn - Chung cư BlueMoon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'styles/Accountant.css' %}">
-    
-    <style>
-        .invoice-id { color: var(--primary); font-weight: 700; font-family: 'Montserrat', sans-serif; }
-        .amount-positive { color: var(--green); font-weight: 700; }
-        
-        /* Badge Đã nộp */
-        .badge-paid { 
-            background: #e6f7d9 !important; color: #52c41a !important; padding: 6px 14px; 
-            border-radius: 8px; font-size: 0.85em; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 5px;
-        }
-
-        /* Badge Chưa đóng (Màu đỏ) */
-        .badge-unpaid {
-            background: #fff1f0 !important; color: #f5222d !important; padding: 6px 14px;
-            border-radius: 8px; font-size: 0.85em; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 5px;
-            border: 1px solid #ffa39e;
-        }
-
-        /* Tinh chỉnh Select lọc */
-        .filter-select {
-            padding: 10px 15px; border: 1px solid #ddd; border-radius: 12px;
-            outline: none; background: #fff; cursor: pointer;
-        }
-        
-        .history-panel { width: 100% !important; min-width: 95% !important; }
-        .filter-group { display: flex; gap: 10px; align-items: center; }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fee_management_modal.css' %}"> 
 </head>
 
 <body class="income-management-page">
@@ -122,7 +93,21 @@
                                     {% endif %}
                                 </td>
                                 <td style="text-align: center;">
-                                    <button class="action-btn" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="action-btn modal-trigger" 
+                                            title="Xem chi tiết" 
+                                            data-url="{% url 'view_invoice_detail_modal' hoadon.id_hoadon %}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+
+                                    {% if not hoadon.ngay_nop %}
+                                    <button class="action-btn btn-confirm-delete" 
+                                            title="Xóa hóa đơn"
+                                            data-url="{% url 'delete_invoice_modal' hoadon.id_hoadon %}"
+                                            data-type="invoice"
+                                            style="background-color: #fff1f0; color: #f5222d; border: 1px solid #ffa39e;">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
@@ -140,5 +125,9 @@
             &copy; BlueMoon Apartment 2025. Created by the ChatGPT's son-in-law team.
         </footer>
     </main>
+    <div id="mainModal" class="modal">
+        <div class="modal-content">
+        </div>
+    <script src="{% static 'js/FeeManagement_modal_logic.js' %}"></script>
 </body>
 </html>
