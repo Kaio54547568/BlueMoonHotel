@@ -336,3 +336,24 @@ header.topbar {
 header.topbar h1 {
   margin-left: 12px;
 }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+}
+
+/* H1 ôm phần giữa, không đẩy avatar chạy lung tung */
+.topbar h1 {
+  margin: 0;
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+/* Cụm profile luôn dính góc phải, nhưng vẫn nằm trong padding header */
+#admShell {
+  margin-left: auto;
+}
