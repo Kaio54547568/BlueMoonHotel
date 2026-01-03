@@ -183,7 +183,7 @@ def admin_home(request):
         
     # Đã đăng nhập -> Hiển thị trang chủ
     HoKhaus = HoKhau.objects.all()
-    return render(request, 'core/home.html', {'admin_home': HoKhaus})
+    return render(request, 'core/admin_home.html', {'admin_home': HoKhaus})
 @login_required(login_url="login")
 
 def accountant_home(request):

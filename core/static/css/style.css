@@ -543,3 +543,31 @@ body {
 .topbar #btnClose:hover {
   background: rgba(0, 0, 0, 0.06) !important;
 }
+
+/* Green button variant */
+.btn--green,
+.brutalist-card__button--green {
+  background: #22c55e; /* xanh lá */
+  border-color: #15803d; /* xanh đậm viền */
+  color: #fff;
+}
+
+.btn--green:hover,
+.brutalist-card__button--green:hover {
+  background: #16a34a;
+  border-color: #14532d;
+}
+
+.add-hokhau-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.add-hokhau-btn {
+  width: auto !important; /* bỏ 100% */
+  min-width: 220px; /* vừa tay */
+  padding: 12px 28px; /* nhìn “đã” hơn */
+  font-size: 16px;
+  border-radius: 10px;
+}
