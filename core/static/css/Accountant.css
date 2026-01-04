@@ -36,11 +36,8 @@ body {
     flex-direction: column;
     z-index: 10;
     box-shadow: 2px 0 8px rgba(30,30,50,.04);
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-=======
     transition: width 0.3s ease;
     overflow-x: hidden;
->>>>>>> main:core/static/css/Accountant.css
 }
 
 .sidebar-logo {
@@ -90,8 +87,6 @@ body {
 .sidebar nav ul li span {
     flex: 1;
 }
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-=======
 /* ✅ ĐÃ SỬA: LOẠI BỎ GẠCH DƯỚI CHO LINK SIDEBAR */
 .sidebar nav ul li a {
     text-decoration: none; 
@@ -102,17 +97,12 @@ body {
     color: inherit;
 }
 
->>>>>>> main:core/static/css/Accountant.css
 
 main {
     margin-left: 230px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-}
-
-=======
     transition: margin-left 0.3s ease;
 }
 
@@ -148,7 +138,6 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
 }
 
 
->>>>>>> main:core/static/css/Accountant.css
 .main-header {
     background: var(--header-bg);
     display: flex;
@@ -213,11 +202,6 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
     transition: box-shadow .18s, border .15s;
 }
 .user-avatar:active, .user-avatar:focus { box-shadow: 0 4px 16px #8357c5a0; border: 2px solid #b39ddb;}
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-/* User menu popup */
-.user-menu {
-    display: none;
-=======
 
 /* ========================================================= */
 /* KHỐI USER MENU ĐÃ SỬA LỖI TÍNH HIỂN THỊ (OPACITY/VISIBILITY) */
@@ -225,7 +209,6 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
 
 /* User menu popup - Tình trạng ẩn mặc định */
 .user-menu {
->>>>>>> main:core/static/css/Accountant.css
     position: absolute;
     top: 62px;
     right: 0;
@@ -234,13 +217,6 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
     border-radius: 18px;
     box-shadow: 0 8px 30px rgba(50,50,90,0.16);
     z-index: 110;
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-    animation: popupfade .2s;
-    overflow: hidden;
-}
-.user-menu.show { display: block;}
-@keyframes popupfade { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
-=======
     overflow: hidden;
 
     opacity: 0;
@@ -256,24 +232,16 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
 }
 
 /* User menu overlay */
->>>>>>> main:core/static/css/Accountant.css
 .user-menu-overlay {
     display: none;
     position: fixed;
     inset: 0;
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-    background: #0003;
-    z-index: 100;
-}
-.user-menu-overlay.show { display: block;}
-=======
     background: transparent;
     z-index: 100;
 }
 .user-menu-overlay.show { display: block;}
 
 /* Các phần tử bên trong menu */
->>>>>>> main:core/static/css/Accountant.css
 .user-menu-header {
     display: flex;
     align-items: center;
@@ -308,13 +276,9 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
 .user-menu-list {
     padding: 8px 0;
 }
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-.user-menu-item {
-=======
 
 /* ✅ SỬA LỖI GẠCH DƯỚI DỨT ĐIỂM */
 .user-menu-list a.user-menu-item {
->>>>>>> main:core/static/css/Accountant.css
     display: flex;
     align-items: flex-start;
     gap: 16px;
@@ -322,11 +286,6 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
     cursor: pointer;
     transition: background .12s;
     border-bottom: 1px solid #f3f3f3;
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-}
-.user-menu-item:last-child { border-bottom: none;}
-.user-menu-item:hover {
-=======
     
     /* Ghi đè mọi định nghĩa gạch chân khác */
     text-decoration: none !important; 
@@ -334,7 +293,6 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
 }
 .user-menu-list a.user-menu-item:last-child { border-bottom: none;}
 .user-menu-list a.user-menu-item:hover {
->>>>>>> main:core/static/css/Accountant.css
     background: #f7f6ff;
 }
 .user-menu-icon {
@@ -346,10 +304,7 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
     align-items: center; justify-content: center;
     margin-top: 3px;
     font-size: 1.25em;
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-=======
     flex-shrink: 0;
->>>>>>> main:core/static/css/Accountant.css
 }
 .menu-idea { background: #ece7ff; color: #6c47d7;}
 .menu-account { background: #e1f5fe; color: #1976d2;}
@@ -368,10 +323,7 @@ body.sidebar-toggled #sidebarToggleBtn .fa-bars:before {
     max-width: 220px;
 }
 
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-=======
 
->>>>>>> main:core/static/css/Accountant.css
 .dashboard {
     display: flex;
     gap: 34px;
@@ -507,12 +459,9 @@ footer {
 }
 
 @media (max-width: 1080px) {
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-=======
     .toggle-btn {
         display: none;
     }
->>>>>>> main:core/static/css/Accountant.css
     .dashboard, .main-content {
         flex-direction: column;
         gap: 18px;
@@ -550,9 +499,6 @@ footer {
     }
     .main-img { width: 100%; }
     .user-menu { right: 15px !important;}
-<<<<<<< HEAD:Project/Frontend/styles/Accountant.css
-}
-=======
 }
 
 
@@ -1200,4 +1146,3 @@ footer {
     font-weight: 700;
     font-family: 'Montserrat', sans-serif;
 }
->>>>>>> main:core/static/css/Accountant.css
