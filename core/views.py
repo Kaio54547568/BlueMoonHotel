@@ -227,6 +227,8 @@ def nhan_khau_delete(request, id_nhankhau):
     if(exists):
         nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
         nhan_khau.is_deleted=True
+        nhan_khau.save()
+
     return render(request, 'core/demomanage_delete.html')
 @login_required(login_url="login")
 
@@ -248,7 +250,7 @@ def add_demo(request):
                     id_hokhau_id=int(ho_khau_id)
                 )
                 BienDongNhanKhau.objects.create(
-                    loai_biendong=LoaiBienDong.TAM_TRU,  # hoặc TAM_VANG
+                    loai_biendong=loai_bien_dong_query,  # hoặc TAM_VANG
                     ngay_batdau=timezone.now().date(),
                     id_nhankhau=nhan_khau,
                     ly_do="Dang ky nhan khau moi"
@@ -326,7 +328,7 @@ def add_demo(request):
 @login_required(login_url="login")
 
 def demomanage(request):
-    nhan_khau_list = NhanKhau.objects.all()
+    nhan_khau_list = NhanKhau.objects.filter(is_deleted=False)
     query = request.GET.get('search_id', '')
     if query:
         try:
@@ -403,6 +405,7 @@ def demomanage_delete(request, id_hokhau):
     if(exists):
         hr = get_object_or_404(HoKhau, id_hokhau=id_hokhau)
         hr.is_deleted=True
+        hr.save()
     return render(request, 'core/hrmanage_delete.html')
 @login_required(login_url="login")
 
