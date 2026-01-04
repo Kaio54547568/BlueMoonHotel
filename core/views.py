@@ -584,17 +584,17 @@ def accountmanage_addaccount(request):
         
         # 1. Kiểm tra dữ liệu
         if not username or not password1 or not password2:
-            return render(request, "core/register.html", {
+            return render(request, "core/accountmanage_addaccount.html", {
                 "error": "Vui lòng nhập đầy đủ thông tin."
             })
 
         if password1 != password2:
-            return render(request, "core/register.html", {
+            return render(request, "core/accountmanage_addaccount.html", {
                 "error": "Mật khẩu không khớp"
             })
 
         if TaiKhoan.objects.filter(username=username).exists():
-            return render(request, "core/register.html", {
+            return render(request, "core/accountmanage_addaccount.html", {
                 "error": "Tên đăng nhập đã tồn tại "
             })
 
