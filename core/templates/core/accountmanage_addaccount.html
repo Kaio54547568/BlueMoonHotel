@@ -40,10 +40,14 @@
                         <select name="vaitro" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da;">
                             <option value="">-- Chọn vai trò --</option>
                             <option value="admin">Quản trị viên (Admin)</option>
-                            <option value="user">Cư dân (User)</option>
                             <option value="ketoan">Kế toán (Accountant)</option>
                         </select>
                     </div>
+                    {% if error %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                    {% endif %}
 
                     <div class="form-actions" style="margin-top: 30px;">
                         <a href="{% url 'accountmanage' %}" class="btn btn-secondary-outline" style="text-decoration: none;">
