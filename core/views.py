@@ -230,8 +230,129 @@ def nhan_khau_delete(request, id_nhankhau):
         nhan_khau.save()
 
     return render(request, 'core/demomanage_delete.html')
-@login_required(login_url="login")
 
+@login_required(login_url="login")
+def export_biendong_excel(request): 
+    # 1️⃣ Lấy dữ liệu
+    biendongs = (
+        BienDongNhanKhau.objects
+        .select_related('id_nhankhau')
+        .order_by('-ngay_batdau')
+    )
+
+    # 2️⃣ Tạo workbook & sheet
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Biến động nhân khẩu"
+
+    # 3️⃣ Header
+    ws.append([
+        "ID Biến động",
+        "Họ tên",
+        "Loại biến động",
+        "Ngày bắt đầu",
+        "Ngày kết thúc",
+        "Lý do"
+    ])
+
+    # 4️⃣ Ghi dữ liệu
+    for bd in biendongs:
+        ws.append([
+            bd.id_biendong,
+            bd.id_nhankhau.ho_ten,
+            bd.loai_biendong,
+            bd.ngay_batdau.strftime('%d/%m/%Y') if bd.ngay_batdau else "",
+            bd.ngay_ketthuc.strftime('%d/%m/%Y') if bd.ngay_ketthuc else "",
+            bd.ly_do or ""
+        ])
+
+    # 5️⃣ Trả file Excel
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="biendong_nhankhau.xlsx"'
+
+    wb.save(response)
+    return response
+@login_required(login_url="login")
+def export_nhankhau_excel(request): 
+    # 1️⃣ Lấy dữ liệu
+    nhankhau = (
+        NhanKhau.objects
+        .filter(is_deleted=False)
+    )
+
+    # 2️⃣ Tạo workbook & sheet
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Danh sách nhân khẩu"
+
+    # 3️⃣ Header
+    ws.append([
+        "ID Nhân khẩu",
+        "Họ tên",
+        "Ngày sinh",
+        "CCCD",
+        "Quan hệ chủ hộ",
+        "ID hộ khẩu"
+    ])
+
+    # 4️⃣ Ghi dữ liệu
+    for nk in nhankhau:
+        ws.append([
+            nk.id_nhankhau,
+            nk.ho_ten,
+            nk.ngay_sinh,
+            nk.cccd,
+            nk.quan_he_chu_ho,
+            nk.id_nhankhau
+        ])
+
+    # 5️⃣ Trả file Excel
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="danh_sach_nhan_khau.xlsx"'
+
+    wb.save(response)
+    return response
+@login_required(login_url="login")
+def export_hokhau_excel(request): 
+    # 1️⃣ Lấy dữ liệu
+    hokhau = (
+        HoKhau.objects.filter(is_deleted=False)
+    )
+
+    # 2️⃣ Tạo workbook & sheet
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Biến động nhân khẩu"
+
+    # 3️⃣ Header
+    ws.append([
+        "ID Hộ Khẩu",
+        "Số căn hộ",
+        "Diện tích"
+    ])
+
+    # 4️⃣ Ghi dữ liệu
+    for hk in hokhau:
+        ws.append([
+            hk.id_hokhau,
+            hk.so_can_ho,
+            hk.dien_tich
+        ])
+
+    # 5️⃣ Trả file Excel
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="danh_sach_ho_khau.xlsx"'
+
+    wb.save(response)
+    return response
+
+@login_required(login_url="login")
 def add_demo(request):
     if request.method == "POST":
         ho_ten = request.POST.get('ho_ten')
