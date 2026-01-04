@@ -1,82 +1,47 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Account – Edit</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa tài khoản - BlueMoon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fee_management_modal.css' %}">
+</head>
+<body>
+    {% include 'core/Sidebar.html' %}
+    <main>
+        {% include 'core/accountant_header.html' %}
+        <section class="main-content">
+            <div class="main-panel" style="max-width: 600px; margin: 0 auto;">
+                <h2 class="form-title" style="text-align: center; color: var(--primary); margin-bottom: 25px">
+                    CẬP NHẬT TÀI KHOẢN <span class="title-icon">📝</span>
+                </h2>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/accountmanage_change.css' %}" />
-  </head>
-  <body>
-    {% include 'core/header.html'%}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <input type="text" name="username" value="{{ taikhoan.username }}" required>
+                    </div>
 
-    <main class="main-section">
-      <section class="brutalist-panel brutalist-panel--narrow edit-form">
-        <h2
-          class="text-uc"
-          style="
-            text-align: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 18px;
-          "
-        >
-          {{ taikhoan.username }} (ID: {{ taikhoan.id_taikhoan }})
-        </h2>
+                    <div class="form-group">
+                        <label class="form-label">ID Vai trò (Hiện tại: {{ taikhoan.vaitro.id_vaitro }})</label>
+                        <input type="number" name="vaitro_id" value="{{ taikhoan.vaitro.id_vaitro }}" placeholder="Nhập mã vai trò mới...">
+                        <small style="color: #666; font-style: italic;">* 1: Admin, 3: Kế toán, 2: Cư dân</small>
+                    </div>
 
-        <form method="POST" action="">
-          {% csrf_token %}
-          <div class="form-row">
-            <label for="username">Tên đăng nhập:</label>
-            <input
-              class="brutalist-input"
-              type="text"
-              id="username"
-              name="username"
-              value="{{ taikhoan.username }}"
-              required
-            />
-          <!-- </div>
-
-          <div class="form-row">
-            <label for="password">Mật khẩu mới:</label>
-            <input
-              class="brutalist-input"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="(bỏ trống nếu không đổi)"
-            />
-          </div> -->
-
-          <div class="form-row">
-            <label for="vaitro_id">ID Vai trò:</label>
-            <input
-              class="brutalist-input"
-              type="number"
-              id="vaitro_id"
-              name="vaitro_id"
-              value="{{ taikhoan.vaitro.id_vaitro }}"
-            />
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn--yellow">
-              💾 Lưu thay đổi
-            </button>
-            <a
-              href="{% url 'accountmanage' %}"
-              class="btn btn--secondary btn--compact"
-              >Hủy</a
-            >
-          </div>
-        </form>
-      </section>
+                    <div class="form-actions" style="margin-top: 30px;">
+                        <a href="{% url 'accountmanage' %}" class="btn btn-secondary-outline" style="text-decoration: none;">
+                            <i class="fa-solid fa-xmark"></i> Hủy bỏ
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
     </main>
-
-    {% include 'core/sidebar_and_footer.html' %}
-  </body>
+</body>
 </html>

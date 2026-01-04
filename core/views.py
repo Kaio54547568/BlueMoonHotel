@@ -8,14 +8,14 @@ from django.db import transaction
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ReservationForm, KhoanThuForm, DotThuPhiForm
-from .models import HoKhau, NhanKhau, TaiKhoan, VaiTro, KhoanThu, DotThuPhi, HoaDon, BienDongNhanKhau
+from .models import HoKhau, LoaiBienDong, NhanKhau, TaiKhoan, VaiTro, KhoanThu, DotThuPhi, HoaDon, BienDongNhanKhau
 from datetime import datetime, timezone
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q,Sum, Count
 from django.contrib.auth.hashers import make_password
-from django.db.models.functions import ExtractMonth
+from django.db.models.functions import ExtractMonth, ExtractYear
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 from django.utils import timezone 
@@ -32,7 +32,6 @@ def user_logout(request):
     return redirect("home")
 
 @login_required(login_url="login")
-
 def profile(request):
     print("adsgdgd")
     user= request.user
@@ -249,11 +248,12 @@ def add_demo(request):
                     id_hokhau_id=int(ho_khau_id)
                 )
                 BienDongNhanKhau.objects.create(
-                    loai_biendong="thuong tru",   
+                    loai_biendong=LoaiBienDong.TAM_TRU,  # hoặc TAM_VANG
                     ngay_batdau=timezone.now().date(),
                     id_nhankhau=nhan_khau,
                     ly_do="Dang ky nhan khau moi"
                 )
+
         except HoKhau.DoesNotExist:
             pass 
 
@@ -371,28 +371,29 @@ def biendong_list(request):
         {'biendongs': biendongs}
     )
 @login_required(login_url="login")
-def add_tam_vang(request, id_nhankhau):
+def dang_ky_bdbk(request, id_nhankhau):
     nhan_khau = get_object_or_404(NhanKhau, id_nhankhau=id_nhankhau)
 
     if request.method == "POST":
         ngay_batdau = request.POST.get('ngay_batdau')
         ngay_ketthuc = request.POST.get('ngay_ketthuc')
+        loai_bien_dong = request.POST.get('loai_bien_dong')
         ly_do = request.POST.get('ly_do')
 
         with transaction.atomic():
             BienDongNhanKhau.objects.create(
-                loai_biendong="tam vang",      # 🔒 cố định
+                loai_biendong=loai_bien_dong,      # 🔒 cố định
                 ngay_batdau=ngay_batdau or timezone.now().date(),
                 ngay_ketthuc=ngay_ketthuc or None,
                 ly_do=ly_do or None,
                 id_nhankhau=nhan_khau
             )
 
-        return redirect('demomanage/adddemo')  # hoặc trang chi tiết nhân khẩu
+        return redirect('biendong_list')  # hoặc trang chi tiết nhân khẩu
 
     return render(
         request,
-        'core/add_tam_vang.html',
+        'core/dangkybdnk.html',
         {'nhan_khau': nhan_khau}
     )
 @login_required(login_url="login")

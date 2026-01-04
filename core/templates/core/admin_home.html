@@ -1,93 +1,126 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>home</title>
-
-    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-  </head>
-  <body>
-    <header class="topbar">
-      <button
-        id="btnOpen"
-        class="icon-btn"
-        aria-controls="sidebar"
-        aria-expanded="false"
-        aria-label="Mở menu"
-      >
-        ☰
-      </button>
-      <h1><span class="brand">BLUEMOON</span> - Dashboard</h1>
-    </header>
-
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Quản Trị - Chung cư BlueMoon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}">
+</head>
+<body>
+    {% include 'core/Sidebar.html' %}
     <main>
-      <section>
-        <h2>Tổng quan hệ thống</h2>
-        <p class="intro">
-          <b>BLUEMOON – Admin Dashboard</b> là trung tâm điều hành toàn bộ hệ
-          thống quản lý khách sạn. Trang này dành riêng cho quản trị viên, cho
-          phép giám sát dữ liệu, phân quyền người dùng, kiểm soát hoạt động vận
-          hành và theo dõi hiệu suất kinh doanh theo thời gian thực.
-        </p>
-      </section>
+        {% include 'core/accountant_header.html' %}
 
-      <section>
-        <h2>Chức năng quản trị</h2>
-        <div class="features">
-          <div class="feature-card">
-            <h3>👤 Quản lý tài khoản</h3>
-            <p>
-              Tạo mới, chỉnh sửa, khóa hoặc phân quyền tài khoản người dùng
-              (admin, lễ tân, kế toán…). Đảm bảo đúng người – đúng quyền – đúng
-              việc.
-            </p>
-          </div>
+        <section class="dashboard">
+            <div class="dash-card">
+                <div class="dash-icon bg-blue">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-number">12</div>
+                    <div class="dash-label">Tài khoản hệ thống</div>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-icon bg-green">
+                    <i class="fa-solid fa-house-chimney"></i>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-number">450</div>
+                    <div class="dash-label">Căn hộ/Hộ khẩu</div>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-icon bg-orange">
+                    <i class="fa-solid fa-user-group"></i>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-number">1,210</div>
+                    <div class="dash-label">Nhân khẩu cư trú</div>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-icon bg-purple">
+                    <i class="fa-solid fa-shield-check"></i>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-number">100%</div>
+                    <div class="dash-label">Hệ thống an toàn</div>
+                </div>
+            </div>
+        </section>
 
-          <div class="feature-card">
-            <h3>🏨 Quản lý phòng & loại phòng</h3>
-            <p>
-              Cấu hình danh sách phòng, loại phòng, giá cơ bản, trạng thái hoạt
-              động và các thông tin liên quan đến cơ sở vật chất khách sạn.
-            </p>
-          </div>
+        <section class="main-content">
+            <div class="main-panel">
+                <h2 style="border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                    <i class="fa-solid fa-gauge-high"></i> TỔNG QUAN HỆ THỐNG
+                </h2>
+                <p style="margin-top: 15px; font-size: 1.1rem; color: #444;">
+                    Chào mừng Quản trị viên đến với <strong>BLUEMOON – Admin Dashboard</strong>. 
+                    Đây là trung tâm điều hành cho phép giám sát dữ liệu căn hộ, quản lý cư dân và phân quyền vận hành toàn bộ hệ thống theo thời gian thực.
+                </p>
 
-          <div class="feature-card">
-            <h3>📅 Quản lý đặt phòng</h3>
-            <p>
-              Theo dõi toàn bộ lịch đặt phòng, kiểm soát tình trạng phòng theo
-              ngày, xử lý các trường hợp hủy, đổi phòng hoặc phát sinh đặc biệt.
-            </p>
-          </div>
+                <h3 style="margin-top: 30px; color: var(--primary); font-family: 'Montserrat', sans-serif;">
+                    <i class="fa-solid fa-toolbox"></i> LỐI TẮT QUẢN TRỊ
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; margin-top: 20px;">
+                    
+                    <a href="{% url 'accountmanage' %}" style="text-decoration: none; color: inherit;">
+                        <div class="stat-card" style="border-left: 5px solid var(--blue); cursor: pointer; transition: transform 0.2s;">
+                            <div class="card-title"><i class="fa-solid fa-user-shield"></i> Quản lý tài khoản</div>
+                            <div class="stat-info">
+                                <p>Phân quyền người dùng (Admin, Kế toán, Cư dân) và kiểm soát truy cập hệ thống.</p>
+                            </div>
+                        </div>
+                    </a>
 
-          <div class="feature-card">
-            <h3>💳 Quản lý doanh thu & hóa đơn</h3>
-            <p>
-              Tổng hợp hóa đơn, kiểm tra dòng tiền, đối soát thanh toán và hỗ
-              trợ xuất dữ liệu phục vụ báo cáo tài chính.
-            </p>
-          </div>
+                    <a href="{% url 'hrmanage' %}" style="text-decoration: none; color: inherit;">
+                        <div class="stat-card" style="border-left: 5px solid var(--green); cursor: pointer;">
+                            <div class="card-title"><i class="fa-solid fa-building-user"></i> Quản lý hộ khẩu</div>
+                            <div class="stat-info">
+                                <p>Cấu hình danh sách căn hộ, diện tích và quản lý thông tin chủ hộ.</p>
+                            </div>
+                        </div>
+                    </a>
 
-          <div class="feature-card">
-            <h3>📊 Báo cáo & thống kê</h3>
-            <p>
-              Xem báo cáo doanh thu, công suất phòng, hiệu quả dịch vụ theo
-              ngày, tháng hoặc năm dưới dạng bảng và biểu đồ trực quan.
-            </p>
-          </div>
+                    <a href="{% url 'demomanage' %}" style="text-decoration: none; color: inherit;">
+                        <div class="stat-card" style="border-left: 5px solid var(--orange); cursor: pointer;">
+                            <div class="card-title"><i class="fa-solid fa-users"></i> Quản lý nhân khẩu</div>
+                            <div class="stat-info">
+                                <p>Theo dõi tạm trú, tạm vắng và biến động dân cư trong tòa nhà.</p>
+                            </div>
+                        </div>
+                    </a>
 
-          <div class="feature-card">
-            <h3>⚙️ Cấu hình hệ thống</h3>
-            <p>
-              Thiết lập các tham số hệ thống, danh mục dùng chung, quy định vận
-              hành và các tùy chọn mở rộng của BLUEMOON.
-            </p>
-          </div>
-        </div>
-      </section>
+                    <a href="{% url 'fee_management' %}" style="text-decoration: none; color: inherit;">
+                        <div class="stat-card" style="border-left: 5px solid var(--purple); cursor: pointer;">
+                            <div class="card-title"><i class="fa-solid fa-file-invoice-dollar"></i> Tài chính & Cấu hình</div>
+                            <div class="stat-info">
+                                <p>Thiết lập danh mục khoản thu, đơn giá và cấu hình tham số vận hành tòa nhà.</p>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            &copy; BlueMoon Apartment 2026. Admin Management System.
+        </footer>
     </main>
 
-    {% include 'core/sidebar_and_footer.html' %}
-  </body>
+    <style>
+        /* Hiệu ứng hover cho các thẻ chức năng */
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+    </style>
+</body>
 </html>
