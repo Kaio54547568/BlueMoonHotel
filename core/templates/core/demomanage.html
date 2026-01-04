@@ -1,114 +1,91 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>demomanage</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý nhân khẩu - BlueMoon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,400,700|Roboto:400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Accountant.css' %}">
+</head>
+<body>
+    {% include 'core/Sidebar.html' %}
+    <main>
+        {% include 'core/accountant_header.html' %}
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/demomanage.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/sidebar_and_footer.css' %}" />
-  </head>
-  <body>
-    {% include 'core/header.html' %}
+        <section class="main-content income-management-page">
+            <div class="main-panel data-table-panel">
+                
+                <div class="income-controls-top">
+                    <form method="GET" action="{% url 'demomanage' %}" style="display: flex; gap: 10px; flex-grow: 1;">
+                        <div class="search-box-container" style="flex-grow: 1;">
+                            <input type="text" name="search_id" placeholder="Nhập ID hoặc tên nhân khẩu..." value="{{ query|default:'' }}">
+                            <i class="fa-solid fa-search"></i>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="min-width: 120px;">
+                            <i class="fa-solid fa-filter"></i> Tìm kiếm
+                        </button>
+                    </form>
+                </div>
 
-    <div id="overlay" class="overlay" tabindex="-1" hidden></div>
+                <h2 class="table-title">DANH SÁCH NHÂN KHẨU CHUNG CƯ</h2>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã NK</th>
+                                <th>Họ tên</th>
+                                <th>Căn hộ (ID Hộ)</th>
+                                <th>CCCD</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data %}
+                            <tr>
+                                <td data-label="Mã NK"><strong>#{{ item.nhan_khau.id_nhankhau }}</strong></td>
+                                <td data-label="Họ tên">{{ item.nhan_khau.ho_ten }}</td>
+                                <td data-label="Căn hộ">{{ item.nhan_khau.id_hokhau_id }}</td>
+                                <td data-label="CCCD">{{ item.nhan_khau.cccd|default:"---" }}</td>
+                                <td data-label="Trạng thái">
+                                    {% if item.trang_thai == "tam tru" %}
+                                        <span class="status status-active" style="background: #fffbe6; color: #d4b106; border: 1px solid #ffe58f;">Tạm trú</span>
+                                    {% elif item.trang_thai == "thuong tru" %}
+                                        <span class="status status-active">Thường trú</span>
+                                    {% elif item.trang_thai == "tam vang" %}
+                                        <span class="status status-inactive">Tạm vắng</span>
+                                    {% else %}
+                                        <span class="status" style="background: #f5f5f5; color: #8c8c8c;">Chưa xác định</span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Thao tác">
+                                    <a href="{% url 'nhan_khau_profile' item.nhan_khau.id_nhankhau %}" class="action-btn" title="Xem hồ sơ">
+                                        <i class="fa-solid fa-address-card"></i>
+                                    </a>
+                                    <a href="{% url 'edit_nhan_khau' item.nhan_khau.id_nhankhau %}" class="action-btn" style="background: #fff3e0; color: #ff9800;">
+                                        <i class="fa-solid fa-user-pen"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Không tìm thấy dữ liệu nhân khẩu.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-    <div class="hrcontainer">
-      <!-- CARD TÌM KIẾM -->
-      <section class="brutalist-panel search-panel">
-        <form method="get" action="{% url 'demomanage' %}" class="search-form">
-          <input
-            type="text"
-            name="search_id"
-            placeholder="Nhập ID nhân khẩu..."
-            value="{{ query }}"
-            class="brutalist-input"
-          />
-          <button
-            type="submit"
-            class="brutalist-card__button brutalist-card__button--secondary brutalist-card__button--compact"
-          >
-            🔍 Tìm kiếm
-          </button>
-          {% if query %}
-          <a
-            href="{% url 'demomanage' %}"
-            class="brutalist-card__button brutalist-card__button--yellow brutalist-card__button--compact"
-          >
-            Hiện tất cả
-          </a>
-          {% endif %}
-        </form>
-      </section>
-
-      <!-- CARD DANH SÁCH -->
-      <main class="content">
-        <section class="brutalist-panel data-panel">
-          <h2>Danh sách Nhân khẩu</h2>
-
-          <table class="brutalist-table">
-            <thead>
-              <tr>
-                <th>ID nhân khẩu</th>
-                <th>Họ tên</th>
-                <!-- NEW -->
-                <th>ID hộ khẩu</th>
-                <th>DOB</th>
-                <th>CCCD</th>
-                <th>Quan hệ với chủ hộ</th>
-                <th>Trạng thái cư trú</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in data %}
-              <tr>
-                <td>
-                  <a
-                    href="{% url 'nhan_khau_profile' item.nhan_khau.id_nhankhau %}"
-                  >
-                    {{ item.nhan_khau.id_nhankhau }}
-                  </a>
-                </td>
-
-                <td>{{ item.nhan_khau.ho_ten }}</td>
-                <!-- NEW: lấy trường tên nhân khẩu -->
-
-                <td>{{ item.nhan_khau.id_hokhau_id }}</td>
-                <td>{{ item.nhan_khau.ngay_sinh }}</td>
-                <td>{{ item.nhan_khau.cccd }}</td>
-                <td>{{ item.nhan_khau.quan_he_chu_ho }}</td>
-                <td>
-                  {% if item.trang_thai == "tam vang" %} 🔴 Tạm vắng {% elif
-                  item.trang_thai == "tam tru" %} 🟡 Tạm trú {% elif
-                  item.trang_thai == "thuong tru" %} 🟢 Thường trú {% else %} ⚪
-                  Chưa xác định {% endif %}
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="6">Không có dữ liệu</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-
-          <div class="hrbutton-bar">
-            <a
-              href="/demomanage/adddemo"
-              class="brutalist-card__button brutalist-card__button--yellow brutalist-card__button--compact"
-            >
-              ➕ Thêm nhân khẩu
-            </a>
-          </div>
+                <div class="income-actions-bottom">
+                    <a href="/demomanage/adddemo" class="btn btn-create-new" style="text-decoration: none;">
+                        <i class="fa-solid fa-person-plus"></i> Thêm nhân khẩu mới
+                    </a>
+                </div>
+            </div>
         </section>
-      </main>
-    </div>
-
-    <!-- /.hrcontainer -->
-
-    {% include 'core/sidebar_and_footer.html' %}
-  </body>
+    </main>
+</body>
 </html>

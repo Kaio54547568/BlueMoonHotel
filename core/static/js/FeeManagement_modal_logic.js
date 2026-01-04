@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const tablePanel = document.getElementById('income-container'); 
+    const tablePanel = document.querySelector('.main-content') || document.querySelector('.history-panel');;
     const modal = document.getElementById('mainModal');
     const modalContent = modal.querySelector('.modal-content');
 
@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.innerHTML = ''; 
     }
 
-    // Gán sự kiện sau khi nạp Modal
     function attachModalListeners() {
         // 1. Đóng Modal
         modalContent.querySelectorAll('.modal-close-btn, #cancelDeleteBtn').forEach(btn => {
@@ -72,11 +71,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkboxes.forEach(cb => cb.checked = this.checked);
             });
         }
+
+        const confirmDeleteBtn = modalContent.querySelector('#confirmDeleteBtn');
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', function() {
+                const form = modalContent.querySelector('form'); 
+                if (!form) return;
+                const url = form.action;     
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;       
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        closeModal();
+                        window.location.reload(); 
+                    }
+                })
+                .catch(err => alert("Lỗi khi xóa: " + err));
+            });
+        }
     }
 
-    // Xử lý tạo hóa đơn mới (Lấy hệ số x đơn giá)
     function handleSaveNewResidents() {
-        // Lấy các hàng có checkbox được tích
         const selectedRows = Array.from(modalContent.querySelectorAll('.new-resident-row'))
                                   .filter(row => row.querySelector('input[name="new_hokhau_ids"]').checked);
 
@@ -101,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('prices[]', price);
         });
 
-        fetch('/create-invoices/', {
+        fetch('/create_invoices/', {
             method: 'POST',
             body: formData,
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -158,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedIds.forEach(id => formData.append('invoice_ids[]', id));
             formData.append('csrfmiddlewaretoken', modalContent.querySelector('[name=csrfmiddlewaretoken]').value);
 
-            fetch('/update-payment-status/', {
+            fetch('/update_payment_status/', {
                 method: 'POST',
                 body: formData,
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -197,7 +220,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
+    document.addEventListener('click', e => {
+        const deleteTrigger = e.target.closest('.btn-confirm-delete');
+        if (deleteTrigger) {
+            e.preventDefault();
+            const url = deleteTrigger.getAttribute('data-url');
+            // Nạp Modal xác nhận từ server (DeleteInvoiceModal.html / DeleteFeeModal.html)
+            loadAndOpenModal(url); 
+        }
+    });
     // Đóng khi click ra ngoài vùng Modal
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 });

@@ -15,27 +15,7 @@
     
     {% include 'core/Sidebar.html' %} 
     <main>
-        <header class="main-header">
-            <div class="header-left">
-                <button id="sidebarToggleBtn" class="toggle-btn">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <h1>Chung cư <span>BlueMoon</span></h1>
-                <p>Hệ thống quản lý hiện đại và thông minh cho tòa nhà của bạn</p>
-            </div>
-            <div class="header-right">
-                <button class="lang-btn" style="margin-right: 12px;">
-                    <img src="https://flagcdn.com/vn.svg" alt="VI" width="22" style="border-radius:50%;border:1px solid #d9d9d9; background:#fff; margin-right:7px;">
-                    <span>VI</span>
-                </button>
-                <div class="user-avatar" id="userMenuBtn">KT</div>
-                
-                {% include 'core/UserMenu.html' %} 
-                
-                <div class="user-menu-overlay" id="userMenuOverlay"></div>
-            </div> 
-        </header>
-
+         {% include 'core/accountant_header.html' %}
         <section class="main-content income-management-page">
             <div class="main-panel data-table-panel" id="income-container">
                 
@@ -72,8 +52,7 @@
                 <div class="income-summary-box">
                     <h3 class="box-title">Tổng quan Khoản thu</h3>
                     <div class="summary-details">
-                        <p>Tổng số Khoản Thu đã định nghĩa: **{{ total_count|default:"0" }}**</p>
-                        <p>Đơn giá trung bình (Tạm tính): **— VND**</p>
+                        <p>Tổng số Khoản Thu đã định nghĩa: {{ total_count|default:"0" }}</p>
                     </div>
                 </div>
 
@@ -111,7 +90,7 @@
                                             data-url="{% url 'edit_khoanthu' pk=item.id_khoanthu %}"> 
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <button class="action-btn delete-fee btn-confirm-delete"
+                                    <button class="action-btn delete-fee modal-trigger"
                                             title="Xóa" 
                                             data-url="{% url 'delete_khoanthu' pk=item.id_khoanthu %}"
                                             data-name="{{item.ten_khoanthu}}">

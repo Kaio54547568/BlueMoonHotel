@@ -29,9 +29,9 @@ class TaiKhoanManager(BaseUserManager):
 class LoaiBienDong(models.TextChoices):
     TAM_TRU = 'tam_tru', 'Tạm trú'
     TAM_VANG = 'tam_vang', 'Tạm vắng'
+    THUONG_TRU = 'thuong_tru', 'Thường trú'
 
 class DonViTinh(models.TextChoices):
-    M2 = 'm2', 'Mét vuông(m²)'
     NGUOI = 'nguoi', 'Người'
     HO = 'ho', 'Hộ gia đình'
     THANG = 'thang', 'Tháng'
@@ -39,7 +39,6 @@ class DonViTinh(models.TextChoices):
     LUOT = 'luot', 'Lượt'
     
 class TrangThaiDotThu(models.TextChoices):
-    DRAFT = 'draft', 'Nháp'
     OPEN = 'open', 'Mở'
     CLOSED = 'closed', 'Đóng'
 
@@ -92,8 +91,8 @@ class NhanKhau(models.Model):
 
 # ===== 5) BienDongNhanKhau =====
 class BienDongNhanKhau(models.Model):
-    id_biendong = models.AutoField(primary_key=True) # SỬA
-    loai_biendong = models.CharField(max_length=8, choices=LoaiBienDong.choices)
+    id_biendong = models.AutoField(primary_key=True) 
+    loai_biendong = models.CharField(max_length=12, choices=LoaiBienDong.choices)
     ngay_batdau = models.DateField()
     ngay_ketthuc = models.DateField(null=True, blank=True)
     ly_do = models.TextField(null=True, blank=True)
@@ -153,7 +152,7 @@ class DotThuPhi(models.Model):
     trang_thai = models.CharField(
         max_length=6, 
         choices=TrangThaiDotThu.choices, 
-        default=TrangThaiDotThu.DRAFT
+        default=TrangThaiDotThu.OPEN
     )
     id_khoanthu = models.ForeignKey(
         'core.KhoanThu',            
