@@ -705,7 +705,7 @@ def hokhau_detail(request, id_hokhau):
     print(3)
     hokhau = HoKhau.objects.get( id_hokhau=id_hokhau)
     print(hokhau.id_hokhau )
-    thanh_vien = NhanKhau.objects.filter(id_hokhau_id=id_hokhau)
+    thanh_vien = NhanKhau.objects.filter(id_hokhau_id=id_hokhau, is_deleted=False)
 
     return render(request, 'core/hokhau_detail.html', {
         'hokhau': hokhau,
